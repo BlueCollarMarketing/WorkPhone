@@ -1,0 +1,22 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Secrets / local
+.env
+*.pem
+*.key
+
+# Large media (add deliberately if needed)
+*.mp4
+*.wav
+*.mp3
