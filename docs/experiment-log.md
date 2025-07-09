@@ -7,3 +7,4 @@
 | 2025-07-03 | WP-4 | S0 | Hill Alexandria | Draft U1-U3 locked; status board Open with S0 evidence pointers |
 | 2025-07-04 | WP-5 | S0 | Roantree Timothy I | YouTrack WP sprints confirmed; experiment-log template added |
 | 2025-07-07 | WP-3 | S0 | Adesanya Okunade K | OTS insufficiency note filed; FM-01 to FM-05 negative findings retained |
+| 2025-07-09 | WP-6 | S0 | Lees Emily D | BRD outline started with FR/AC placeholders; linked Project and Test Plans |
