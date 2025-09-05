@@ -10,3 +10,4 @@
 | 2025-07-09 | WP-6 | S0 | Lees Emily D | BRD outline started with FR/AC placeholders; linked Project and Test Plans |
 | 2025-09-01 | WP-7 | S1 | Adesanya Okunade K | Business-number forward path answers; latency and config logged for S1 |
 | 2025-09-02 | WP-8 | S1 | Damczyk Jennifer | Session lifecycle ring-answer-greet-end configured; settings recorded |
+| 2025-09-05 | WP-9 | S1 | Adesanya Okunade K | Answer latency and failure-to-answer measured on N=20 calls; causes logged |
