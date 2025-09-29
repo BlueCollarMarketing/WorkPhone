@@ -13,3 +13,4 @@
 | 2025-09-05 | WP-9 | S1 | Adesanya Okunade K | Answer latency and failure-to-answer measured on N=20 calls; causes logged |
 | 2025-09-08 | WP-10 | S1 | Hill Alexandria | Executed vs Planned telephony stack documented for S1 evidence |
 | 2025-09-09 | WP-11 | S1 | Damczyk Jennifer | Negative-finding register NF-T01 to NF-T05 retained for S1 baseline pack |
+| 2025-09-29 | WP-12 | S2 | Adesanya Okunade K | After-hours and weekend answer behaviour tested vs policy; outcomes logged |
