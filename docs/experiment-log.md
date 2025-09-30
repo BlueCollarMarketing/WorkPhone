@@ -14,3 +14,4 @@
 | 2025-09-08 | WP-10 | S1 | Hill Alexandria | Executed vs Planned telephony stack documented for S1 evidence |
 | 2025-09-09 | WP-11 | S1 | Damczyk Jennifer | Negative-finding register NF-T01 to NF-T05 retained for S1 baseline pack |
 | 2025-09-29 | WP-12 | S2 | Adesanya Okunade K | After-hours and weekend answer behaviour tested vs policy; outcomes logged |
+| 2025-09-30 | WP-13 | S2 | Damczyk Jennifer | Abandoned-call and rapid re-dial: no stuck sessions; outcomes logged |
