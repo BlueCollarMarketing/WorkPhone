@@ -16,3 +16,4 @@
 | 2025-09-29 | WP-12 | S2 | Adesanya Okunade K | After-hours and weekend answer behaviour tested vs policy; outcomes logged |
 | 2025-09-30 | WP-13 | S2 | Damczyk Jennifer | Abandoned-call and rapid re-dial: no stuck sessions; outcomes logged |
 | 2025-10-06 | WP-14 | S2 | Adesanya Okunade K | Greeting and human/voicemail fallback rules stabilized; final config recorded |
+| 2025-10-02 | WP-15 | S2 | Roantree Timothy I | Telephony baseline pack (configs, call table, failure modes) assembled for M2 Evidence Gate |
