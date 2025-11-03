@@ -18,3 +18,4 @@
 | 2025-10-06 | WP-14 | S2 | Adesanya Okunade K | Greeting and human/voicemail fallback rules stabilized; final config recorded |
 | 2025-10-02 | WP-15 | S2 | Roantree Timothy I | Telephony baseline pack (configs, call table, failure modes) assembled for M2 Evidence Gate |
 | 2025-10-08 | WP-16 | S2 | Roantree Timothy I | Evidence Gate: telephony exports and rejected-setting register Present/Missing/Location; S2 closed |
+| 2025-11-03 | WP-17 | S3 | Damczyk Jennifer | v0 construction call script pack (WP-SCR-v0) versioned for U1 baseline |
