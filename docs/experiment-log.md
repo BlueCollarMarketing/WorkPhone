@@ -21,3 +21,4 @@
 | 2025-11-03 | WP-17 | S3 | Damczyk Jennifer | v0 construction call script pack (WP-SCR-v0) versioned for U1 baseline |
 | 2025-11-04 | WP-18 | S3 | Adesanya Okunade K | ASR/NLU clean-script baseline scored; Executed model settings retained for U1 |
 | 2025-11-10 | WP-19 | S3 | Adesanya Okunade K | ASR/NLU error taxonomy E-Jargon/E-Num/E-Overlap (+ omit/invent/intent) filed for U1 |
+| 2025-11-06 | WP-20 | S3 | Hill Alexandria | Executed ASR/NLU provider/model settings recorded; Planned alternatives listed |
