@@ -22,3 +22,4 @@
 | 2025-11-04 | WP-18 | S3 | Adesanya Okunade K | ASR/NLU clean-script baseline scored; Executed model settings retained for U1 |
 | 2025-11-10 | WP-19 | S3 | Adesanya Okunade K | ASR/NLU error taxonomy E-Jargon/E-Num/E-Overlap (+ omit/invent/intent) filed for U1 |
 | 2025-11-06 | WP-20 | S3 | Hill Alexandria | Executed ASR/NLU provider/model settings recorded; Planned alternatives listed |
+| 2025-11-12 | WP-21 | S4 | Roantree Timothy I | S4 noise/jargon hypothesis log H-S4-01..04 linked to S3 baseline scores |
