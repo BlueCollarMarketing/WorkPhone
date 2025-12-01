@@ -1,0 +1,63 @@
+{
+  "pack_id": "WP-SCR-v0-NJ",
+  "version": "v0-noise-jargon",
+  "condition": "noise_jargon",
+  "scripts": [
+    {
+      "id": "SCR-E01-NJ",
+      "base_id": "SCR-E01",
+      "scenario": "estimate",
+      "intent": "estimate",
+      "must_capture": ["name", "number", "job_type", "site_area", "callback"],
+      "utterance": "Hi, I need an estimate for a roof repair in Scarborough. Can someone call me back tomorrow? My number is 647-555-0101.",
+      "asr_text": "hi i need a... for roof flashing rough-in in scarborough can someone call me back tomorrow my number is six four seven five five five uh zero one zero one",
+      "noise": "job_site",
+      "jargon": ["flashing", "rough-in"]
+    },
+    {
+      "id": "SCR-S01-NJ",
+      "base_id": "SCR-S01",
+      "scenario": "service",
+      "intent": "service",
+      "must_capture": ["name", "number", "issue", "urgency"],
+      "utterance": "Something is leaking under the sink. I need service this week. Call 416-555-0199.",
+      "asr_text": "something is (noise) under the sink i need (unclear) this week call four one six five five five oh one nine nine",
+      "noise": "job_site",
+      "jargon": []
+    },
+    {
+      "id": "SCR-A01-NJ",
+      "base_id": "SCR-A01",
+      "scenario": "after_hours",
+      "intent": "estimate",
+      "must_capture": ["name", "number", "job_type", "after_hours"],
+      "utterance": "It's Saturday night. I need an estimate for basement reno. Number 905-555-0144.",
+      "asr_text": "saturday night i need a... for basement reno number nine zero five five five five zero one four four",
+      "noise": "phone_hiss",
+      "jargon": ["reno"]
+    },
+    {
+      "id": "SCR-I01-NJ",
+      "base_id": "SCR-I01",
+      "scenario": "incomplete",
+      "intent": "service",
+      "must_capture": ["name", "number", "issue"],
+      "omit": ["address", "urgency"],
+      "utterance": "This is Sam, I need a plumber. That is all I can say right now. 437-555-0177.",
+      "asr_text": "this is sam i need a (noise) that is all i can say right now four three seven five five five zero one seven seven",
+      "noise": "overlap",
+      "jargon": []
+    },
+    {
+      "id": "SCR-C01-NJ",
+      "base_id": "SCR-C01",
+      "scenario": "callback",
+      "intent": "callback",
+      "must_capture": ["name", "number", "callback"],
+      "utterance": "Just have them call me back. Jordan, 289-555-0122.",
+      "asr_text": "just have them (static) jordan two eight nine five five five zero one two two",
+      "noise": "static",
+      "jargon": []
+    }
+  ]
+}

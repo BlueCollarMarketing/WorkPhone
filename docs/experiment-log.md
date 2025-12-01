@@ -23,3 +23,4 @@
 | 2025-11-10 | WP-19 | S3 | Adesanya Okunade K | ASR/NLU error taxonomy E-Jargon/E-Num/E-Overlap (+ omit/invent/intent) filed for U1 |
 | 2025-11-06 | WP-20 | S3 | Hill Alexandria | Executed ASR/NLU provider/model settings recorded; Planned alternatives listed |
 | 2025-11-12 | WP-21 | S4 | Roantree Timothy I | S4 noise/jargon hypothesis log H-S4-01..04 linked to S3 baseline scores |
+| 2025-12-01 | WP-22 | S4 | Adesanya Okunade K | Noise+jargon intent accuracy 0.20 vs clean 1.00 (delta 0.80); H-S4-01 supported |
