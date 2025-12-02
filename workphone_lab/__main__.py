@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
+from .corpus import load_corpus, validate_corpus
 from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
 from .scoring import compare_to_baseline, score_pack
 from .session import run_demo_session
@@ -11,6 +12,7 @@ from .session import run_demo_session
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "data" / "scripts" / "wp_scr_v0.json"
 SCRIPTS_NJ = ROOT / "data" / "scripts" / "wp_scr_v0_noise_jargon.json"
+CORPUS = ROOT / "data" / "corpus" / "regression_corpus.json"
 OUT = ROOT / "outputs"
 
 
@@ -87,6 +89,24 @@ def cmd_noise_jargon(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_corpus(_: argparse.Namespace) -> int:
+    corpus = load_corpus(CORPUS)
+    report = validate_corpus(ROOT, corpus)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "regression_corpus_report.json"
+    path.write_text(json.dumps({"manifest": corpus, "validation": report}, indent=2), encoding="utf-8")
+    print(f"Corpus {report['corpus_id']} {report['version']}")
+    print(f"Baseline linked: WP-SCR-v0 @ {report['baseline_version']}")
+    print(f"Variants indexed: {report['variant_count']}")
+    print(f"Validation OK: {report['ok']}")
+    for err in report["errors"]:
+        print(f"  ERROR: {err}")
+    for row in corpus["variant_index"]:
+        print(f"  {row['variant_id']} <- {row['base_id']} [{row['variant_version']}] {', '.join(row['tags'])}")
+    print(f"Wrote {path}")
+    return 0 if report["ok"] else 1
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(prog="workphone_lab", description="Workphone lab simulator")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -102,6 +122,9 @@ def main() -> int:
 
     p_nj = sub.add_parser("noise-jargon", help="Measure intent drop under noise+jargon vs clean baseline (WP-22)")
     p_nj.set_defaults(func=cmd_noise_jargon)
+
+    p_corp = sub.add_parser("corpus", help="Validate regression corpus version tags vs clean S3 baseline (WP-23)")
+    p_corp.set_defaults(func=cmd_corpus)
 
     args = parser.parse_args()
     return args.func(args)

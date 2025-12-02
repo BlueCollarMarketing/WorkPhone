@@ -18,6 +18,7 @@ python -m workphone_lab baseline
 python -m workphone_lab session
 python -m workphone_lab hypothesis-s4
 python -m workphone_lab noise-jargon
+python -m workphone_lab corpus
 ```
 
 | Command | What it does |
@@ -26,6 +27,6 @@ python -m workphone_lab noise-jargon
 | `session` | Demo ring-answer-greet-end -> `outputs/session_demo.json` |
 | `hypothesis-s4` | S4 hypothesis log from S3 baseline -> `outputs/s4_hypothesis_log.json` |
 | `noise-jargon` | Intent drop vs clean baseline (WP-22) -> `outputs/s4_noise_jargon_scores.json` |
+| `corpus` | Validate regression corpus version tags (WP-23) -> `outputs/regression_corpus_report.json` |
 
-Script pack: `data/scripts/wp_scr_v0.json`  
-Evidence notes: `docs/`
+Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)

@@ -2,6 +2,8 @@
   "pack_id": "WP-SCR-v0-NJ",
   "version": "v0-noise-jargon",
   "condition": "noise_jargon",
+  "linked_baseline_pack_id": "WP-SCR-v0",
+  "linked_baseline_version": "v0",
   "scripts": [
     {
       "id": "SCR-E01-NJ",
@@ -12,7 +14,8 @@
       "utterance": "Hi, I need an estimate for a roof repair in Scarborough. Can someone call me back tomorrow? My number is 647-555-0101.",
       "asr_text": "hi i need a... for roof flashing rough-in in scarborough can someone call me back tomorrow my number is six four seven five five five uh zero one zero one",
       "noise": "job_site",
-      "jargon": ["flashing", "rough-in"]
+      "jargon": ["flashing", "rough-in"],
+      "tags": ["noise:job_site", "jargon:flashing", "jargon:rough-in"]
     },
     {
       "id": "SCR-S01-NJ",
@@ -23,7 +26,8 @@
       "utterance": "Something is leaking under the sink. I need service this week. Call 416-555-0199.",
       "asr_text": "something is (noise) under the sink i need (unclear) this week call four one six five five five oh one nine nine",
       "noise": "job_site",
-      "jargon": []
+      "jargon": [],
+      "tags": ["noise:job_site"]
     },
     {
       "id": "SCR-A01-NJ",
@@ -34,7 +38,8 @@
       "utterance": "It's Saturday night. I need an estimate for basement reno. Number 905-555-0144.",
       "asr_text": "saturday night i need a... for basement reno number nine zero five five five five zero one four four",
       "noise": "phone_hiss",
-      "jargon": ["reno"]
+      "jargon": ["reno"],
+      "tags": ["noise:phone_hiss", "jargon:reno"]
     },
     {
       "id": "SCR-I01-NJ",
@@ -46,7 +51,8 @@
       "utterance": "This is Sam, I need a plumber. That is all I can say right now. 437-555-0177.",
       "asr_text": "this is sam i need a (noise) that is all i can say right now four three seven five five five zero one seven seven",
       "noise": "overlap",
-      "jargon": []
+      "jargon": [],
+      "tags": ["noise:overlap"]
     },
     {
       "id": "SCR-C01-NJ",
@@ -57,7 +63,32 @@
       "utterance": "Just have them call me back. Jordan, 289-555-0122.",
       "asr_text": "just have them (static) jordan two eight nine five five five zero one two two",
       "noise": "static",
-      "jargon": []
+      "jargon": [],
+      "tags": ["noise:static"]
+    },
+    {
+      "id": "SCR-E01-J",
+      "base_id": "SCR-E01",
+      "scenario": "estimate",
+      "intent": "estimate",
+      "must_capture": ["name", "number", "job_type", "site_area", "callback"],
+      "utterance": "Hi, I need an estimate for a roof repair in Scarborough. Can someone call me back tomorrow? My number is 647-555-0101.",
+      "asr_text": "hi need roof flashing and ridge vent work in scarborough call me back tomorrow number 647-555-0101",
+      "noise": "none",
+      "jargon": ["flashing", "ridge_vent"],
+      "tags": ["jargon:flashing", "jargon:ridge_vent"]
+    },
+    {
+      "id": "SCR-S01-N",
+      "base_id": "SCR-S01",
+      "scenario": "service",
+      "intent": "service",
+      "must_capture": ["name", "number", "issue", "urgency"],
+      "utterance": "Something is leaking under the sink. I need service this week. Call 416-555-0199.",
+      "asr_text": "(crew radio) something is leaking under the sink i need service this week call (clipped) four one six...",
+      "noise": "crew_radio",
+      "jargon": [],
+      "tags": ["noise:crew_radio"]
     }
   ]
 }

@@ -1,0 +1,32 @@
+{
+  "corpus_id": "WP-REG-CORPUS",
+  "version": "v0.1",
+  "label": "Executed",
+  "baseline_pack": {
+    "pack_id": "WP-SCR-v0",
+    "version": "v0",
+    "path": "data/scripts/wp_scr_v0.json",
+    "sprint": "S3",
+    "cards": ["WP-17", "WP-18"]
+  },
+  "variant_packs": [
+    {
+      "pack_id": "WP-SCR-v0-NJ",
+      "version": "v0-noise-jargon",
+      "path": "data/scripts/wp_scr_v0_noise_jargon.json",
+      "condition": "noise_jargon",
+      "linked_baseline_version": "v0",
+      "sprint": "S4",
+      "cards": ["WP-22", "WP-23"]
+    }
+  ],
+  "variant_index": [
+    {"variant_id": "SCR-E01-NJ", "base_id": "SCR-E01", "baseline_version": "v0", "variant_version": "v0-noise-jargon", "tags": ["noise:job_site", "jargon:flashing", "jargon:rough-in"]},
+    {"variant_id": "SCR-S01-NJ", "base_id": "SCR-S01", "baseline_version": "v0", "variant_version": "v0-noise-jargon", "tags": ["noise:job_site"]},
+    {"variant_id": "SCR-A01-NJ", "base_id": "SCR-A01", "baseline_version": "v0", "variant_version": "v0-noise-jargon", "tags": ["noise:phone_hiss", "jargon:reno"]},
+    {"variant_id": "SCR-I01-NJ", "base_id": "SCR-I01", "baseline_version": "v0", "variant_version": "v0-noise-jargon", "tags": ["noise:overlap"]},
+    {"variant_id": "SCR-C01-NJ", "base_id": "SCR-C01", "baseline_version": "v0", "variant_version": "v0-noise-jargon", "tags": ["noise:static"]},
+    {"variant_id": "SCR-E01-J", "base_id": "SCR-E01", "baseline_version": "v0", "variant_version": "v0-noise-jargon", "tags": ["jargon:flashing", "jargon:ridge_vent"]},
+    {"variant_id": "SCR-S01-N", "base_id": "SCR-S01", "baseline_version": "v0", "variant_version": "v0-noise-jargon", "tags": ["noise:crew_radio"]}
+  ]
+}

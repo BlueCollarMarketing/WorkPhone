@@ -6,37 +6,65 @@
       "id": "SCR-E01",
       "scenario": "estimate",
       "intent": "estimate",
-      "must_capture": ["name", "number", "job_type", "site_area", "callback"],
+      "must_capture": [
+        "name",
+        "number",
+        "job_type",
+        "site_area",
+        "callback"
+      ],
       "utterance": "Hi, I need an estimate for a roof repair in Scarborough. Can someone call me back tomorrow? My number is 647-555-0101."
     },
     {
       "id": "SCR-S01",
       "scenario": "service",
       "intent": "service",
-      "must_capture": ["name", "number", "issue", "urgency"],
+      "must_capture": [
+        "name",
+        "number",
+        "issue",
+        "urgency"
+      ],
       "utterance": "Something is leaking under the sink. I need service this week. Call 416-555-0199."
     },
     {
       "id": "SCR-A01",
       "scenario": "after_hours",
       "intent": "estimate",
-      "must_capture": ["name", "number", "job_type", "after_hours"],
+      "must_capture": [
+        "name",
+        "number",
+        "job_type",
+        "after_hours"
+      ],
       "utterance": "It's Saturday night. I need an estimate for basement reno. Number 905-555-0144."
     },
     {
       "id": "SCR-I01",
       "scenario": "incomplete",
       "intent": "service",
-      "must_capture": ["name", "number", "issue"],
-      "omit": ["address", "urgency"],
+      "must_capture": [
+        "name",
+        "number",
+        "issue"
+      ],
+      "omit": [
+        "address",
+        "urgency"
+      ],
       "utterance": "This is Sam, I need a plumber. That is all I can say right now. 437-555-0177."
     },
     {
       "id": "SCR-C01",
       "scenario": "callback",
       "intent": "callback",
-      "must_capture": ["name", "number", "callback"],
+      "must_capture": [
+        "name",
+        "number",
+        "callback"
+      ],
       "utterance": "Just have them call me back. Jordan, 289-555-0122."
     }
-  ]
+  ],
+  "linked_baseline_version": "v0"
 }
