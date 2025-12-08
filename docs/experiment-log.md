@@ -25,3 +25,4 @@
 | 2025-11-12 | WP-21 | S4 | Roantree Timothy I | S4 noise/jargon hypothesis log H-S4-01..04 linked to S3 baseline scores |
 | 2025-12-01 | WP-22 | S4 | Adesanya Okunade K | Noise+jargon intent accuracy 0.20 vs clean 1.00 (delta 0.80); H-S4-01 supported |
 | 2025-12-02 | WP-23 | S4 | Damczyk Jennifer | Noise/jargon variants added to regression corpus v0.1; tags linked to clean WP-SCR-v0 |
+| 2025-12-08 | WP-24 | S4 | Adesanya Okunade K | Clarification-loop at low conf: helps 4 / harms 0 / no_change 3; H-S4-04 supported |

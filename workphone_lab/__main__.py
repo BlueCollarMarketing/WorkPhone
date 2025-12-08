@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
+from .clarification import run_clarification_pack
 from .corpus import load_corpus, validate_corpus
 from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
 from .scoring import compare_to_baseline, score_pack
@@ -107,6 +108,26 @@ def cmd_corpus(_: argparse.Namespace) -> int:
     return 0 if report["ok"] else 1
 
 
+def cmd_clarify(_: argparse.Namespace) -> int:
+    pack = json.loads(SCRIPTS_NJ.read_text(encoding="utf-8"))
+    report = run_clarification_pack(pack)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s4_clarification_loop.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"Wrote {path}")
+    print(
+        f"helps={report['summary']['helps']}  "
+        f"harms={report['summary']['harms']}  "
+        f"no_change={report['summary']['no_change']}"
+    )
+    for r in report["results"]:
+        print(
+            f"  {r['script_id']}: conf={r['confidence']} "
+            f"{r['before_intent']}->{r['after_intent']} => {r['outcome']}"
+        )
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(prog="workphone_lab", description="Workphone lab simulator")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -125,6 +146,9 @@ def main() -> int:
 
     p_corp = sub.add_parser("corpus", help="Validate regression corpus version tags vs clean S3 baseline (WP-23)")
     p_corp.set_defaults(func=cmd_corpus)
+
+    p_cl = sub.add_parser("clarify", help="Test clarification-loop prompts at low confidence (WP-24)")
+    p_cl.set_defaults(func=cmd_clarify)
 
     args = parser.parse_args()
     return args.func(args)
