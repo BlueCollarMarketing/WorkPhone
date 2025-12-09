@@ -7,6 +7,7 @@ from pathlib import Path
 from .clarification import run_clarification_pack
 from .corpus import load_corpus, validate_corpus
 from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
+from .ots_compare import compare_side_by_side
 from .scoring import compare_to_baseline, score_pack
 from .session import run_demo_session
 
@@ -128,6 +129,32 @@ def cmd_clarify(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_compare_ots(_: argparse.Namespace) -> int:
+    pack = json.loads(SCRIPTS.read_text(encoding="utf-8"))
+    report = compare_side_by_side(pack)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s4_ots_vs_workphone.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    agg = report["aggregate"]
+    print(f"Wrote {path}")
+    print(
+        f"Intent  OTS {agg['ots_intent_pass']}/{agg['n']}  "
+        f"Workphone {agg['wp_intent_pass']}/{agg['n']}  "
+        f"delta {agg['delta_intent_pass']:+d}"
+    )
+    print(
+        f"Entity  OTS {agg['ots_entity_full']}/{agg['n']}  "
+        f"Workphone {agg['wp_entity_full']}/{agg['n']}  "
+        f"delta {agg['delta_entity_full']:+d}"
+    )
+    for r in report["results"]:
+        print(
+            f"  {r['script_id']}: OTS={r['ots_predicted']} WP={r['wp_predicted']} "
+            f"d_intent={r['delta_intent']:+d} d_ent={r['delta_entities']:+d}"
+        )
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(prog="workphone_lab", description="Workphone lab simulator")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -149,6 +176,9 @@ def main() -> int:
 
     p_cl = sub.add_parser("clarify", help="Test clarification-loop prompts at low confidence (WP-24)")
     p_cl.set_defaults(func=cmd_clarify)
+
+    p_ots = sub.add_parser("compare-ots", help="Side-by-side OTS vs Workphone on same scripts (WP-25)")
+    p_ots.set_defaults(func=cmd_compare_ots)
 
     args = parser.parse_args()
     return args.func(args)

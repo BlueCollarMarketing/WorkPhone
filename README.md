@@ -20,6 +20,7 @@ python -m workphone_lab hypothesis-s4
 python -m workphone_lab noise-jargon
 python -m workphone_lab corpus
 python -m workphone_lab clarify
+python -m workphone_lab compare-ots
 ```
 
 | Command | What it does |
@@ -30,5 +31,6 @@ python -m workphone_lab clarify
 | `noise-jargon` | Intent drop vs clean baseline (WP-22) -> `outputs/s4_noise_jargon_scores.json` |
 | `corpus` | Validate regression corpus version tags (WP-23) -> `outputs/regression_corpus_report.json` |
 | `clarify` | Clarification-loop helps/harms/no_change (WP-24) -> `outputs/s4_clarification_loop.json` |
+| `compare-ots` | OTS vs Workphone delta table (WP-25) -> `outputs/s4_ots_vs_workphone.json` |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)
