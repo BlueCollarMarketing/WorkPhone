@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .clarification import run_clarification_pack
 from .corpus import load_corpus, validate_corpus
+from .evidence_gate import gate_s4
 from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
 from .ots_compare import compare_side_by_side
 from .scoring import compare_to_baseline, score_pack
@@ -155,6 +156,35 @@ def cmd_compare_ots(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_gate_s4(_: argparse.Namespace) -> int:
+    # Refresh regenerable outputs so gate sees Present where possible
+    _ensure_baseline()
+    pack_nj = json.loads(SCRIPTS_NJ.read_text(encoding="utf-8"))
+    OUT.mkdir(parents=True, exist_ok=True)
+    (OUT / "s4_noise_jargon_scores.json").write_text(
+        json.dumps(
+            {
+                "card": "WP-22",
+                "noise_jargon": score_pack(pack_nj),
+                "comparison": compare_to_baseline(_ensure_baseline(), score_pack(pack_nj)),
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    report = gate_s4(ROOT)
+    path = OUT / "s4_evidence_gate.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"Wrote {path}")
+    for row in report["checklist"]:
+        print(f"  [{row['status']}] {row['item']} -> {row['location']}")
+    print("Rejected configs:")
+    for rj in report["rejected_configs"]:
+        print(f"  {rj['id']}: {rj['config']}")
+    print(f"Gate pass: {report['summary']['gate_pass']}")
+    return 0 if report["summary"]["gate_pass"] else 1
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(prog="workphone_lab", description="Workphone lab simulator")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -179,6 +209,9 @@ def main() -> int:
 
     p_ots = sub.add_parser("compare-ots", help="Side-by-side OTS vs Workphone on same scripts (WP-25)")
     p_ots.set_defaults(func=cmd_compare_ots)
+
+    p_gate = sub.add_parser("gate-s4", help="Evidence Gate checklist for S4 close (WP-26)")
+    p_gate.set_defaults(func=cmd_gate_s4)
 
     args = parser.parse_args()
     return args.func(args)

@@ -21,6 +21,7 @@ python -m workphone_lab noise-jargon
 python -m workphone_lab corpus
 python -m workphone_lab clarify
 python -m workphone_lab compare-ots
+python -m workphone_lab gate-s4
 ```
 
 | Command | What it does |
@@ -32,5 +33,6 @@ python -m workphone_lab compare-ots
 | `corpus` | Validate regression corpus version tags (WP-23) -> `outputs/regression_corpus_report.json` |
 | `clarify` | Clarification-loop helps/harms/no_change (WP-24) -> `outputs/s4_clarification_loop.json` |
 | `compare-ots` | OTS vs Workphone delta table (WP-25) -> `outputs/s4_ots_vs_workphone.json` |
+| `gate-s4` | S4 Evidence Gate Present/Missing (WP-26) -> `outputs/s4_evidence_gate.json` |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)
