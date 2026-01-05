@@ -22,6 +22,7 @@ python -m workphone_lab corpus
 python -m workphone_lab clarify
 python -m workphone_lab compare-ots
 python -m workphone_lab gate-s4
+python -m workphone_lab policy
 ```
 
 | Command | What it does |
@@ -34,5 +35,7 @@ python -m workphone_lab gate-s4
 | `clarify` | Clarification-loop helps/harms/no_change (WP-24) -> `outputs/s4_clarification_loop.json` |
 | `compare-ots` | OTS vs Workphone delta table (WP-25) -> `outputs/s4_ots_vs_workphone.json` |
 | `gate-s4` | S4 Evidence Gate Present/Missing (WP-26) -> `outputs/s4_evidence_gate.json` |
+| `policy` | Dialogue policy estimate/emergency/inquiry demo (WP-27) -> `outputs/s5_dialogue_policy_demo.json` |
 
-Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)
+Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)  
+Policy: `data/policy/dialogue_policy_v0.json`

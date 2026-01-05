@@ -28,3 +28,4 @@
 | 2025-12-08 | WP-24 | S4 | Adesanya Okunade K | Clarification-loop at low conf: helps 4 / harms 0 / no_change 3; H-S4-04 supported |
 | 2025-12-09 | WP-25 | S4 | Damczyk Jennifer | OTS vs Workphone on WP-SCR-v0: intent delta +4, entity delta +4 (Executed) |
 | 2025-12-11 | WP-26 | S4 | Roantree Timothy I | Evidence Gate S4: corpus/scores Present; RJ-S4-01..04 rejected; S4 closed |
+| 2026-01-05 | WP-27 | S5 | Hill Alexandria | Dialogue policy v0 draft for estimate/emergency/inquiry aligned to U2 |

@@ -1,0 +1,45 @@
+{
+  "policy_id": "WP-DIALOGUE-v0",
+  "version": "v0",
+  "sprint": "S5",
+  "aligns_to": "U2",
+  "label": "Executed",
+  "paths": {
+    "estimate": {
+      "route_id": "PATH-EST",
+      "priority": 2,
+      "triggers": ["estimate", "quote", "bid", "pricing", "how much"],
+      "goal": "Collect booking-grade estimate intake without inventing fields",
+      "required_fields": ["name", "number", "job_type", "site_area", "callback_window"],
+      "optional_fields": ["budget_hint", "preferred_trade"],
+      "next_step": "Confirm callback window; offer voicemail if human unavailable",
+      "wrong_path_guard": "Do not route to emergency unless safety keywords present"
+    },
+    "emergency": {
+      "route_id": "PATH-EMG",
+      "priority": 1,
+      "triggers": ["emergency", "gas", "flood", "flooding", "fire", "sparking", "no heat", "burst pipe", "urgent danger"],
+      "goal": "Prioritize safety triage and escalate; still capture callback number",
+      "required_fields": ["name", "number", "hazard_type", "urgency"],
+      "optional_fields": ["site_area", "occupancy"],
+      "next_step": "Escalate to human/urgent line when configured; else high-priority voicemail",
+      "wrong_path_guard": "Never treat emergency as general inquiry or defer without number"
+    },
+    "inquiry": {
+      "route_id": "PATH-INQ",
+      "priority": 3,
+      "triggers": ["hours", "location", "do you do", "general question", "inquiry", "info"],
+      "goal": "Answer or take message without forcing full estimate intake",
+      "required_fields": ["name", "number", "inquiry_topic"],
+      "optional_fields": ["callback_window"],
+      "next_step": "Short answer if known; else message + callback",
+      "wrong_path_guard": "Do not invent service availability claims"
+    }
+  },
+  "default_path": "inquiry",
+  "u2_intake_goals": [
+    "Correct path selection among estimate / emergency / inquiry",
+    "Required fields collected or explicitly marked missing (no invent)",
+    "Wrong-path handoffs logged as defects"
+  ]
+}

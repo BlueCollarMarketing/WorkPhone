@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .clarification import run_clarification_pack
 from .corpus import load_corpus, validate_corpus
+from .dialogue_policy import demo_policy, load_policy
 from .evidence_gate import gate_s4
 from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
 from .ots_compare import compare_side_by_side
@@ -16,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "data" / "scripts" / "wp_scr_v0.json"
 SCRIPTS_NJ = ROOT / "data" / "scripts" / "wp_scr_v0_noise_jargon.json"
 CORPUS = ROOT / "data" / "corpus" / "regression_corpus.json"
+POLICY = ROOT / "data" / "policy" / "dialogue_policy_v0.json"
 OUT = ROOT / "outputs"
 
 
@@ -185,6 +187,21 @@ def cmd_gate_s4(_: argparse.Namespace) -> int:
     return 0 if report["summary"]["gate_pass"] else 1
 
 
+def cmd_policy(_: argparse.Namespace) -> int:
+    policy = load_policy(POLICY)
+    report = demo_policy(policy)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s5_dialogue_policy_demo.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"Policy {report['policy_id']} {report['version']} (U2)")
+    print(f"Path OK: {report['aggregate']['path_ok']}/{report['aggregate']['n']}")
+    for r in report["results"]:
+        mark = "OK" if r["ok"] else "FAIL"
+        print(f"  [{mark}] {r['expected_path']} <- {r['utterance'][:48]}...")
+    print(f"Wrote {path}")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(prog="workphone_lab", description="Workphone lab simulator")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -212,6 +229,9 @@ def main() -> int:
 
     p_gate = sub.add_parser("gate-s4", help="Evidence Gate checklist for S4 close (WP-26)")
     p_gate.set_defaults(func=cmd_gate_s4)
+
+    p_pol = sub.add_parser("policy", help="Demo dialogue policy estimate/emergency/inquiry (WP-27)")
+    p_pol.set_defaults(func=cmd_policy)
 
     args = parser.parse_args()
     return args.func(args)
