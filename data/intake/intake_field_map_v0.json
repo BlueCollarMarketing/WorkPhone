@@ -1,0 +1,63 @@
+{
+  "map_id": "WP-INTAKE-MAP",
+  "version": "v0",
+  "deliverable": "D-04",
+  "sprint": "S5",
+  "linked_policy": {
+    "policy_id": "WP-DIALOGUE-v0",
+    "version": "v0",
+    "path": "data/policy/dialogue_policy_v0.json"
+  },
+  "label": "Executed",
+  "field_catalog": {
+    "contact_name": {"group": "contact", "type": "string", "required_hint": "Caller name or business"},
+    "contact_number": {"group": "contact", "type": "phone", "required_hint": "Callback number"},
+    "service_type": {"group": "service", "type": "enum", "values": ["estimate", "repair", "maintenance", "emergency", "inquiry"]},
+    "job_type": {"group": "service", "type": "string", "required_hint": "Trade / job description"},
+    "hazard_type": {"group": "urgency", "type": "string", "required_hint": "Emergency hazard class"},
+    "urgency_level": {"group": "urgency", "type": "enum", "values": ["routine", "this_week", "today", "immediate"]},
+    "site_area": {"group": "location_window", "type": "string", "required_hint": "City / neighbourhood / site"},
+    "address": {"group": "location_window", "type": "string", "required_hint": "Street address when available"},
+    "callback_window": {"group": "location_window", "type": "string", "required_hint": "Preferred callback time window"},
+    "inquiry_topic": {"group": "service", "type": "string", "required_hint": "General inquiry subject"},
+    "access_notes": {"group": "location_window", "type": "string", "required_hint": "Gate codes / access"}
+  },
+  "call_types": {
+    "estimate": {
+      "policy_path": "estimate",
+      "required": ["contact_name", "contact_number", "service_type", "job_type", "site_area", "callback_window"],
+      "optional": ["address", "access_notes"],
+      "groups": ["contact", "service", "location_window"]
+    },
+    "service": {
+      "policy_path": "estimate",
+      "note": "Repair/maintenance maps to service_type=repair|maintenance; may share estimate path prompts",
+      "required": ["contact_name", "contact_number", "service_type", "job_type", "urgency_level", "site_area"],
+      "optional": ["address", "callback_window", "access_notes"],
+      "groups": ["contact", "service", "urgency", "location_window"]
+    },
+    "emergency": {
+      "policy_path": "emergency",
+      "required": ["contact_name", "contact_number", "service_type", "hazard_type", "urgency_level"],
+      "optional": ["site_area", "address"],
+      "groups": ["contact", "service", "urgency", "location_window"]
+    },
+    "inquiry": {
+      "policy_path": "inquiry",
+      "required": ["contact_name", "contact_number", "inquiry_topic"],
+      "optional": ["callback_window"],
+      "groups": ["contact", "service", "location_window"]
+    }
+  },
+  "group_coverage": {
+    "service": ["estimate", "service", "emergency", "inquiry"],
+    "urgency": ["service", "emergency"],
+    "location_window": ["estimate", "service", "emergency", "inquiry"],
+    "contact": ["estimate", "service", "emergency", "inquiry"]
+  },
+  "rules": [
+    "Never invent a required field; mark missing explicitly",
+    "Emergency must capture contact_number before end",
+    "Version bumps: v0.x additive fields; v1 breaking renames"
+  ]
+}

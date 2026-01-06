@@ -9,6 +9,7 @@ from .corpus import load_corpus, validate_corpus
 from .dialogue_policy import demo_policy, load_policy
 from .evidence_gate import gate_s4
 from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
+from .intake_map import load_field_map, validate_field_map
 from .ots_compare import compare_side_by_side
 from .scoring import compare_to_baseline, score_pack
 from .session import run_demo_session
@@ -18,6 +19,7 @@ SCRIPTS = ROOT / "data" / "scripts" / "wp_scr_v0.json"
 SCRIPTS_NJ = ROOT / "data" / "scripts" / "wp_scr_v0_noise_jargon.json"
 CORPUS = ROOT / "data" / "corpus" / "regression_corpus.json"
 POLICY = ROOT / "data" / "policy" / "dialogue_policy_v0.json"
+INTAKE = ROOT / "data" / "intake" / "intake_field_map_v0.json"
 OUT = ROOT / "outputs"
 
 
@@ -202,6 +204,48 @@ def cmd_policy(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_intake(_: argparse.Namespace) -> int:
+    fmap = load_field_map(INTAKE)
+    report = validate_field_map(fmap)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s5_intake_field_map_report.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"Intake map {report['map_id']} {report['version']} ({report['deliverable']})")
+    print(f"Fields: {report['field_count']}  Call types: {', '.join(report['call_types'])}")
+    for ct, spec in report["summary_table"].items():
+        print(f"  {ct}: required={spec['required']}")
+    print(f"Validation OK: {report['ok']}")
+    for err in report["errors"]:
+        print(f"  ERROR: {err}")
+    print(f"Wrote {path}")
+    return 0 if report["ok"] else 1
+
+
+def cmd_all(_: argparse.Namespace) -> int:
+    """Run the full lab suite (smoke check that the project is runnable)."""
+    steps = [
+        ("baseline", cmd_baseline),
+        ("session", cmd_session),
+        ("hypothesis-s4", cmd_hypothesis_s4),
+        ("noise-jargon", cmd_noise_jargon),
+        ("corpus", cmd_corpus),
+        ("clarify", cmd_clarify),
+        ("compare-ots", cmd_compare_ots),
+        ("gate-s4", cmd_gate_s4),
+        ("policy", cmd_policy),
+        ("intake", cmd_intake),
+    ]
+    print("=== workphone_lab all ===")
+    for name, fn in steps:
+        print(f"\n--- {name} ---")
+        code = fn(_)
+        if code != 0:
+            print(f"FAILED at {name} (exit {code})")
+            return code
+    print("\n=== all steps OK ===")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(prog="workphone_lab", description="Workphone lab simulator")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -232,6 +276,12 @@ def main() -> int:
 
     p_pol = sub.add_parser("policy", help="Demo dialogue policy estimate/emergency/inquiry (WP-27)")
     p_pol.set_defaults(func=cmd_policy)
+
+    p_in = sub.add_parser("intake", help="Validate intake field map per call type for D-04 (WP-28)")
+    p_in.set_defaults(func=cmd_intake)
+
+    p_all = sub.add_parser("all", help="Run full lab suite smoke check")
+    p_all.set_defaults(func=cmd_all)
 
     args = parser.parse_args()
     return args.func(args)

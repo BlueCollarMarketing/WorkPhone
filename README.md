@@ -23,6 +23,7 @@ python -m workphone_lab clarify
 python -m workphone_lab compare-ots
 python -m workphone_lab gate-s4
 python -m workphone_lab policy
+python -m workphone_lab intake
 ```
 
 | Command | What it does |
@@ -36,6 +37,11 @@ python -m workphone_lab policy
 | `compare-ots` | OTS vs Workphone delta table (WP-25) -> `outputs/s4_ots_vs_workphone.json` |
 | `gate-s4` | S4 Evidence Gate Present/Missing (WP-26) -> `outputs/s4_evidence_gate.json` |
 | `policy` | Dialogue policy estimate/emergency/inquiry demo (WP-27) -> `outputs/s5_dialogue_policy_demo.json` |
+| `intake` | Intake field map validation D-04 (WP-28) -> `outputs/s5_intake_field_map_report.json` |
+| `all` | Run full lab suite smoke check |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)  
-Policy: `data/policy/dialogue_policy_v0.json`
+Policy: `data/policy/dialogue_policy_v0.json`  
+Intake: `data/intake/intake_field_map_v0.json`
+
+**Full smoke check:** `python -m workphone_lab all`
