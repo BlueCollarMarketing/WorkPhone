@@ -10,6 +10,7 @@ from .dialogue_policy import demo_policy, load_policy
 from .evidence_gate import gate_s4
 from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
 from .intake_map import load_field_map, validate_field_map
+from .measure_policy import measure_packs
 from .ots_compare import compare_side_by_side
 from .scoring import compare_to_baseline, score_pack
 from .session import run_demo_session
@@ -221,6 +222,28 @@ def cmd_intake(_: argparse.Namespace) -> int:
     return 0 if report["ok"] else 1
 
 
+def cmd_measure_policy(_: argparse.Namespace) -> int:
+    policy = load_policy(POLICY)
+    clean = json.loads(SCRIPTS.read_text(encoding="utf-8"))
+    nj = json.loads(SCRIPTS_NJ.read_text(encoding="utf-8"))
+    report = measure_packs(policy, [clean, nj])
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s5_policy_completion_wrong_path.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    agg = report["aggregate"]
+    print(f"Policy {report['policy_id']} @ {report['policy_version']} on versioned corpus")
+    print(f"N={agg['n']}  mean completion={agg['completion_rate_mean']}  fully complete={agg['fully_complete_rate']}")
+    print(f"Wrong-path rate={agg['wrong_path_rate']} ({agg['wrong_path_count']}/{agg['n']})")
+    for r in report["results"]:
+        wp = "WRONG" if r["wrong_path"] else "ok"
+        print(
+            f"  {r['script_id']}: path {r['expected_path']}->{r['routed_path']} [{wp}] "
+            f"completion={r['completion_rate']}"
+        )
+    print(f"Wrote {path}")
+    return 0
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -234,6 +257,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("gate-s4", cmd_gate_s4),
         ("policy", cmd_policy),
         ("intake", cmd_intake),
+        ("measure-policy", cmd_measure_policy),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -279,6 +303,9 @@ def main() -> int:
 
     p_in = sub.add_parser("intake", help="Validate intake field map per call type for D-04 (WP-28)")
     p_in.set_defaults(func=cmd_intake)
+
+    p_mp = sub.add_parser("measure-policy", help="Measure policy completion and wrong-path rate on corpus (WP-29)")
+    p_mp.set_defaults(func=cmd_measure_policy)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

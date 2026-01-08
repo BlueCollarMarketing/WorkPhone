@@ -30,3 +30,4 @@
 | 2025-12-11 | WP-26 | S4 | Roantree Timothy I | Evidence Gate S4: corpus/scores Present; RJ-S4-01..04 rejected; S4 closed |
 | 2026-01-05 | WP-27 | S5 | Hill Alexandria | Dialogue policy v0 draft for estimate/emergency/inquiry aligned to U2 |
 | 2026-01-06 | WP-28 | S5 | Damczyk Jennifer | Intake field map v0 for D-04; required fields per call type versioned |
+| 2026-01-08 | WP-29 | S5 | Adesanya Okunade K | Policy on versioned corpus: mean completion 0.48; wrong-path rate 0.67 (U2) |
