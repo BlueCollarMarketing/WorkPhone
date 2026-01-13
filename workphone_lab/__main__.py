@@ -14,6 +14,7 @@ from .measure_policy import measure_packs
 from .ots_compare import compare_side_by_side
 from .scoring import compare_to_baseline, score_pack
 from .session import run_demo_session
+from .status_board import load_board, render_board
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "data" / "scripts" / "wp_scr_v0.json"
@@ -21,6 +22,7 @@ SCRIPTS_NJ = ROOT / "data" / "scripts" / "wp_scr_v0_noise_jargon.json"
 CORPUS = ROOT / "data" / "corpus" / "regression_corpus.json"
 POLICY = ROOT / "data" / "policy" / "dialogue_policy_v0.json"
 INTAKE = ROOT / "data" / "intake" / "intake_field_map_v0.json"
+BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 OUT = ROOT / "outputs"
 
 
@@ -244,6 +246,22 @@ def cmd_measure_policy(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_status_board(_: argparse.Namespace) -> int:
+    board = load_board(BOARD)
+    report = render_board(board)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s5_u1_status_board.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"Status board {report['board_id']} {report['version']}")
+    for row in report["rows"]:
+        print(f"  {row['id']}: {row['status']} (evidence={row['evidence_count']}, labels={row['labels']})")
+    print("U1 pointers:")
+    for p in report["u1"]["evidence_pointers"]:
+        print(f"  - {p['card']} [{p['label']}]: {p['note']}")
+    print(f"Wrote {path}")
+    return 0
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -258,6 +276,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("policy", cmd_policy),
         ("intake", cmd_intake),
         ("measure-policy", cmd_measure_policy),
+        ("status-board", cmd_status_board),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -306,6 +325,9 @@ def main() -> int:
 
     p_mp = sub.add_parser("measure-policy", help="Measure policy completion and wrong-path rate on corpus (WP-29)")
     p_mp.set_defaults(func=cmd_measure_policy)
+
+    p_sb = sub.add_parser("status-board", help="Print U1-U3 status board with evidence labels (WP-30)")
+    p_sb.set_defaults(func=cmd_status_board)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

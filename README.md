@@ -25,6 +25,7 @@ python -m workphone_lab gate-s4
 python -m workphone_lab policy
 python -m workphone_lab intake
 python -m workphone_lab measure-policy
+python -m workphone_lab status-board
 ```
 
 | Command | What it does |
@@ -40,10 +41,12 @@ python -m workphone_lab measure-policy
 | `policy` | Dialogue policy estimate/emergency/inquiry demo (WP-27) -> `outputs/s5_dialogue_policy_demo.json` |
 | `intake` | Intake field map validation D-04 (WP-28) -> `outputs/s5_intake_field_map_report.json` |
 | `measure-policy` | Policy completion + wrong-path on corpus (WP-29) -> `outputs/s5_policy_completion_wrong_path.json` |
+| `status-board` | U1-U3 status board with evidence labels (WP-30) -> `outputs/s5_u1_status_board.json` |
 | `all` | Run full lab suite smoke check |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)  
 Policy: `data/policy/dialogue_policy_v0.json`  
-Intake: `data/intake/intake_field_map_v0.json`
+Intake: `data/intake/intake_field_map_v0.json`  
+Status board: `data/status/u1_u3_status_board.json`
 
 **Full smoke check:** `python -m workphone_lab all`

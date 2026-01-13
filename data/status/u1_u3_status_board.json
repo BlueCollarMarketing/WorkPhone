@@ -1,0 +1,49 @@
+{
+  "board_id": "WP-STATUS-BOARD",
+  "version": "v0.2",
+  "updated_card": "WP-30",
+  "label": "Executed",
+  "uncertainties": {
+    "U1": {
+      "status": "Partial",
+      "statement": "Can the agent reliably understand and classify inbound speech under contractor conditions (noise, trade jargon, incomplete info)?",
+      "evidence_pointers": [
+        {"card": "WP-18", "label": "Executed", "note": "Clean ASR/NLU baseline intent scores"},
+        {"card": "WP-19", "label": "Executed", "note": "Error taxonomy E-Jargon/E-Num/E-Overlap"},
+        {"card": "WP-20", "label": "Executed", "note": "Executed provider/model settings"},
+        {"card": "WP-22", "label": "Executed", "note": "Noise+jargon intent drop vs clean (delta logged)"},
+        {"card": "WP-23", "label": "Executed", "note": "Regression corpus variants linked to WP-SCR-v0"},
+        {"card": "WP-24", "label": "Executed", "note": "Clarification-loop helps/harms/no_change"},
+        {"card": "WP-25", "label": "Executed", "note": "OTS vs Workphone delta table"},
+        {"card": "WP-26", "label": "Executed", "note": "S4 Evidence Gate Present/Missing"},
+        {"card": "WP-29", "label": "Executed", "note": "Policy/corpus routing under speech stress (related)"}
+      ],
+      "notes": "Partial: clean-path speech/intent evidenced; noise/jargon still degrades accuracy; not Confirmed closed."
+    },
+    "U2": {
+      "status": "Open",
+      "statement": "Can a construction-specific dialogue policy collect booking-grade intake fields without wrong-path handoffs?",
+      "evidence_pointers": [
+        {"card": "WP-27", "label": "Executed", "note": "Dialogue policy v0 draft"},
+        {"card": "WP-28", "label": "Executed", "note": "Intake field map D-04"},
+        {"card": "WP-29", "label": "Executed", "note": "Completion 0.48; wrong-path 0.67"}
+      ],
+      "notes": "Still Open for board lock; S5 work started but U1 is the focus of WP-30."
+    },
+    "U3": {
+      "status": "Open",
+      "statement": "Can concurrent telephony and post-call summaries stay accurate and timely under load?",
+      "evidence_pointers": [],
+      "notes": "No concurrency/summary experiments yet (later sprints)."
+    },
+    "System": {
+      "status": "Open",
+      "statement": "End-to-end live path assembled and gated",
+      "evidence_pointers": [
+        {"card": "WP-07", "label": "Executed", "note": "Telephony forward path (lab/docs)"},
+        {"card": "lab", "label": "Executed", "note": "workphone_lab runnable suite"}
+      ],
+      "notes": "Lab runnable; production carrier path not Confirmed."
+    }
+  }
+}

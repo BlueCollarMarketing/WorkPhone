@@ -31,3 +31,4 @@
 | 2026-01-05 | WP-27 | S5 | Hill Alexandria | Dialogue policy v0 draft for estimate/emergency/inquiry aligned to U2 |
 | 2026-01-06 | WP-28 | S5 | Damczyk Jennifer | Intake field map v0 for D-04; required fields per call type versioned |
 | 2026-01-08 | WP-29 | S5 | Adesanya Okunade K | Policy on versioned corpus: mean completion 0.48; wrong-path rate 0.67 (U2) |
+| 2026-01-13 | WP-30 | S5 | Roantree Timothy I | U1 status board -> Partial with S3-S5 Executed evidence pointers |
