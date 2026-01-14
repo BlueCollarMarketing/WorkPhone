@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .clarification import run_clarification_pack
 from .corpus import load_corpus, validate_corpus
+from .corpus_gate import evaluate_corpus_gate, load_json
 from .dialogue_policy import demo_policy, load_policy
 from .evidence_gate import gate_s4
 from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
@@ -23,6 +24,7 @@ CORPUS = ROOT / "data" / "corpus" / "regression_corpus.json"
 POLICY = ROOT / "data" / "policy" / "dialogue_policy_v0.json"
 INTAKE = ROOT / "data" / "intake" / "intake_field_map_v0.json"
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
+CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
 OUT = ROOT / "outputs"
 
 
@@ -262,6 +264,37 @@ def cmd_status_board(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_corpus_gate(_: argparse.Namespace) -> int:
+    gate = load_json(CORPUS_GATE)
+    corpus = load_corpus(CORPUS)
+    policy = load_policy(POLICY)
+    # M3 decision: record PASS for tagged approved corpus (no unauthorized bulk change)
+    report = evaluate_corpus_gate(gate, corpus, policy, proposed_bulk_policy_change=True)
+    # Also show blocked example if corpus version were wrong
+    blocked_demo = evaluate_corpus_gate(
+        gate,
+        {**corpus, "version": "v999-unapproved"},
+        policy,
+        proposed_bulk_policy_change=True,
+    )
+    out = {
+        "m3_decision": report,
+        "blocked_if_unapproved_corpus_demo": blocked_demo,
+    }
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s5_corpus_gate_m3.json"
+    path.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    print(f"Corpus gate {report['gate_id']} ({report['milestone']})")
+    print(
+        f"Tagged corpus: {report['corpus_tagged']['corpus_id']} @ {report['corpus_tagged']['version']} "
+        f"(approved={report['corpus_tagged']['matches_approved']})"
+    )
+    print(f"M3 decision: {report['decision']} — {report['reason']}")
+    print(f"Demo BLOCKED if unapproved: {blocked_demo['decision']}")
+    print(f"Wrote {path}")
+    return 0 if report["decision"] == "PASS" else 1
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -277,6 +310,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("intake", cmd_intake),
         ("measure-policy", cmd_measure_policy),
         ("status-board", cmd_status_board),
+        ("corpus-gate", cmd_corpus_gate),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -328,6 +362,9 @@ def main() -> int:
 
     p_sb = sub.add_parser("status-board", help="Print U1-U3 status board with evidence labels (WP-30)")
     p_sb.set_defaults(func=cmd_status_board)
+
+    p_cg = sub.add_parser("corpus-gate", help="Corpus gate before bulk policy changes — M3 (WP-31)")
+    p_cg.set_defaults(func=cmd_corpus_gate)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

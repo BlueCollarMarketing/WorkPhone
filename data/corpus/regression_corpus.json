@@ -2,6 +2,8 @@
   "corpus_id": "WP-REG-CORPUS",
   "version": "v0.1",
   "label": "Executed",
+  "approved_for_gates": ["M3"],
+  "gate_tag": "approved@v0.1",
   "baseline_pack": {
     "pack_id": "WP-SCR-v0",
     "version": "v0",

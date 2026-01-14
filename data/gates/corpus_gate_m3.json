@@ -1,0 +1,30 @@
+{
+  "gate_id": "WP-CORPUS-GATE",
+  "version": "v0",
+  "milestone": "M3",
+  "sprint": "S5",
+  "label": "Executed",
+  "rule": "No bulk production policy change without an approved corpus version",
+  "approved_corpus": {
+    "corpus_id": "WP-REG-CORPUS",
+    "version": "v0.1",
+    "path": "data/corpus/regression_corpus.json",
+    "baseline_pack": "WP-SCR-v0@v0",
+    "variant_pack": "WP-SCR-v0-NJ@v0-noise-jargon"
+  },
+  "policy_under_gate": {
+    "policy_id": "WP-DIALOGUE-v0",
+    "version": "v0",
+    "path": "data/policy/dialogue_policy_v0.json"
+  },
+  "bulk_change_definition": [
+    "Replace production dialogue policy wholesale",
+    "Change more than one path priority/trigger set in one release",
+    "Retarget required_fields across call types without corpus re-score"
+  ],
+  "allowed_without_new_corpus": [
+    "Docs-only clarifications",
+    "Additive optional fields that do not change routing",
+    "Lab-only experiments not labeled production"
+  ]
+}
