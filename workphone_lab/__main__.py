@@ -9,6 +9,7 @@ from .corpus import load_corpus, validate_corpus
 from .corpus_gate import evaluate_corpus_gate, load_json
 from .dialogue_policy import demo_policy, load_policy
 from .evidence_gate import gate_s4
+from .handoff_enforce import measure_enforcement
 from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
 from .intake_map import load_field_map, validate_field_map
 from .intake_schema import load_schema, validate_schema_pack
@@ -312,6 +313,28 @@ def cmd_schema(_: argparse.Namespace) -> int:
     return 0 if report["ok"] else 1
 
 
+def cmd_handoff(_: argparse.Namespace) -> int:
+    schema = load_schema(SCHEMA)
+    clean = json.loads(SCRIPTS.read_text(encoding="utf-8"))
+    nj = json.loads(SCRIPTS_NJ.read_text(encoding="utf-8"))
+    report = measure_enforcement([clean, nj], schema)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s6_handoff_enforcement.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    agg = report["aggregate"]
+    print("Required-field handoff enforcement (WP-33)")
+    print(
+        f"incomplete without={agg['incomplete_rate_without']}  "
+        f"with={agg['incomplete_rate_with']}  delta={agg['incomplete_delta']}"
+    )
+    print(
+        f"allowed conversion with={agg['allowed_conversion_rate_with']}  "
+        f"wrong={agg['wrong_rate_with']}  supported={agg['hypothesis_supported']}"
+    )
+    print(f"Wrote {path}")
+    return 0
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -329,6 +352,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("status-board", cmd_status_board),
         ("corpus-gate", cmd_corpus_gate),
         ("schema", cmd_schema),
+        ("handoff", cmd_handoff),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -386,6 +410,9 @@ def main() -> int:
 
     p_sc = sub.add_parser("schema", help="Validate intake schema for contractor call fields (WP-32)")
     p_sc.set_defaults(func=cmd_schema)
+
+    p_hf = sub.add_parser("handoff", help="Required-field enforcement on intake handoffs (WP-33)")
+    p_hf.set_defaults(func=cmd_handoff)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

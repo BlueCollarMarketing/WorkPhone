@@ -28,6 +28,7 @@ python -m workphone_lab measure-policy
 python -m workphone_lab status-board
 python -m workphone_lab corpus-gate
 python -m workphone_lab schema
+python -m workphone_lab handoff
 ```
 
 | Command | What it does |
@@ -46,6 +47,7 @@ python -m workphone_lab schema
 | `status-board` | U1-U3 status board with evidence labels (WP-30) -> `outputs/s5_u1_status_board.json` |
 | `corpus-gate` | Corpus gate before bulk policy changes M3 (WP-31) -> `outputs/s5_corpus_gate_m3.json` |
 | `schema` | Intake schema validation D-04/S6 (WP-32) -> `outputs/s6_intake_schema_report.json` |
+| `handoff` | Required-field enforcement on handoffs (WP-33) -> `outputs/s6_handoff_enforcement.json` |
 | `all` | Run full lab suite smoke check |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)  
