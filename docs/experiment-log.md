@@ -35,3 +35,4 @@
 | 2026-01-14 | WP-31 | S5 | Roantree Timothy I | Corpus gate M3: WP-REG-CORPUS v0.1 approved; bulk policy change gated |
 | 2026-02-02 | WP-32 | S6 | Damczyk Jennifer | Intake schema v0 (D-04): name/phone/service/urgency/location_window/notes |
 | 2026-01-26 | WP-33 | S6 | Mann Wesley J | Required-field handoff enforcement: incomplete 0.83->0.00; conversion 0.17 kept |
+| 2026-01-27 | WP-34 | S6 | Mann Wesley J | Handoff rules v0 for email/SMS/CRM stub on Executed path (WS3) |

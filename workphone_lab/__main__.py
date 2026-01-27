@@ -10,6 +10,7 @@ from .corpus_gate import evaluate_corpus_gate, load_json
 from .dialogue_policy import demo_policy, load_policy
 from .evidence_gate import gate_s4
 from .handoff_enforce import measure_enforcement
+from .handoff_rules import demo_handoff_rules, load_rules
 from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
 from .intake_map import load_field_map, validate_field_map
 from .intake_schema import load_schema, validate_schema_pack
@@ -26,6 +27,7 @@ CORPUS = ROOT / "data" / "corpus" / "regression_corpus.json"
 POLICY = ROOT / "data" / "policy" / "dialogue_policy_v0.json"
 INTAKE = ROOT / "data" / "intake" / "intake_field_map_v0.json"
 SCHEMA = ROOT / "data" / "intake" / "intake_schema_v0.json"
+HANDOFF_RULES = ROOT / "data" / "handoff" / "handoff_rules_v0.json"
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
 OUT = ROOT / "outputs"
@@ -335,6 +337,22 @@ def cmd_handoff(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_channels(_: argparse.Namespace) -> int:
+    rules = load_rules(HANDOFF_RULES)
+    schema = load_schema(SCHEMA)
+    clean = json.loads(SCRIPTS.read_text(encoding="utf-8"))
+    report = demo_handoff_rules(rules, schema, [clean])
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s6_handoff_channels.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"Handoff rules {report['rules_id']} {report['version']} ({report['workstream']})")
+    print(f"Channels: {', '.join(report['channels_defined'])}  label={report['label']}")
+    for r in report["results"]:
+        print(f"  {r['script_id']}: allowed={r['allowed']} -> {r['channels']}")
+    print(f"Wrote {path}")
+    return 0
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -353,6 +371,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("corpus-gate", cmd_corpus_gate),
         ("schema", cmd_schema),
         ("handoff", cmd_handoff),
+        ("channels", cmd_channels),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -413,6 +432,9 @@ def main() -> int:
 
     p_hf = sub.add_parser("handoff", help="Required-field enforcement on intake handoffs (WP-33)")
     p_hf.set_defaults(func=cmd_handoff)
+
+    p_ch = sub.add_parser("channels", help="Handoff rules email/SMS/CRM stub on Executed path (WP-34)")
+    p_ch.set_defaults(func=cmd_channels)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

@@ -1,0 +1,44 @@
+{
+  "rules_id": "WP-HANDOFF-RULES",
+  "version": "v0",
+  "sprint": "S6",
+  "workstream": "WS3",
+  "label": "Executed",
+  "path_scope": "Executed lab path only (not Planned carrier swaps)",
+  "linked_schema": {
+    "schema_id": "WP-INTAKE-SCHEMA",
+    "version": "v0",
+    "path": "data/intake/intake_schema_v0.json"
+  },
+  "channels": {
+    "email": {
+      "channel_id": "EMAIL",
+      "when": ["default", "estimate", "inquiry", "service"],
+      "requires": ["name", "phone", "service"],
+      "payload": ["name", "phone", "service", "urgency", "location_window", "notes"],
+      "acceptance": "Business receives structured email with required core fields present"
+    },
+    "sms": {
+      "channel_id": "SMS",
+      "when": ["emergency", "callback_ack"],
+      "requires": ["phone"],
+      "payload": ["phone", "service.service_type", "urgency.urgency_level", "short_note"],
+      "acceptance": "Short SMS ack or urgent ping; not a substitute for full email intake"
+    },
+    "crm_stub": {
+      "channel_id": "CRM_STUB",
+      "when": ["all_allowed_handoffs"],
+      "requires": ["name", "phone", "service"],
+      "payload": ["full_intake_record", "channel_trace"],
+      "acceptance": "Stub CRM row created with schema v0 fields; no silent drop"
+    }
+  },
+  "priority": ["sms_if_emergency", "email_always_on_allowed", "crm_stub_mirror"],
+  "rules": [
+    "Only fire channels on Executed path after required-field enforcement (WP-33)",
+    "Emergency: SMS + email + CRM stub",
+    "Estimate/service/inquiry: email + CRM stub",
+    "Never invent fields to satisfy a channel",
+    "Planned channels (other CRMs) stay Planned until Confirmed"
+  ]
+}
