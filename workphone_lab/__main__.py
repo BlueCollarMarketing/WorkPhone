@@ -15,6 +15,7 @@ from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
 from .intake_map import load_field_map, validate_field_map
 from .intake_schema import load_schema, validate_schema_pack
 from .measure_policy import measure_packs
+from .negative_intake import load_cases, run_negative_cases
 from .ots_compare import compare_side_by_side
 from .scoring import compare_to_baseline, score_pack
 from .session import run_demo_session
@@ -27,6 +28,7 @@ CORPUS = ROOT / "data" / "corpus" / "regression_corpus.json"
 POLICY = ROOT / "data" / "policy" / "dialogue_policy_v0.json"
 INTAKE = ROOT / "data" / "intake" / "intake_field_map_v0.json"
 SCHEMA = ROOT / "data" / "intake" / "intake_schema_v0.json"
+NEG_CASES = ROOT / "data" / "intake" / "negative_intake_cases_v0.json"
 HANDOFF_RULES = ROOT / "data" / "handoff" / "handoff_rules_v0.json"
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
@@ -353,6 +355,20 @@ def cmd_channels(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_negative(_: argparse.Namespace) -> int:
+    pack = load_cases(NEG_CASES)
+    report = run_negative_cases(pack)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s6_negative_intake.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"Negative intake {report['pack_id']} {report['version']}")
+    print(f"Pass {report['aggregate']['pass']}/{report['aggregate']['n']}  safe={report['aggregate']['safe_no_fabricate']}")
+    for r in report["results"]:
+        print(f"  {r['id']}: {'OK' if r['ok'] else 'FAIL'} {r['reasons']}")
+    print(f"Wrote {path}")
+    return 0 if report["aggregate"]["safe_no_fabricate"] else 1
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -372,6 +388,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("schema", cmd_schema),
         ("handoff", cmd_handoff),
         ("channels", cmd_channels),
+        ("negative", cmd_negative),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -435,6 +452,9 @@ def main() -> int:
 
     p_ch = sub.add_parser("channels", help="Handoff rules email/SMS/CRM stub on Executed path (WP-34)")
     p_ch.set_defaults(func=cmd_channels)
+
+    p_neg = sub.add_parser("negative", help="Negative intake cases refuse/partial/callback (WP-35)")
+    p_neg.set_defaults(func=cmd_negative)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

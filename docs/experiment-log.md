@@ -36,3 +36,4 @@
 | 2026-02-02 | WP-32 | S6 | Damczyk Jennifer | Intake schema v0 (D-04): name/phone/service/urgency/location_window/notes |
 | 2026-01-26 | WP-33 | S6 | Mann Wesley J | Required-field handoff enforcement: incomplete 0.83->0.00; conversion 0.17 kept |
 | 2026-01-27 | WP-34 | S6 | Mann Wesley J | Handoff rules v0 for email/SMS/CRM stub on Executed path (WS3) |
+| 2026-01-28 | WP-35 | S6 | Damczyk Jennifer | Negative intake cases 3/3 safe; no fabricated fields |

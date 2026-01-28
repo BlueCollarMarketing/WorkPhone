@@ -1,0 +1,39 @@
+{
+  "pack_id": "WP-NEG-INTAKE-v0",
+  "version": "v0",
+  "sprint": "S6",
+  "label": "Executed",
+  "cases": [
+    {
+      "id": "NEG-REFUSE",
+      "name": "Caller refuses info",
+      "utterance": "I do not want to give my address or last name. Just have someone call 647-555-0188.",
+      "expected": {
+        "fabricated_fields": false,
+        "must_not_contain": ["address", "last_name_invented"],
+        "may_contain": ["phone", "callback_intent"]
+      }
+    },
+    {
+      "id": "NEG-PARTIAL-ADDR",
+      "name": "Partial address only",
+      "utterance": "I am near the plaza on Main. Name is Alex. Number 416-555-0170. No street number.",
+      "expected": {
+        "fabricated_fields": false,
+        "must_not_contain": ["invented_street_number"],
+        "partial_ok": ["site_area"],
+        "mark_missing": ["address"]
+      }
+    },
+    {
+      "id": "NEG-CALLBACK",
+      "name": "Callback request only",
+      "utterance": "Just call me back. Jordan 289-555-0122.",
+      "expected": {
+        "fabricated_fields": false,
+        "must_not_contain": ["job_type_invented", "urgency_invented"],
+        "may_contain": ["name", "phone", "callback"]
+      }
+    }
+  ]
+}
