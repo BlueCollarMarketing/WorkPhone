@@ -31,6 +31,7 @@ python -m workphone_lab schema
 python -m workphone_lab handoff
 python -m workphone_lab channels
 python -m workphone_lab negative
+python -m workphone_lab gate-s6
 ```
 
 | Command | What it does |
@@ -52,6 +53,7 @@ python -m workphone_lab negative
 | `handoff` | Required-field enforcement on handoffs (WP-33) -> `outputs/s6_handoff_enforcement.json` |
 | `channels` | Handoff rules email/SMS/CRM stub (WP-34) -> `outputs/s6_handoff_channels.json` |
 | `negative` | Negative intake refuse/partial/callback (WP-35) -> `outputs/s6_negative_intake.json` |
+| `gate-s6` | S6 Evidence Gate schema + wrong rates (WP-36) -> `outputs/s6_evidence_gate.json` |
 | `all` | Run full lab suite smoke check |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)  

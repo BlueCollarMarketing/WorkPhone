@@ -9,6 +9,7 @@ from .corpus import load_corpus, validate_corpus
 from .corpus_gate import evaluate_corpus_gate, load_json
 from .dialogue_policy import demo_policy, load_policy
 from .evidence_gate import gate_s4
+from .evidence_gate_s6 import gate_s6
 from .handoff_enforce import measure_enforcement
 from .handoff_rules import demo_handoff_rules, load_rules
 from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
@@ -369,6 +370,29 @@ def cmd_negative(_: argparse.Namespace) -> int:
     return 0 if report["aggregate"]["safe_no_fabricate"] else 1
 
 
+def cmd_gate_s6(_: argparse.Namespace) -> int:
+    # refresh regenerable exports
+    cmd_schema(_)
+    cmd_handoff(_)
+    cmd_negative(_)
+    report = gate_s6(ROOT)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s6_evidence_gate.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"Wrote {path}")
+    for row in report["checklist"]:
+        print(f"  [{row['status']}] {row['item']} -> {row['location']}")
+    wr = report["wrong_rate_summary"]
+    print(
+        f"Wrong/incomplete rates: without={wr['incomplete_rate_without']} "
+        f"with={wr['incomplete_rate_with']} wrong={wr['wrong_rate_with']}"
+    )
+    for rj in report["rejected_configs"]:
+        print(f"  {rj['id']}: {rj['config']}")
+    print(f"Gate pass: {report['summary']['gate_pass']}")
+    return 0 if report["summary"]["gate_pass"] else 1
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -389,6 +413,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("handoff", cmd_handoff),
         ("channels", cmd_channels),
         ("negative", cmd_negative),
+        ("gate-s6", cmd_gate_s6),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -455,6 +480,9 @@ def main() -> int:
 
     p_neg = sub.add_parser("negative", help="Negative intake cases refuse/partial/callback (WP-35)")
     p_neg.set_defaults(func=cmd_negative)
+
+    p_g6 = sub.add_parser("gate-s6", help="Evidence Gate intake schema and wrong-rate tables (WP-36)")
+    p_g6.set_defaults(func=cmd_gate_s6)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)
