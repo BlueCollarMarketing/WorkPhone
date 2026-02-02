@@ -33,3 +33,4 @@
 | 2026-01-08 | WP-29 | S5 | Adesanya Okunade K | Policy on versioned corpus: mean completion 0.48; wrong-path rate 0.67 (U2) |
 | 2026-01-13 | WP-30 | S5 | Roantree Timothy I | U1 status board -> Partial with S3-S5 Executed evidence pointers |
 | 2026-01-14 | WP-31 | S5 | Roantree Timothy I | Corpus gate M3: WP-REG-CORPUS v0.1 approved; bulk policy change gated |
+| 2026-02-02 | WP-32 | S6 | Damczyk Jennifer | Intake schema v0 (D-04): name/phone/service/urgency/location_window/notes |

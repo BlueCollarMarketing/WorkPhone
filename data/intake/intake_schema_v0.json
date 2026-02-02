@@ -1,0 +1,78 @@
+{
+  "schema_id": "WP-INTAKE-SCHEMA",
+  "version": "v0",
+  "deliverable": "D-04",
+  "sprint": "S6",
+  "label": "Executed",
+  "linked_field_map": {
+    "map_id": "WP-INTAKE-MAP",
+    "version": "v0",
+    "path": "data/intake/intake_field_map_v0.json"
+  },
+  "description": "Contractor call intake schema: name, phone, service, urgency, location/window, notes",
+  "properties": {
+    "name": {
+      "type": "string",
+      "group": "contact",
+      "maps_to": "contact_name",
+      "min_length": 1
+    },
+    "phone": {
+      "type": "phone",
+      "group": "contact",
+      "maps_to": "contact_number",
+      "pattern": "digits_or_formatted"
+    },
+    "service": {
+      "type": "object",
+      "group": "service",
+      "properties": {
+        "service_type": {"type": "enum", "values": ["estimate", "repair", "maintenance", "emergency", "inquiry"]},
+        "job_type": {"type": "string"},
+        "inquiry_topic": {"type": "string"}
+      }
+    },
+    "urgency": {
+      "type": "object",
+      "group": "urgency",
+      "properties": {
+        "urgency_level": {"type": "enum", "values": ["routine", "this_week", "today", "immediate"]},
+        "hazard_type": {"type": "string"}
+      }
+    },
+    "location_window": {
+      "type": "object",
+      "group": "location_window",
+      "properties": {
+        "site_area": {"type": "string"},
+        "address": {"type": "string"},
+        "callback_window": {"type": "string"},
+        "access_notes": {"type": "string"}
+      }
+    },
+    "notes": {
+      "type": "string",
+      "group": "notes",
+      "description": "Free-text call notes; never used to invent required fields"
+    }
+  },
+  "required_core": ["name", "phone", "service"],
+  "examples": {
+    "estimate": {
+      "name": "Jordan",
+      "phone": "647-555-0101",
+      "service": {"service_type": "estimate", "job_type": "roof repair"},
+      "urgency": {"urgency_level": "this_week"},
+      "location_window": {"site_area": "Scarborough", "callback_window": "tomorrow"},
+      "notes": "Prefers afternoon callback"
+    },
+    "emergency": {
+      "name": "Sam",
+      "phone": "416-555-0199",
+      "service": {"service_type": "emergency", "job_type": "electrical"},
+      "urgency": {"urgency_level": "immediate", "hazard_type": "sparking"},
+      "location_window": {"site_area": "basement"},
+      "notes": "Caller reports sparking near panel"
+    }
+  }
+}

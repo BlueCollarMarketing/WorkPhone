@@ -11,6 +11,7 @@ from .dialogue_policy import demo_policy, load_policy
 from .evidence_gate import gate_s4
 from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
 from .intake_map import load_field_map, validate_field_map
+from .intake_schema import load_schema, validate_schema_pack
 from .measure_policy import measure_packs
 from .ots_compare import compare_side_by_side
 from .scoring import compare_to_baseline, score_pack
@@ -23,6 +24,7 @@ SCRIPTS_NJ = ROOT / "data" / "scripts" / "wp_scr_v0_noise_jargon.json"
 CORPUS = ROOT / "data" / "corpus" / "regression_corpus.json"
 POLICY = ROOT / "data" / "policy" / "dialogue_policy_v0.json"
 INTAKE = ROOT / "data" / "intake" / "intake_field_map_v0.json"
+SCHEMA = ROOT / "data" / "intake" / "intake_schema_v0.json"
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
 OUT = ROOT / "outputs"
@@ -295,6 +297,21 @@ def cmd_corpus_gate(_: argparse.Namespace) -> int:
     return 0 if report["decision"] == "PASS" else 1
 
 
+def cmd_schema(_: argparse.Namespace) -> int:
+    schema = load_schema(SCHEMA)
+    report = validate_schema_pack(schema)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s6_intake_schema_report.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"Schema {report['schema_id']} {report['version']} ({report['deliverable']})")
+    print(f"Groups: {', '.join(report['groups'])}")
+    for r in report["results"]:
+        print(f"  {r['example']}: {'OK' if r['ok'] else 'FAIL'} {r.get('errors') or ''}")
+    print(f"Pack validation OK: {report['ok']}")
+    print(f"Wrote {path}")
+    return 0 if report["ok"] else 1
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -311,6 +328,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("measure-policy", cmd_measure_policy),
         ("status-board", cmd_status_board),
         ("corpus-gate", cmd_corpus_gate),
+        ("schema", cmd_schema),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -365,6 +383,9 @@ def main() -> int:
 
     p_cg = sub.add_parser("corpus-gate", help="Corpus gate before bulk policy changes — M3 (WP-31)")
     p_cg.set_defaults(func=cmd_corpus_gate)
+
+    p_sc = sub.add_parser("schema", help="Validate intake schema for contractor call fields (WP-32)")
+    p_sc.set_defaults(func=cmd_schema)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)
