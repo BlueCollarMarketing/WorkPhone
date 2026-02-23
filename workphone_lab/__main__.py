@@ -21,6 +21,7 @@ from .ots_compare import compare_side_by_side
 from .scoring import compare_to_baseline, score_pack
 from .session import run_demo_session
 from .status_board import load_board, render_board
+from .summary_email import demo_summary, load_template
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "data" / "scripts" / "wp_scr_v0.json"
@@ -31,6 +32,7 @@ INTAKE = ROOT / "data" / "intake" / "intake_field_map_v0.json"
 SCHEMA = ROOT / "data" / "intake" / "intake_schema_v0.json"
 NEG_CASES = ROOT / "data" / "intake" / "negative_intake_cases_v0.json"
 HANDOFF_RULES = ROOT / "data" / "handoff" / "handoff_rules_v0.json"
+SUMMARY_TMPL = ROOT / "data" / "summary" / "summary_email_template_v0.json"
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
 OUT = ROOT / "outputs"
@@ -393,6 +395,21 @@ def cmd_gate_s6(_: argparse.Namespace) -> int:
     return 0 if report["summary"]["gate_pass"] else 1
 
 
+def cmd_summary(_: argparse.Namespace) -> int:
+    tmpl = load_template(SUMMARY_TMPL)
+    schema = load_schema(SCHEMA)
+    report = demo_summary(tmpl, schema.get("examples", {}))
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s7_summary_email_demo.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"Summary template {report['template_id']} {report['version']} ({report['deliverable']})")
+    for r in report["results"]:
+        print(f"  [{r['example']}] {r['email']['subject']}")
+        print(f"    fields={r['fields']}")
+    print(f"Wrote {path}")
+    return 0
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -414,6 +431,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("channels", cmd_channels),
         ("negative", cmd_negative),
         ("gate-s6", cmd_gate_s6),
+        ("summary", cmd_summary),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -483,6 +501,9 @@ def main() -> int:
 
     p_g6 = sub.add_parser("gate-s6", help="Evidence Gate intake schema and wrong-rate tables (WP-36)")
     p_g6.set_defaults(func=cmd_gate_s6)
+
+    p_sum = sub.add_parser("summary", help="Render post-call summary email template D-05 (WP-37)")
+    p_sum.set_defaults(func=cmd_summary)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

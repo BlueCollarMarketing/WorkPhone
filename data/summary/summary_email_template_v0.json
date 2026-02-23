@@ -1,0 +1,19 @@
+{
+  "template_id": "WP-SUMMARY-EMAIL",
+  "version": "v0",
+  "deliverable": "D-05",
+  "sprint": "S7",
+  "label": "Executed",
+  "subject": "[Workphone] Call summary - {{caller}} - {{need_short}}",
+  "body_text": "Caller: {{caller}}\nNumber: {{number}}\nNeed: {{need}}\nUrgency: {{urgency}}\nNext step: {{next_step}}\n\nNotes: {{notes}}\n\nTemplate: {{template_id}} {{version}}\n",
+  "fields": ["caller", "number", "need", "urgency", "next_step", "notes"],
+  "linked_schema": {
+    "schema_id": "WP-INTAKE-SCHEMA",
+    "version": "v0"
+  },
+  "rules": [
+    "Never invent caller, number, need, or urgency",
+    "If a field is missing, render as MISSING",
+    "next_step must come from handoff rules / policy, not free invent"
+  ]
+}

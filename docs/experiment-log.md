@@ -38,3 +38,4 @@
 | 2026-01-27 | WP-34 | S6 | Mann Wesley J | Handoff rules v0 for email/SMS/CRM stub on Executed path (WS3) |
 | 2026-01-28 | WP-35 | S6 | Damczyk Jennifer | Negative intake cases 3/3 safe; no fabricated fields |
 | 2026-01-29 | WP-36 | S6 | Hill Alexandria | Evidence Gate S6: intake schema Present; incomplete/wrong rates logged; S6 closed |
+| 2026-02-23 | WP-37 | S7 | Hill Alexandria | Post-call summary email template v0 for D-05 (caller/number/need/urgency/next step) |
