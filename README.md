@@ -33,6 +33,7 @@ python -m workphone_lab channels
 python -m workphone_lab negative
 python -m workphone_lab gate-s6
 python -m workphone_lab summary
+python -m workphone_lab measure-summary
 ```
 
 | Command | What it does |
@@ -56,6 +57,7 @@ python -m workphone_lab summary
 | `negative` | Negative intake refuse/partial/callback (WP-35) -> `outputs/s6_negative_intake.json` |
 | `gate-s6` | S6 Evidence Gate schema + wrong rates (WP-36) -> `outputs/s6_evidence_gate.json` |
 | `summary` | Post-call summary email template D-05 (WP-37) -> `outputs/s7_summary_email_demo.json` |
+| `measure-summary` | Summary invent/omit vs ground-truth notes (WP-38) -> `outputs/s7_summary_field_accuracy.json` |
 | `all` | Run full lab suite smoke check |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)  
@@ -65,6 +67,7 @@ Schema: `data/intake/intake_schema_v0.json`
 Negative cases: `data/intake/negative_intake_cases_v0.json`  
 Handoff rules: `data/handoff/handoff_rules_v0.json`  
 Summary template: `data/summary/summary_email_template_v0.json`  
+Summary ground truth: `data/summary/ground_truth_call_notes_v0.json`  
 Status board: `data/status/u1_u3_status_board.json`  
 Corpus gate: `data/gates/corpus_gate_m3.json`
 

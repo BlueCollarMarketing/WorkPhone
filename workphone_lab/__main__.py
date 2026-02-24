@@ -16,6 +16,7 @@ from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
 from .intake_map import load_field_map, validate_field_map
 from .intake_schema import load_schema, validate_schema_pack
 from .measure_policy import measure_packs
+from .measure_summary import load_gt_pack, measure_summary_accuracy
 from .negative_intake import load_cases, run_negative_cases
 from .ots_compare import compare_side_by_side
 from .scoring import compare_to_baseline, score_pack
@@ -33,6 +34,7 @@ SCHEMA = ROOT / "data" / "intake" / "intake_schema_v0.json"
 NEG_CASES = ROOT / "data" / "intake" / "negative_intake_cases_v0.json"
 HANDOFF_RULES = ROOT / "data" / "handoff" / "handoff_rules_v0.json"
 SUMMARY_TMPL = ROOT / "data" / "summary" / "summary_email_template_v0.json"
+SUMMARY_GT = ROOT / "data" / "summary" / "ground_truth_call_notes_v0.json"
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
 OUT = ROOT / "outputs"
@@ -410,6 +412,30 @@ def cmd_summary(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_measure_summary(_: argparse.Namespace) -> int:
+    gt = load_gt_pack(SUMMARY_GT)
+    pack = json.loads(SCRIPTS.read_text(encoding="utf-8"))
+    scripts_by_id = {s["id"]: s for s in pack["scripts"]}
+    report = measure_summary_accuracy(gt, scripts_by_id)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s7_summary_field_accuracy.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"Summary field accuracy (WP-38 / {report['hypothesis_id']})")
+    print(
+        f"accuracy={report['field_accuracy']}  invent_rate={report['invent_rate']}  "
+        f"omit_rate={report['omit_rate']}  n_notes={report['n_notes']}"
+    )
+    print(f"targets: accuracy>={report['targets']['field_accuracy_min']} invent<={report['targets']['invent_rate_max']}")
+    print(f"H-S7-01 supported: {report['hypothesis_supported']}")
+    for row in report["results"]:
+        print(
+            f"  {row['note_id']}: acc={row['field_accuracy']} "
+            f"omit={row['counts']['omit']} invent={row['counts']['invent']} wrong={row['counts']['wrong']}"
+        )
+    print(f"Wrote {path}")
+    return 0 if report["hypothesis_supported"] else 1
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -432,6 +458,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("negative", cmd_negative),
         ("gate-s6", cmd_gate_s6),
         ("summary", cmd_summary),
+        ("measure-summary", cmd_measure_summary),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -504,6 +531,9 @@ def main() -> int:
 
     p_sum = sub.add_parser("summary", help="Render post-call summary email template D-05 (WP-37)")
     p_sum.set_defaults(func=cmd_summary)
+
+    p_ms = sub.add_parser("measure-summary", help="Score summary invent/omit vs ground-truth notes (WP-38)")
+    p_ms.set_defaults(func=cmd_measure_summary)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

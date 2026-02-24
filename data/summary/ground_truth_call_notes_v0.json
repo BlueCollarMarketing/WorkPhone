@@ -1,0 +1,106 @@
+{
+  "pack_id": "WP-SUMMARY-GT-NOTES",
+  "version": "v0",
+  "sprint": "S7",
+  "card": "WP-38",
+  "label": "Executed",
+  "deliverable": "D-05",
+  "template_id": "WP-SUMMARY-EMAIL",
+  "template_version": "v0",
+  "hypothesis": {
+    "id": "H-S7-01",
+    "statement": "Summary field accuracy meets target on corpus; invent and omit rates are logged against ground-truth call notes.",
+    "targets": {
+      "field_accuracy_min": 0.8,
+      "invent_rate_max": 0.0
+    }
+  },
+  "score_fields": ["caller", "number", "need", "urgency", "next_step"],
+  "notes": [
+    {
+      "note_id": "NOTE-E01",
+      "script_id": "SCR-E01",
+      "pack_id": "WP-SCR-v0",
+      "call_notes": "Caller asked for roof repair estimate in Scarborough; callback tomorrow; left 647-555-0101. Name not given.",
+      "ground_truth": {
+        "caller": null,
+        "number": "647-555-0101",
+        "need": "roof repair",
+        "urgency": "tomorrow",
+        "next_step": "Email business + CRM stub row"
+      }
+    },
+    {
+      "note_id": "NOTE-S01",
+      "script_id": "SCR-S01",
+      "pack_id": "WP-SCR-v0",
+      "call_notes": "Leak under sink; wants service this week; 416-555-0199. Name not given.",
+      "ground_truth": {
+        "caller": null,
+        "number": "416-555-0199",
+        "need": "sink leak",
+        "urgency": "this_week",
+        "next_step": "Email business + CRM stub row"
+      }
+    },
+    {
+      "note_id": "NOTE-A01",
+      "script_id": "SCR-A01",
+      "pack_id": "WP-SCR-v0",
+      "call_notes": "Saturday night basement reno estimate request; 905-555-0144. Name not given.",
+      "ground_truth": {
+        "caller": null,
+        "number": "905-555-0144",
+        "need": "basement reno",
+        "urgency": null,
+        "next_step": "Email business + CRM stub row"
+      }
+    },
+    {
+      "note_id": "NOTE-I01",
+      "script_id": "SCR-I01",
+      "pack_id": "WP-SCR-v0",
+      "call_notes": "Sam needs a plumber; 437-555-0177. Address and urgency not provided; must not invent.",
+      "ground_truth": {
+        "caller": "Sam",
+        "number": "437-555-0177",
+        "need": "plumber",
+        "urgency": null,
+        "next_step": "Email business + CRM stub row"
+      }
+    },
+    {
+      "note_id": "NOTE-C01",
+      "script_id": "SCR-C01",
+      "pack_id": "WP-SCR-v0",
+      "call_notes": "Jordan wants callback only; 289-555-0122. No job or urgency stated.",
+      "ground_truth": {
+        "caller": "Jordan",
+        "number": "289-555-0122",
+        "need": null,
+        "urgency": null,
+        "next_step": "Email business + CRM stub row"
+      }
+    },
+    {
+      "note_id": "NOTE-EMERG",
+      "script_id": "SCHEMA-EMERGENCY",
+      "pack_id": "WP-INTAKE-SCHEMA",
+      "call_notes": "Sam reports sparking near electrical panel; immediate; 416-555-0199.",
+      "ground_truth": {
+        "caller": "Sam",
+        "number": "416-555-0199",
+        "need": "electrical",
+        "urgency": "immediate",
+        "next_step": "Escalate / high-priority voicemail"
+      },
+      "intake_record": {
+        "name": "Sam",
+        "phone": "416-555-0199",
+        "service": {"service_type": "emergency", "job_type": "electrical"},
+        "urgency": {"urgency_level": "immediate", "hazard_type": "sparking"},
+        "notes": "Caller reports sparking near panel"
+      }
+    }
+  ]
+}
