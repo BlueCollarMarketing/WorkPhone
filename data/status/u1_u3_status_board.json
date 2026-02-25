@@ -1,7 +1,7 @@
 {
   "board_id": "WP-STATUS-BOARD",
-  "version": "v0.2",
-  "updated_card": "WP-30",
+  "version": "v0.3",
+  "updated_card": "WP-39",
   "label": "Executed",
   "uncertainties": {
     "U1": {
@@ -31,10 +31,14 @@
       "notes": "Still Open for board lock; S5 work started but U1 is the focus of WP-30."
     },
     "U3": {
-      "status": "Open",
+      "status": "Partial",
       "statement": "Can concurrent telephony and post-call summaries stay accurate and timely under load?",
-      "evidence_pointers": [],
-      "notes": "No concurrency/summary experiments yet (later sprints)."
+      "evidence_pointers": [
+        {"card": "WP-37", "label": "Executed", "note": "Summary email template D-05 v0"},
+        {"card": "WP-38", "label": "Executed", "note": "Summary field accuracy invent/omit vs ground truth"},
+        {"card": "WP-39", "label": "Executed", "note": "Call-end to email latency distribution retained"}
+      ],
+      "notes": "Partial: summary fidelity + latency on Executed lab path; concurrency under load still later (S8)."
     },
     "System": {
       "status": "Open",

@@ -23,6 +23,7 @@ from .scoring import compare_to_baseline, score_pack
 from .session import run_demo_session
 from .status_board import load_board, render_board
 from .summary_email import demo_summary, load_template
+from .summary_latency import load_latency_pack, measure_summary_latency
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "data" / "scripts" / "wp_scr_v0.json"
@@ -35,6 +36,7 @@ NEG_CASES = ROOT / "data" / "intake" / "negative_intake_cases_v0.json"
 HANDOFF_RULES = ROOT / "data" / "handoff" / "handoff_rules_v0.json"
 SUMMARY_TMPL = ROOT / "data" / "summary" / "summary_email_template_v0.json"
 SUMMARY_GT = ROOT / "data" / "summary" / "ground_truth_call_notes_v0.json"
+SUMMARY_LAT = ROOT / "data" / "summary" / "summary_latency_runs_v0.json"
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
 OUT = ROOT / "outputs"
@@ -436,6 +438,26 @@ def cmd_measure_summary(_: argparse.Namespace) -> int:
     return 0 if report["hypothesis_supported"] else 1
 
 
+def cmd_summary_latency(_: argparse.Namespace) -> int:
+    pack = load_latency_pack(SUMMARY_LAT)
+    report = measure_summary_latency(pack)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s7_summary_latency_distribution.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    d = report["distribution"]
+    print(f"Summary latency call_end->email (WP-39 / U3)")
+    print(
+        f"n={d['n']}  min={d['min_s']}s  p50={d['p50_s']}s  p90={d['p90_s']}s  "
+        f"p95={d['p95_s']}s  max={d['max_s']}s  mean={d['mean_s']}s"
+    )
+    print(f"within draft targets: {report['within_draft_targets']}")
+    for b in d["histogram_s"]:
+        hi = f"{b['hi_s']}" if b["hi_s"] is not None else "inf"
+        print(f"  bin [{b['lo_s']},{hi}): {b['count']}")
+    print(f"Wrote {path}")
+    return 0
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -459,6 +481,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("gate-s6", cmd_gate_s6),
         ("summary", cmd_summary),
         ("measure-summary", cmd_measure_summary),
+        ("summary-latency", cmd_summary_latency),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -534,6 +557,9 @@ def main() -> int:
 
     p_ms = sub.add_parser("measure-summary", help="Score summary invent/omit vs ground-truth notes (WP-38)")
     p_ms.set_defaults(func=cmd_measure_summary)
+
+    p_sl = sub.add_parser("summary-latency", help="Measure call-end to email latency distribution for U3 (WP-39)")
+    p_sl.set_defaults(func=cmd_summary_latency)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

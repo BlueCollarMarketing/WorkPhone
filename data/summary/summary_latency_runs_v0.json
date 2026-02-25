@@ -1,0 +1,47 @@
+{
+  "pack_id": "WP-SUMMARY-LATENCY",
+  "version": "v0",
+  "sprint": "S7",
+  "card": "WP-39",
+  "label": "Executed",
+  "uncertainty": "U3",
+  "metric": "call_end_to_email_received_seconds",
+  "path": "Executed lab path (template render + queue stub + email stub)",
+  "definition": {
+    "t0": "call_end (session idle end)",
+    "t1": "email_received (summary email accepted by stub inbox)",
+    "latency_s": "t1 - t0"
+  },
+  "stages": [
+    {"id": "render", "description": "Fill WP-SUMMARY-EMAIL v0 slots"},
+    {"id": "queue", "description": "Enqueue summary job"},
+    {"id": "deliver", "description": "Stub SMTP accept / inbox receive"}
+  ],
+  "targets_draft": {
+    "p50_max_s": 30.0,
+    "p95_max_s": 90.0,
+    "note": "Draft working targets for U3; freeze later with concurrency cards"
+  },
+  "runs": [
+    {"run_id": "LAT-01", "script_id": "SCR-E01", "call_end_s": 0.0, "render_s": 0.4, "queue_s": 1.1, "deliver_s": 2.8},
+    {"run_id": "LAT-02", "script_id": "SCR-S01", "call_end_s": 0.0, "render_s": 0.5, "queue_s": 1.4, "deliver_s": 3.2},
+    {"run_id": "LAT-03", "script_id": "SCR-A01", "call_end_s": 0.0, "render_s": 0.6, "queue_s": 2.0, "deliver_s": 4.1},
+    {"run_id": "LAT-04", "script_id": "SCR-I01", "call_end_s": 0.0, "render_s": 0.3, "queue_s": 0.9, "deliver_s": 2.4},
+    {"run_id": "LAT-05", "script_id": "SCR-C01", "call_end_s": 0.0, "render_s": 0.4, "queue_s": 1.2, "deliver_s": 2.9},
+    {"run_id": "LAT-06", "script_id": "SCHEMA-EMERGENCY", "call_end_s": 0.0, "render_s": 0.5, "queue_s": 1.0, "deliver_s": 2.2},
+    {"run_id": "LAT-07", "script_id": "SCR-E01", "call_end_s": 0.0, "render_s": 0.7, "queue_s": 3.5, "deliver_s": 5.8},
+    {"run_id": "LAT-08", "script_id": "SCR-S01", "call_end_s": 0.0, "render_s": 0.4, "queue_s": 1.3, "deliver_s": 3.0},
+    {"run_id": "LAT-09", "script_id": "SCR-A01", "call_end_s": 0.0, "render_s": 0.8, "queue_s": 4.2, "deliver_s": 8.5},
+    {"run_id": "LAT-10", "script_id": "SCR-I01", "call_end_s": 0.0, "render_s": 0.3, "queue_s": 1.0, "deliver_s": 2.6},
+    {"run_id": "LAT-11", "script_id": "SCR-C01", "call_end_s": 0.0, "render_s": 0.5, "queue_s": 1.6, "deliver_s": 3.4},
+    {"run_id": "LAT-12", "script_id": "SCHEMA-EMERGENCY", "call_end_s": 0.0, "render_s": 0.4, "queue_s": 0.8, "deliver_s": 2.1},
+    {"run_id": "LAT-13", "script_id": "SCR-E01", "call_end_s": 0.0, "render_s": 0.6, "queue_s": 2.2, "deliver_s": 4.5},
+    {"run_id": "LAT-14", "script_id": "SCR-S01", "call_end_s": 0.0, "render_s": 0.5, "queue_s": 1.5, "deliver_s": 3.3},
+    {"run_id": "LAT-15", "script_id": "SCR-A01", "call_end_s": 0.0, "render_s": 1.1, "queue_s": 6.0, "deliver_s": 12.4},
+    {"run_id": "LAT-16", "script_id": "SCR-I01", "call_end_s": 0.0, "render_s": 0.4, "queue_s": 1.1, "deliver_s": 2.7},
+    {"run_id": "LAT-17", "script_id": "SCR-C01", "call_end_s": 0.0, "render_s": 0.5, "queue_s": 1.8, "deliver_s": 3.6},
+    {"run_id": "LAT-18", "script_id": "SCHEMA-EMERGENCY", "call_end_s": 0.0, "render_s": 0.6, "queue_s": 1.2, "deliver_s": 2.5},
+    {"run_id": "LAT-19", "script_id": "SCR-E01", "call_end_s": 0.0, "render_s": 0.7, "queue_s": 2.8, "deliver_s": 5.1},
+    {"run_id": "LAT-20", "script_id": "SCR-S01", "call_end_s": 0.0, "render_s": 0.4, "queue_s": 1.4, "deliver_s": 3.1}
+  ]
+}
