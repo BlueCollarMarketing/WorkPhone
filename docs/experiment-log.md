@@ -41,3 +41,4 @@
 | 2026-02-23 | WP-37 | S7 | Hill Alexandria | Post-call summary email template v0 for D-05 (caller/number/need/urgency/next step) |
 | 2026-02-24 | WP-38 | S7 | Mann Wesley J | Summary field accuracy 1.00; invent 0.00; omit 0.00 vs ground-truth notes (H-S7-01) |
 | 2026-02-25 | WP-39 | S7 | Mann Wesley J | Call-end to email latency distribution retained for U3 (n=20; p50=5.0s) |
+| 2026-02-26 | WP-40 | S7 | Roantree Timothy I | Summary FM delay/wrong-number/hallucination logged; invent kept as defect (RJ-S7-01) |

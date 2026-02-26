@@ -1,7 +1,7 @@
 {
   "board_id": "WP-STATUS-BOARD",
-  "version": "v0.3",
-  "updated_card": "WP-39",
+  "version": "v0.4",
+  "updated_card": "WP-40",
   "label": "Executed",
   "uncertainties": {
     "U1": {
@@ -36,9 +36,10 @@
       "evidence_pointers": [
         {"card": "WP-37", "label": "Executed", "note": "Summary email template D-05 v0"},
         {"card": "WP-38", "label": "Executed", "note": "Summary field accuracy invent/omit vs ground truth"},
-        {"card": "WP-39", "label": "Executed", "note": "Call-end to email latency distribution retained"}
+        {"card": "WP-39", "label": "Executed", "note": "Call-end to email latency distribution retained"},
+        {"card": "WP-40", "label": "Executed", "note": "Summary FM: delay / wrong number / hallucinated service; invent=defect"}
       ],
-      "notes": "Partial: summary fidelity + latency on Executed lab path; concurrency under load still later (S8)."
+      "notes": "Partial: summary fidelity + latency + failure-mode library on Executed path; concurrency under load still later (S8)."
     },
     "System": {
       "status": "Open",

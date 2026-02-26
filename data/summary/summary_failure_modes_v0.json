@@ -1,0 +1,94 @@
+{
+  "library_id": "WP-SUMMARY-FM",
+  "version": "v0",
+  "sprint": "S7",
+  "card": "WP-40",
+  "label": "Executed",
+  "uncertainty": "U3",
+  "linked": {
+    "template": "WP-SUMMARY-EMAIL @ v0",
+    "accuracy": "WP-38",
+    "latency": "WP-39"
+  },
+  "scoring_rule": {
+    "id": "RJ-S7-01",
+    "rule": "Invent cases are defects, never passes",
+    "applies_to": ["SF-INVENT", "SF-HALLUC-SVC", "SF-WRONG-NUM"]
+  },
+  "modes": [
+    {
+      "id": "SF-DELAY",
+      "name": "Delayed email",
+      "description": "Summary email arrives late after call_end (latency above draft working band)",
+      "severity": "Major",
+      "u3_link": "timeliness"
+    },
+    {
+      "id": "SF-WRONG-NUM",
+      "name": "Wrong number",
+      "description": "Summary lists a callback number that does not match ground-truth call notes",
+      "severity": "Critical",
+      "u3_link": "accuracy"
+    },
+    {
+      "id": "SF-HALLUC-SVC",
+      "name": "Hallucinated service type",
+      "description": "Summary invents or swaps service/need without support in call notes",
+      "severity": "Critical",
+      "u3_link": "accuracy"
+    },
+    {
+      "id": "SF-INVENT",
+      "name": "Invented field (generic)",
+      "description": "Any summary field filled without ground-truth support; always a defect",
+      "severity": "Critical",
+      "u3_link": "accuracy"
+    }
+  ],
+  "probes": [
+    {
+      "probe_id": "SF-P01",
+      "mode_id": "SF-DELAY",
+      "script_id": "SCR-A01",
+      "observed": {
+        "latency_s": 19.5,
+        "draft_p95_max_s": 90.0,
+        "draft_alert_s": 15.0,
+        "email_received": true
+      },
+      "ground_truth_note": "LAT-15 style slow queue/deliver path"
+    },
+    {
+      "probe_id": "SF-P02",
+      "mode_id": "SF-WRONG-NUM",
+      "script_id": "SCR-E01",
+      "observed": {
+        "predicted_number": "647-555-9999",
+        "ground_truth_number": "647-555-0101"
+      },
+      "ground_truth_note": "Digit group swapped in summary body"
+    },
+    {
+      "probe_id": "SF-P03",
+      "mode_id": "SF-HALLUC-SVC",
+      "script_id": "SCR-C01",
+      "observed": {
+        "predicted_need": "roof estimate",
+        "ground_truth_need": null,
+        "call_notes": "Callback only; no job stated"
+      },
+      "ground_truth_note": "Service type invented on callback-only call"
+    },
+    {
+      "probe_id": "SF-P04",
+      "mode_id": "SF-INVENT",
+      "script_id": "SCR-I01",
+      "observed": {
+        "predicted_urgency": "immediate",
+        "ground_truth_urgency": null,
+        "call_notes": "Sam plumber; urgency not provided"
+      },
+      "ground_truth_note": "Urgency invented on incomplete intake"
+    }
+  ]
+}

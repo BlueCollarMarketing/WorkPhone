@@ -23,6 +23,7 @@ from .scoring import compare_to_baseline, score_pack
 from .session import run_demo_session
 from .status_board import load_board, render_board
 from .summary_email import demo_summary, load_template
+from .summary_failure_modes import evaluate_failure_modes, load_failure_modes
 from .summary_latency import load_latency_pack, measure_summary_latency
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -37,6 +38,7 @@ HANDOFF_RULES = ROOT / "data" / "handoff" / "handoff_rules_v0.json"
 SUMMARY_TMPL = ROOT / "data" / "summary" / "summary_email_template_v0.json"
 SUMMARY_GT = ROOT / "data" / "summary" / "ground_truth_call_notes_v0.json"
 SUMMARY_LAT = ROOT / "data" / "summary" / "summary_latency_runs_v0.json"
+SUMMARY_FM = ROOT / "data" / "summary" / "summary_failure_modes_v0.json"
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
 OUT = ROOT / "outputs"
@@ -458,6 +460,27 @@ def cmd_summary_latency(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_summary_fm(_: argparse.Namespace) -> int:
+    library = load_failure_modes(SUMMARY_FM)
+    report = evaluate_failure_modes(library)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s7_summary_failure_modes.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"Summary failure modes {report['library_id']} {report['version']} (WP-40)")
+    print(
+        f"probes={report['n_probes']} defects={report['n_defects']} "
+        f"invent_defects={report['invent_defects']} rule_ok={report['rule_ok']}"
+    )
+    for r in report["results"]:
+        mark = "DEFECT" if r["defect"] else "ok"
+        invent = " invent=defect" if r["invent_kept_as_defect"] else ""
+        print(f"  {r['probe_id']} {r['mode_id']}: {mark}{invent} ({r['detail']})")
+    for rj in report["rejected_configs"]:
+        print(f"  {rj['id']}: {rj['config']}")
+    print(f"Wrote {path}")
+    return 0 if report["rule_ok"] else 1
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -482,6 +505,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("summary", cmd_summary),
         ("measure-summary", cmd_measure_summary),
         ("summary-latency", cmd_summary_latency),
+        ("summary-fm", cmd_summary_fm),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -560,6 +584,9 @@ def main() -> int:
 
     p_sl = sub.add_parser("summary-latency", help="Measure call-end to email latency distribution for U3 (WP-39)")
     p_sl.set_defaults(func=cmd_summary_latency)
+
+    p_fm = sub.add_parser("summary-fm", help="Log summary failure modes delay/wrong-number/hallucination (WP-40)")
+    p_fm.set_defaults(func=cmd_summary_fm)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)
