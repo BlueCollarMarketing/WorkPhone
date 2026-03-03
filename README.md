@@ -36,6 +36,7 @@ python -m workphone_lab summary
 python -m workphone_lab measure-summary
 python -m workphone_lab summary-latency
 python -m workphone_lab summary-fm
+python -m workphone_lab gate-m4
 ```
 
 | Command | What it does |
@@ -62,6 +63,7 @@ python -m workphone_lab summary-fm
 | `measure-summary` | Summary invent/omit vs ground-truth notes (WP-38) -> `outputs/s7_summary_field_accuracy.json` |
 | `summary-latency` | Call-end to email latency distribution U3 (WP-39) -> `outputs/s7_summary_latency_distribution.json` |
 | `summary-fm` | Summary failure modes delay/wrong-num/hallucination (WP-40) -> `outputs/s7_summary_failure_modes.json` |
+| `gate-m4` | M4 intake+summary core path freeze / S7 close (WP-41) -> `outputs/s7_m4_intake_summary_freeze.json` |
 | `all` | Run full lab suite smoke check |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)  
@@ -75,6 +77,7 @@ Summary ground truth: `data/summary/ground_truth_call_notes_v0.json`
 Summary latency: `data/summary/summary_latency_runs_v0.json`  
 Summary failure modes: `data/summary/summary_failure_modes_v0.json`  
 Status board: `data/status/u1_u3_status_board.json`  
-Corpus gate: `data/gates/corpus_gate_m3.json`
+Corpus gate: `data/gates/corpus_gate_m3.json`  
+M4 freeze: `data/gates/m4_intake_summary_freeze.json`
 
 **Full smoke check:** `python -m workphone_lab all`

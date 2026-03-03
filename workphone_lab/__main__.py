@@ -15,6 +15,7 @@ from .handoff_rules import demo_handoff_rules, load_rules
 from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
 from .intake_map import load_field_map, validate_field_map
 from .intake_schema import load_schema, validate_schema_pack
+from .m4_freeze import evaluate_m4_freeze, load_m4_freeze
 from .measure_policy import measure_packs
 from .measure_summary import load_gt_pack, measure_summary_accuracy
 from .negative_intake import load_cases, run_negative_cases
@@ -41,6 +42,7 @@ SUMMARY_LAT = ROOT / "data" / "summary" / "summary_latency_runs_v0.json"
 SUMMARY_FM = ROOT / "data" / "summary" / "summary_failure_modes_v0.json"
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
+M4_FREEZE = ROOT / "data" / "gates" / "m4_intake_summary_freeze.json"
 OUT = ROOT / "outputs"
 
 
@@ -481,6 +483,29 @@ def cmd_summary_fm(_: argparse.Namespace) -> int:
     return 0 if report["rule_ok"] else 1
 
 
+def cmd_gate_m4(_: argparse.Namespace) -> int:
+    gate = load_m4_freeze(M4_FREEZE)
+    report = evaluate_m4_freeze(ROOT, gate)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s7_m4_intake_summary_freeze.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"M4 freeze {report['freeze_tag']} (WP-41)")
+    print(
+        f"present={report['summary']['present']} missing={report['summary']['missing']} "
+        f"gaps={report['summary']['explicit_gaps']} freeze_pass={report['summary']['freeze_pass']}"
+    )
+    for r in report["checklist"]:
+        print(f"  [{r['status']}] {r['item']} -> {r['location']}")
+    print("Explicit gaps (do not block freeze):")
+    for g in report["explicit_gaps"]:
+        print(f"  {g['id']} [{g['label']}] {g['item']}: {g['note']}")
+    for rj in report["rejected_configs"]:
+        print(f"  {rj['id']}: {rj['config']}")
+    print(f"S7 closed: {report['summary']['s7_closed']}")
+    print(f"Wrote {path}")
+    return 0 if report["summary"]["freeze_pass"] else 1
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -506,6 +531,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("measure-summary", cmd_measure_summary),
         ("summary-latency", cmd_summary_latency),
         ("summary-fm", cmd_summary_fm),
+        ("gate-m4", cmd_gate_m4),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -587,6 +613,9 @@ def main() -> int:
 
     p_fm = sub.add_parser("summary-fm", help="Log summary failure modes delay/wrong-number/hallucination (WP-40)")
     p_fm.set_defaults(func=cmd_summary_fm)
+
+    p_m4 = sub.add_parser("gate-m4", help="Freeze intake+summary core path for M4 / S7 close (WP-41)")
+    p_m4.set_defaults(func=cmd_gate_m4)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

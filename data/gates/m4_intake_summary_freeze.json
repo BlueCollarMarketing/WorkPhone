@@ -1,0 +1,85 @@
+{
+  "gate_id": "WP-M4-FREEZE",
+  "version": "v0",
+  "milestone": "M4",
+  "sprint": "S7",
+  "card": "WP-41",
+  "label": "Executed",
+  "rule": "Core intake + summary path versions are frozen for M4; changes require explicit gap waiver or new freeze revision",
+  "freeze_tag": "frozen@m4-v0",
+  "frozen_core_path": {
+    "intake": [
+      {"id": "WP-INTAKE-MAP", "version": "v0", "path": "data/intake/intake_field_map_v0.json", "deliverable": "D-04"},
+      {"id": "WP-INTAKE-SCHEMA", "version": "v0", "path": "data/intake/intake_schema_v0.json", "deliverable": "D-04"},
+      {"id": "WP-NEG-INTAKE", "version": "v0", "path": "data/intake/negative_intake_cases_v0.json"},
+      {"id": "WP-HANDOFF-RULES", "version": "v0", "path": "data/handoff/handoff_rules_v0.json"}
+    ],
+    "summary": [
+      {"id": "WP-SUMMARY-EMAIL", "version": "v0", "path": "data/summary/summary_email_template_v0.json", "deliverable": "D-05"},
+      {"id": "WP-SUMMARY-GT-NOTES", "version": "v0", "path": "data/summary/ground_truth_call_notes_v0.json"},
+      {"id": "WP-SUMMARY-LATENCY", "version": "v0", "path": "data/summary/summary_latency_runs_v0.json"},
+      {"id": "WP-SUMMARY-FM", "version": "v0", "path": "data/summary/summary_failure_modes_v0.json"}
+    ],
+    "linked_gates": [
+      {"id": "WP-REG-CORPUS", "version": "v0.1", "path": "data/corpus/regression_corpus.json", "milestone": "M3"},
+      {"id": "WP-DIALOGUE-v0", "version": "v0", "path": "data/policy/dialogue_policy_v0.json", "milestone": "M3"}
+    ]
+  },
+  "evidence_docs": [
+    {"item": "Intake schema note", "path": "docs/s6/WP-32-intake-schema-contractor-fields.md"},
+    {"item": "Required-field enforcement", "path": "docs/s6/WP-33-required-field-enforcement-handoffs.md"},
+    {"item": "Handoff channel rules", "path": "docs/s6/WP-34-handoff-rules-email-sms-crm.md"},
+    {"item": "Negative intake cases", "path": "docs/s6/WP-35-negative-intake-cases.md"},
+    {"item": "Summary email template", "path": "docs/s7/WP-37-post-call-summary-email-template.md"},
+    {"item": "Summary field accuracy", "path": "docs/s7/WP-38-summary-field-accuracy-invent-omit.md"},
+    {"item": "Summary latency distribution", "path": "docs/s7/WP-39-summary-latency-call-end-to-email.md"},
+    {"item": "Summary failure modes", "path": "docs/s7/WP-40-summary-failure-modes.md"}
+  ],
+  "explicit_gaps": [
+    {
+      "id": "GAP-M4-01",
+      "item": "Live CRM production write audit",
+      "status": "Missing",
+      "label": "Planned",
+      "note": "CRM stub only on Executed path (WP-34 / WP-36)"
+    },
+    {
+      "id": "GAP-M4-02",
+      "item": "Live SMTP / carrier email delivery",
+      "status": "Missing",
+      "label": "Planned",
+      "note": "Summary latency uses queue/email stub (WP-39)"
+    },
+    {
+      "id": "GAP-M4-03",
+      "item": "Concurrency under load",
+      "status": "Missing",
+      "label": "Planned",
+      "note": "U3 Partial; S8 concurrency cards"
+    },
+    {
+      "id": "GAP-M4-04",
+      "item": "Frozen absolute latency SLA",
+      "status": "Missing",
+      "label": "Draft",
+      "note": "p50/p95 remain Draft working targets until concurrency freeze"
+    }
+  ],
+  "rejected_configs": [
+    {
+      "id": "RJ-M4-01",
+      "config": "Silent bump of frozen intake/summary versions without new freeze note",
+      "reason": "Breaks M4 audit trail"
+    },
+    {
+      "id": "RJ-M4-02",
+      "config": "Treat Planned CRM/live SMTP as part of frozen Executed core path",
+      "reason": "Explicit gaps GAP-M4-01/02"
+    },
+    {
+      "id": "RJ-M4-03",
+      "config": "Mark invent cases as pass on frozen summary path",
+      "reason": "RJ-S7-01 retained"
+    }
+  ]
+}
