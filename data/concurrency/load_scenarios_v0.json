@@ -1,0 +1,70 @@
+{
+  "pack_id": "WP-CONC-SCENARIOS",
+  "version": "v0",
+  "sprint": "S8",
+  "card": "WP-42",
+  "label": "Executed",
+  "uncertainty": "U3",
+  "purpose": "Design load scenarios for 2 / 3 / N simultaneous inbound calls; document method and limits for U3 tests",
+  "method": {
+    "path": "Executed lab session lifecycle (ring-answer-greet-active-end)",
+    "overlap": "Start N inbound invites within stagger_ms of each other",
+    "scripts": "Rotate WP-SCR-v0 scripts across concurrent legs",
+    "metrics": [
+      "answer_delay_s (invite to answer)",
+      "drop_or_reject (Y/N)",
+      "stuck_session (Y/N at idle end)",
+      "summary_queue_backlog (optional link to WP-39)"
+    ],
+    "pass_fail_draft": {
+      "max_answer_delay_s": 8.0,
+      "max_drop_rate": 0.0,
+      "stuck_sessions_allowed": 0
+    },
+    "next_card": "WP-43 measures break-point N under these scenarios"
+  },
+  "limits": {
+    "lab_soft_cap_n": 5,
+    "lab_hard_cap_n": 8,
+    "provider_concurrent_channels": {
+      "value": null,
+      "label": "Planned",
+      "note": "Carrier/SIP channel limit not Confirmed on Executed path"
+    },
+    "notes": [
+      "N in LOAD-N uses lab_soft_cap_n as the designed working N for U3 tests",
+      "Break-point search (WP-43) may raise N up to lab_hard_cap_n on lab path only",
+      "Do not claim production concurrency until provider cap is Confirmed"
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "LOAD-2",
+      "simultaneous_calls": 2,
+      "stagger_ms": 100,
+      "duration_hint_s": 60,
+      "script_rotation": ["SCR-E01", "SCR-S01"],
+      "intent": "Baseline dual inbound overlap",
+      "u3_focus": "answer delay under light concurrency"
+    },
+    {
+      "id": "LOAD-3",
+      "simultaneous_calls": 3,
+      "stagger_ms": 100,
+      "duration_hint_s": 60,
+      "script_rotation": ["SCR-E01", "SCR-S01", "SCR-C01"],
+      "intent": "Triple inbound; mix estimate/service/callback",
+      "u3_focus": "drop risk and greet contention"
+    },
+    {
+      "id": "LOAD-N",
+      "simultaneous_calls": 5,
+      "n_source": "lab_soft_cap_n",
+      "stagger_ms": 150,
+      "duration_hint_s": 90,
+      "script_rotation": ["SCR-E01", "SCR-S01", "SCR-A01", "SCR-I01", "SCR-C01"],
+      "intent": "Designed working-N load for U3 tests",
+      "u3_focus": "approach soft cap; feed break-point search"
+    }
+  ]
+}

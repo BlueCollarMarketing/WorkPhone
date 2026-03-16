@@ -43,3 +43,4 @@
 | 2026-02-25 | WP-39 | S7 | Mann Wesley J | Call-end to email latency distribution retained for U3 (n=20; p50=5.0s) |
 | 2026-02-26 | WP-40 | S7 | Roantree Timothy I | Summary FM delay/wrong-number/hallucination logged; invent kept as defect (RJ-S7-01) |
 | 2026-03-03 | WP-41 | S7 | Roantree Timothy I | M4 freeze frozen@m4-v0: intake+summary core path; gaps listed; S7 closed |
+| 2026-03-16 | WP-42 | S8 | Damczyk Jennifer | Concurrency load scenarios LOAD-2/3/N designed; soft_cap N=5 for U3 tests |

@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 from .clarification import run_clarification_pack
+from .concurrency_scenarios import design_report, load_scenarios
 from .corpus import load_corpus, validate_corpus
 from .corpus_gate import evaluate_corpus_gate, load_json
 from .dialogue_policy import demo_policy, load_policy
@@ -40,6 +41,7 @@ SUMMARY_TMPL = ROOT / "data" / "summary" / "summary_email_template_v0.json"
 SUMMARY_GT = ROOT / "data" / "summary" / "ground_truth_call_notes_v0.json"
 SUMMARY_LAT = ROOT / "data" / "summary" / "summary_latency_runs_v0.json"
 SUMMARY_FM = ROOT / "data" / "summary" / "summary_failure_modes_v0.json"
+CONC_SCENARIOS = ROOT / "data" / "concurrency" / "load_scenarios_v0.json"
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
 M4_FREEZE = ROOT / "data" / "gates" / "m4_intake_summary_freeze.json"
@@ -506,6 +508,28 @@ def cmd_gate_m4(_: argparse.Namespace) -> int:
     return 0 if report["summary"]["freeze_pass"] else 1
 
 
+def cmd_concurrency_scenarios(_: argparse.Namespace) -> int:
+    pack = load_scenarios(CONC_SCENARIOS)
+    report = design_report(pack)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s8_concurrency_load_scenarios.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"Concurrency load scenarios {report['pack_id']} {report['version']} (WP-42 / U3)")
+    print(
+        f"soft_cap_n={report['limits']['lab_soft_cap_n']} "
+        f"hard_cap_n={report['limits']['lab_hard_cap_n']} design_ok={report['design_ok']}"
+    )
+    for sc in report["scenarios"]:
+        print(
+            f"  {sc['id']}: N={sc['simultaneous_calls']} stagger_ms={sc['stagger_ms']} "
+            f"legs={len(sc['dry_run_legs'])} ok={sc['design_ok']}"
+        )
+    for err in report["errors"]:
+        print(f"  ERROR: {err}")
+    print(f"Wrote {path}")
+    return 0 if report["design_ok"] else 1
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -532,6 +556,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("summary-latency", cmd_summary_latency),
         ("summary-fm", cmd_summary_fm),
         ("gate-m4", cmd_gate_m4),
+        ("concurrency-scenarios", cmd_concurrency_scenarios),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -616,6 +641,9 @@ def main() -> int:
 
     p_m4 = sub.add_parser("gate-m4", help="Freeze intake+summary core path for M4 / S7 close (WP-41)")
     p_m4.set_defaults(func=cmd_gate_m4)
+
+    p_cs = sub.add_parser("concurrency-scenarios", help="Design 2/3/N inbound load scenarios for U3 (WP-42)")
+    p_cs.set_defaults(func=cmd_concurrency_scenarios)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)
