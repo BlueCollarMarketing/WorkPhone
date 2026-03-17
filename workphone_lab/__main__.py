@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 from .clarification import run_clarification_pack
+from .concurrency_breakpoint import load_breakpoint_config, measure_breakpoint
 from .concurrency_scenarios import design_report, load_scenarios
 from .corpus import load_corpus, validate_corpus
 from .corpus_gate import evaluate_corpus_gate, load_json
@@ -42,6 +43,7 @@ SUMMARY_GT = ROOT / "data" / "summary" / "ground_truth_call_notes_v0.json"
 SUMMARY_LAT = ROOT / "data" / "summary" / "summary_latency_runs_v0.json"
 SUMMARY_FM = ROOT / "data" / "summary" / "summary_failure_modes_v0.json"
 CONC_SCENARIOS = ROOT / "data" / "concurrency" / "load_scenarios_v0.json"
+CONC_BREAK = ROOT / "data" / "concurrency" / "breakpoint_config_v0.json"
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
 M4_FREEZE = ROOT / "data" / "gates" / "m4_intake_summary_freeze.json"
@@ -530,6 +532,31 @@ def cmd_concurrency_scenarios(_: argparse.Namespace) -> int:
     return 0 if report["design_ok"] else 1
 
 
+def cmd_concurrency_breakpoint(_: argparse.Namespace) -> int:
+    cfg = load_breakpoint_config(CONC_BREAK)
+    report = measure_breakpoint(cfg)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s8_concurrency_breakpoint.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"Concurrency breakpoint (WP-43 / {report['hypothesis_id']})")
+    print(
+        f"break_point_n={report['break_point_n']} last_ok_n={report['last_ok_n']} "
+        f"supported={report['hypothesis_supported']}"
+    )
+    for row in report["sweep"]:
+        mark = "OK" if row["within_limits"] else "FAIL:" + ",".join(row["fail_reasons"])
+        print(
+            f"  N={row['n']}: max_delay={row['max_answer_delay_s']} "
+            f"drop_rate={row['drop_rate']} {mark}"
+        )
+    exe = report["provider_configs"]["executed"]
+    plan = report["provider_configs"]["planned"]
+    print(f"  provider Executed: {exe['numbering']}")
+    print(f"  provider Planned: {plan['alternate_sip_trunk']} (limit unset)")
+    print(f"Wrote {path}")
+    return 0 if report["hypothesis_supported"] else 1
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -557,6 +584,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("summary-fm", cmd_summary_fm),
         ("gate-m4", cmd_gate_m4),
         ("concurrency-scenarios", cmd_concurrency_scenarios),
+        ("concurrency-breakpoint", cmd_concurrency_breakpoint),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -644,6 +672,9 @@ def main() -> int:
 
     p_cs = sub.add_parser("concurrency-scenarios", help="Design 2/3/N inbound load scenarios for U3 (WP-42)")
     p_cs.set_defaults(func=cmd_concurrency_scenarios)
+
+    p_cb = sub.add_parser("concurrency-breakpoint", help="Measure concurrent drop/answer-delay break-point N (WP-43)")
+    p_cb.set_defaults(func=cmd_concurrency_breakpoint)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

@@ -1,7 +1,7 @@
 {
   "board_id": "WP-STATUS-BOARD",
-  "version": "v0.5",
-  "updated_card": "WP-42",
+  "version": "v0.6",
+  "updated_card": "WP-43",
   "label": "Executed",
   "uncertainties": {
     "U1": {
@@ -38,9 +38,10 @@
         {"card": "WP-38", "label": "Executed", "note": "Summary field accuracy invent/omit vs ground truth"},
         {"card": "WP-39", "label": "Executed", "note": "Call-end to email latency distribution retained"},
         {"card": "WP-40", "label": "Executed", "note": "Summary FM: delay / wrong number / hallucinated service; invent=defect"},
-        {"card": "WP-42", "label": "Executed", "note": "Concurrency load scenarios LOAD-2 / LOAD-3 / LOAD-N designed"}
+        {"card": "WP-42", "label": "Executed", "note": "Concurrency load scenarios LOAD-2 / LOAD-3 / LOAD-N designed"},
+        {"card": "WP-43", "label": "Executed", "note": "Break-point N=6 (last_ok=5); drop/answer-delay limits logged"}
       ],
-      "notes": "Partial: summary path + concurrency scenario design on Executed lab; break-point N and provider caps still later S8 cards."
+      "notes": "Partial: summary path + concurrency scenarios + break-point on Executed lab; provider channel cap still Planned; queue/error pack next."
     },
     "System": {
       "status": "Open",
