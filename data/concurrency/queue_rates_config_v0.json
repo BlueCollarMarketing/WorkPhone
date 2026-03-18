@@ -1,0 +1,31 @@
+{
+  "pack_id": "WP-CONC-QUEUE-RATES",
+  "version": "v0",
+  "sprint": "S8",
+  "card": "WP-44",
+  "label": "Executed",
+  "uncertainty": "U3",
+  "u3_pack": "WP-U3-CONCURRENCY",
+  "linked": {
+    "scenarios": "data/concurrency/load_scenarios_v0.json",
+    "breakpoint": "data/concurrency/breakpoint_config_v0.json"
+  },
+  "safe_n": 5,
+  "queue_depth_limit": 5,
+  "load_points": [
+    {"id": "LOAD-2", "n": 2, "stagger_ms": 100},
+    {"id": "LOAD-3", "n": 3, "stagger_ms": 100},
+    {"id": "LOAD-N", "n": 5, "stagger_ms": 150},
+    {"id": "LOAD-BP", "n": 6, "stagger_ms": 100, "note": "break-point N from WP-43"}
+  ],
+  "error_classes": [
+    {"id": "E-QUEUE-FULL", "description": "Inbound invite rejected; queue at depth limit"},
+    {"id": "E-DROP", "description": "Session dropped / rejected under concurrency"},
+    {"id": "E-ANSWER-TIMEOUT", "description": "Answer delay exceeded threshold before connect"},
+    {"id": "E-PROVIDER-BLIP", "description": "Transient provider error on Executed forward path"}
+  ],
+  "provider_log_template": {
+    "source": "Executed lab forward path",
+    "fields": ["ts", "n", "leg", "event", "error_class", "queue_depth", "detail"]
+  }
+}

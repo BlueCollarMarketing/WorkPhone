@@ -45,3 +45,4 @@
 | 2026-03-03 | WP-41 | S7 | Roantree Timothy I | M4 freeze frozen@m4-v0: intake+summary core path; gaps listed; S7 closed |
 | 2026-03-16 | WP-42 | S8 | Damczyk Jennifer | Concurrency load scenarios LOAD-2/3/N designed; soft_cap N=5 for U3 tests |
 | 2026-03-17 | WP-43 | S8 | Adesanya Okunade K | Concurrent break-point N=6 (last_ok=5); drop/delay limits logged; H-S8-01 |
+| 2026-03-18 | WP-44 | S8 | Damczyk Jennifer | Queue/drop/error rates under load; provider logs retained in U3 concurrency pack |

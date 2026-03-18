@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .clarification import run_clarification_pack
 from .concurrency_breakpoint import load_breakpoint_config, measure_breakpoint
+from .concurrency_queue_rates import load_queue_config, measure_queue_rates
 from .concurrency_scenarios import design_report, load_scenarios
 from .corpus import load_corpus, validate_corpus
 from .corpus_gate import evaluate_corpus_gate, load_json
@@ -44,6 +45,7 @@ SUMMARY_LAT = ROOT / "data" / "summary" / "summary_latency_runs_v0.json"
 SUMMARY_FM = ROOT / "data" / "summary" / "summary_failure_modes_v0.json"
 CONC_SCENARIOS = ROOT / "data" / "concurrency" / "load_scenarios_v0.json"
 CONC_BREAK = ROOT / "data" / "concurrency" / "breakpoint_config_v0.json"
+CONC_QUEUE = ROOT / "data" / "concurrency" / "queue_rates_config_v0.json"
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
 M4_FREEZE = ROOT / "data" / "gates" / "m4_intake_summary_freeze.json"
@@ -557,6 +559,43 @@ def cmd_concurrency_breakpoint(_: argparse.Namespace) -> int:
     return 0 if report["hypothesis_supported"] else 1
 
 
+def cmd_concurrency_queue(_: argparse.Namespace) -> int:
+    cfg = load_queue_config(CONC_QUEUE)
+    report = measure_queue_rates(cfg)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s8_concurrency_queue_rates.json"
+    logs_path = OUT / "s8_u3_concurrency_provider_logs.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    logs_path.write_text(
+        json.dumps(
+            {
+                "u3_pack": report["u3_pack"],
+                "card": "WP-44",
+                "label": "Executed",
+                "retained": True,
+                "n_logs": report["provider_log_count"],
+                "logs": report["provider_logs"],
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    agg = report["aggregate"]
+    print(f"Queue/drop/error rates under load (WP-44 / {report['u3_pack']})")
+    print(
+        f"aggregate drop_rate={agg['queue_drop_rate']} error_rate={agg['error_rate']} "
+        f"answer_rate={agg['answer_rate']} offered={agg['offered']}"
+    )
+    for row in report["results"]:
+        print(
+            f"  {row['id']} N={row['n']}: drop={row['queue_drop_rate']} "
+            f"error={row['error_rate']} answered={row['answered']}/{row['offered']}"
+        )
+    print(f"provider logs retained: {report['provider_log_count']} -> {logs_path.name}")
+    print(f"Wrote {path}")
+    return 0
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -585,6 +624,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("gate-m4", cmd_gate_m4),
         ("concurrency-scenarios", cmd_concurrency_scenarios),
         ("concurrency-breakpoint", cmd_concurrency_breakpoint),
+        ("concurrency-queue", cmd_concurrency_queue),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -675,6 +715,9 @@ def main() -> int:
 
     p_cb = sub.add_parser("concurrency-breakpoint", help="Measure concurrent drop/answer-delay break-point N (WP-43)")
     p_cb.set_defaults(func=cmd_concurrency_breakpoint)
+
+    p_cq = sub.add_parser("concurrency-queue", help="Measure queue/drop/error rates under load; retain provider logs (WP-44)")
+    p_cq.set_defaults(func=cmd_concurrency_queue)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)
