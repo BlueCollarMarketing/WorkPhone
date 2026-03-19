@@ -8,6 +8,7 @@ from .clarification import run_clarification_pack
 from .concurrency_breakpoint import load_breakpoint_config, measure_breakpoint
 from .concurrency_queue_rates import load_queue_config, measure_queue_rates
 from .concurrency_scenarios import design_report, load_scenarios
+from .concurrency_summary_fidelity import load_fidelity_config, spot_check_fidelity
 from .corpus import load_corpus, validate_corpus
 from .corpus_gate import evaluate_corpus_gate, load_json
 from .dialogue_policy import demo_policy, load_policy
@@ -46,6 +47,7 @@ SUMMARY_FM = ROOT / "data" / "summary" / "summary_failure_modes_v0.json"
 CONC_SCENARIOS = ROOT / "data" / "concurrency" / "load_scenarios_v0.json"
 CONC_BREAK = ROOT / "data" / "concurrency" / "breakpoint_config_v0.json"
 CONC_QUEUE = ROOT / "data" / "concurrency" / "queue_rates_config_v0.json"
+CONC_FIDELITY = ROOT / "data" / "concurrency" / "summary_fidelity_under_load_v0.json"
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
 M4_FREEZE = ROOT / "data" / "gates" / "m4_intake_summary_freeze.json"
@@ -596,6 +598,33 @@ def cmd_concurrency_queue(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_concurrency_fidelity(_: argparse.Namespace) -> int:
+    cfg = load_fidelity_config(CONC_FIDELITY)
+    gt = load_gt_pack(SUMMARY_GT)
+    pack = json.loads(SCRIPTS.read_text(encoding="utf-8"))
+    scripts_by_id = {s["id"]: s for s in pack["scripts"]}
+    report = spot_check_fidelity(cfg, gt, scripts_by_id)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s8_summary_fidelity_under_load.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"Summary fidelity under load (WP-45 / {report['hypothesis_id']})")
+    print(
+        f"collapse_flagged={report['collapse_flagged']} rule_ok={report['rule_ok']} "
+        f"supported={report['hypothesis_supported']}"
+    )
+    for row in report["results"]:
+        collapse = " COLLAPSE" if row["silent_collapse_flagged"] else ""
+        print(
+            f"  {row['id']} N={row['n']}: acc={row['field_accuracy']} "
+            f"invent={row['invent_count']} omit={row['omit_count']} "
+            f"pass={row['check_pass']}{collapse}"
+        )
+    for rj in report["rejected_configs"]:
+        print(f"  {rj['id']}: {rj['config']}")
+    print(f"Wrote {path}")
+    return 0 if report["hypothesis_supported"] else 1
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -625,6 +654,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("concurrency-scenarios", cmd_concurrency_scenarios),
         ("concurrency-breakpoint", cmd_concurrency_breakpoint),
         ("concurrency-queue", cmd_concurrency_queue),
+        ("concurrency-fidelity", cmd_concurrency_fidelity),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -718,6 +748,9 @@ def main() -> int:
 
     p_cq = sub.add_parser("concurrency-queue", help="Measure queue/drop/error rates under load; retain provider logs (WP-44)")
     p_cq.set_defaults(func=cmd_concurrency_queue)
+
+    p_cf = sub.add_parser("concurrency-fidelity", help="Spot-check summary fidelity under load; flag invent/omit collapse (WP-45)")
+    p_cf.set_defaults(func=cmd_concurrency_fidelity)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

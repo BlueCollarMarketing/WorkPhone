@@ -1,0 +1,58 @@
+{
+  "pack_id": "WP-CONC-SUMMARY-FIDELITY",
+  "version": "v0",
+  "sprint": "S8",
+  "card": "WP-45",
+  "label": "Executed",
+  "uncertainty": "U3",
+  "hypothesis": {
+    "id": "H-S8-02",
+    "statement": "Summary fidelity holds under concurrent load at or below safe_n; silent invent/omit collapse is flagged and never marked pass."
+  },
+  "rules": {
+    "invent_as_pass": false,
+    "omit_as_pass": false,
+    "id": "RJ-S8-01",
+    "text": "Do not mark invent/omit as pass under load"
+  },
+  "safe_n": 5,
+  "baseline_accuracy_min": 0.8,
+  "collapse_accuracy_max": 0.8,
+  "spot_checks": [
+    {
+      "id": "FID-LOAD-2",
+      "load_id": "LOAD-2",
+      "n": 2,
+      "mode": "faithful",
+      "note_ids": ["NOTE-E01", "NOTE-S01"]
+    },
+    {
+      "id": "FID-LOAD-3",
+      "load_id": "LOAD-3",
+      "n": 3,
+      "mode": "faithful",
+      "note_ids": ["NOTE-E01", "NOTE-S01", "NOTE-C01"]
+    },
+    {
+      "id": "FID-LOAD-N",
+      "load_id": "LOAD-N",
+      "n": 5,
+      "mode": "faithful",
+      "note_ids": ["NOTE-E01", "NOTE-S01", "NOTE-A01", "NOTE-I01", "NOTE-C01"]
+    },
+    {
+      "id": "FID-LOAD-BP-COLLAPSE",
+      "load_id": "LOAD-BP",
+      "n": 6,
+      "mode": "collapse_probe",
+      "note_ids": ["NOTE-C01", "NOTE-I01"],
+      "collapse": {
+        "description": "Silent quality collapse under overload: invent need/urgency on incomplete/callback notes",
+        "injections": {
+          "NOTE-C01": {"need": "roof estimate", "urgency": "immediate"},
+          "NOTE-I01": {"urgency": "immediate", "need": "emergency electrical"}
+        }
+      }
+    }
+  ]
+}

@@ -40,6 +40,7 @@ python -m workphone_lab gate-m4
 python -m workphone_lab concurrency-scenarios
 python -m workphone_lab concurrency-breakpoint
 python -m workphone_lab concurrency-queue
+python -m workphone_lab concurrency-fidelity
 ```
 
 | Command | What it does |
@@ -70,6 +71,7 @@ python -m workphone_lab concurrency-queue
 | `concurrency-scenarios` | Design 2/3/N inbound load scenarios U3 (WP-42) -> `outputs/s8_concurrency_load_scenarios.json` |
 | `concurrency-breakpoint` | Concurrent drop/answer-delay break-point N (WP-43) -> `outputs/s8_concurrency_breakpoint.json` |
 | `concurrency-queue` | Queue/drop/error rates + provider logs U3 (WP-44) -> `outputs/s8_concurrency_queue_rates.json` |
+| `concurrency-fidelity` | Summary fidelity under load; invent/omit not pass (WP-45) -> `outputs/s8_summary_fidelity_under_load.json` |
 | `all` | Run full lab suite smoke check |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)  
@@ -85,6 +87,7 @@ Summary failure modes: `data/summary/summary_failure_modes_v0.json`
 Concurrency scenarios: `data/concurrency/load_scenarios_v0.json`  
 Concurrency breakpoint: `data/concurrency/breakpoint_config_v0.json`  
 Concurrency queue rates: `data/concurrency/queue_rates_config_v0.json`  
+Concurrency fidelity: `data/concurrency/summary_fidelity_under_load_v0.json`  
 U3 concurrency pack: `data/concurrency/u3_concurrency_pack_v0.json`  
 Status board: `data/status/u1_u3_status_board.json`  
 Corpus gate: `data/gates/corpus_gate_m3.json`  

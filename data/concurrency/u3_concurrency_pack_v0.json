@@ -1,14 +1,15 @@
 {
   "pack_id": "WP-U3-CONCURRENCY",
-  "version": "v0.1",
+  "version": "v0.2",
   "sprint": "S8",
   "label": "Executed",
   "uncertainty": "U3",
-  "updated_card": "WP-44",
+  "updated_card": "WP-45",
   "artifacts": [
     {"card": "WP-42", "path": "data/concurrency/load_scenarios_v0.json", "export": "outputs/s8_concurrency_load_scenarios.json"},
     {"card": "WP-43", "path": "data/concurrency/breakpoint_config_v0.json", "export": "outputs/s8_concurrency_breakpoint.json"},
     {"card": "WP-44", "path": "data/concurrency/queue_rates_config_v0.json", "export": "outputs/s8_concurrency_queue_rates.json"},
-    {"card": "WP-44", "path": "outputs/s8_u3_concurrency_provider_logs.json", "note": "provider logs retained"}
+    {"card": "WP-44", "path": "outputs/s8_u3_concurrency_provider_logs.json", "note": "provider logs retained"},
+    {"card": "WP-45", "path": "data/concurrency/summary_fidelity_under_load_v0.json", "export": "outputs/s8_summary_fidelity_under_load.json"}
   ]
 }
