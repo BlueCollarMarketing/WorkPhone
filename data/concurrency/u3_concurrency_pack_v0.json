@@ -1,15 +1,18 @@
 {
   "pack_id": "WP-U3-CONCURRENCY",
-  "version": "v0.2",
+  "version": "v0.3",
   "sprint": "S8",
   "label": "Executed",
   "uncertainty": "U3",
-  "updated_card": "WP-45",
+  "updated_card": "WP-46",
+  "gate": "WP-S8-EVIDENCE-GATE",
+  "limits_statement_id": "U3-LIMITS-v0",
   "artifacts": [
     {"card": "WP-42", "path": "data/concurrency/load_scenarios_v0.json", "export": "outputs/s8_concurrency_load_scenarios.json"},
     {"card": "WP-43", "path": "data/concurrency/breakpoint_config_v0.json", "export": "outputs/s8_concurrency_breakpoint.json"},
     {"card": "WP-44", "path": "data/concurrency/queue_rates_config_v0.json", "export": "outputs/s8_concurrency_queue_rates.json"},
     {"card": "WP-44", "path": "outputs/s8_u3_concurrency_provider_logs.json", "note": "provider logs retained"},
-    {"card": "WP-45", "path": "data/concurrency/summary_fidelity_under_load_v0.json", "export": "outputs/s8_summary_fidelity_under_load.json"}
+    {"card": "WP-45", "path": "data/concurrency/summary_fidelity_under_load_v0.json", "export": "outputs/s8_summary_fidelity_under_load.json"},
+    {"card": "WP-46", "path": "data/gates/s8_concurrency_evidence_gate.json", "export": "outputs/s8_evidence_gate.json", "note": "Evidence Gate + limits statement"}
   ]
 }

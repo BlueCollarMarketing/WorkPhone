@@ -1,0 +1,61 @@
+{
+  "gate_id": "WP-S8-EVIDENCE-GATE",
+  "version": "v0",
+  "sprint": "S8",
+  "card": "WP-46",
+  "milestone": "U3-concurrency-pack",
+  "label": "Executed",
+  "uncertainty": "U3",
+  "limits_statement": {
+    "id": "U3-LIMITS-v0",
+    "safe_n": 5,
+    "break_point_n": 6,
+    "max_answer_delay_s": 8.0,
+    "max_drop_rate_at_or_below_safe_n": 0.0,
+    "lab_hard_cap_n": 8,
+    "provider_channel_limit": {
+      "value": null,
+      "label": "Planned",
+      "note": "Not Confirmed; do not claim production concurrency"
+    },
+    "summary_under_load": {
+      "faithful_through_safe_n": true,
+      "invent_omit_as_pass": false,
+      "rule": "RJ-S8-01"
+    },
+    "text": "Executed lab concurrency: operate at or below safe_n=5. Break-point N=6 (excess answer delay and/or drop). Answer delay limit 8.0s. Invent/omit under load are defects. Provider concurrent channel limit remains Planned."
+  },
+  "checklist": [
+    {"item": "Load scenarios LOAD-2/3/N", "path": "data/concurrency/load_scenarios_v0.json", "cards": ["WP-42"], "regenerable": false},
+    {"item": "Breakpoint config", "path": "data/concurrency/breakpoint_config_v0.json", "cards": ["WP-43"], "regenerable": false},
+    {"item": "Queue/drop/error rates config", "path": "data/concurrency/queue_rates_config_v0.json", "cards": ["WP-44"], "regenerable": false},
+    {"item": "Summary fidelity under load config", "path": "data/concurrency/summary_fidelity_under_load_v0.json", "cards": ["WP-45"], "regenerable": false},
+    {"item": "U3 concurrency pack index", "path": "data/concurrency/u3_concurrency_pack_v0.json", "cards": ["WP-44", "WP-45", "WP-46"], "regenerable": false},
+    {"item": "Load scenarios note", "path": "docs/s8/WP-42-concurrency-load-scenarios.md", "cards": ["WP-42"], "regenerable": false},
+    {"item": "Breakpoint note", "path": "docs/s8/WP-43-concurrent-drop-answer-delay.md", "cards": ["WP-43"], "regenerable": false},
+    {"item": "Queue rates note", "path": "docs/s8/WP-44-queue-drop-error-rates.md", "cards": ["WP-44"], "regenerable": false},
+    {"item": "Fidelity under load note", "path": "docs/s8/WP-45-summary-fidelity-under-load.md", "cards": ["WP-45"], "regenerable": false},
+    {"item": "Load scenarios export", "path": "outputs/s8_concurrency_load_scenarios.json", "cards": ["WP-42"], "regenerable": true},
+    {"item": "Breakpoint export", "path": "outputs/s8_concurrency_breakpoint.json", "cards": ["WP-43"], "regenerable": true},
+    {"item": "Queue rates export", "path": "outputs/s8_concurrency_queue_rates.json", "cards": ["WP-44"], "regenerable": true},
+    {"item": "Provider logs retained", "path": "outputs/s8_u3_concurrency_provider_logs.json", "cards": ["WP-44"], "regenerable": true},
+    {"item": "Fidelity under load export", "path": "outputs/s8_summary_fidelity_under_load.json", "cards": ["WP-45"], "regenerable": true}
+  ],
+  "rejected_configs": [
+    {
+      "id": "RJ-S8-01",
+      "config": "Mark invent/omit as pass under concurrent load",
+      "reason": "Silent quality collapse must be flagged as defect"
+    },
+    {
+      "id": "RJ-S8-02",
+      "config": "Operate production above safe_n without Confirmed provider channel limit",
+      "reason": "Break-point N=6 on lab path; provider cap Planned"
+    },
+    {
+      "id": "RJ-S8-03",
+      "config": "Treat Planned SIP channel pool as Executed concurrency capacity",
+      "reason": "Evidence labels: Planned vs Executed"
+    }
+  ]
+}

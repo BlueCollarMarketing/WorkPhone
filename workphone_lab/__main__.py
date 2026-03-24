@@ -14,6 +14,7 @@ from .corpus_gate import evaluate_corpus_gate, load_json
 from .dialogue_policy import demo_policy, load_policy
 from .evidence_gate import gate_s4
 from .evidence_gate_s6 import gate_s6
+from .evidence_gate_s8 import gate_s8, load_s8_gate
 from .handoff_enforce import measure_enforcement
 from .handoff_rules import demo_handoff_rules, load_rules
 from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
@@ -51,6 +52,7 @@ CONC_FIDELITY = ROOT / "data" / "concurrency" / "summary_fidelity_under_load_v0.
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
 M4_FREEZE = ROOT / "data" / "gates" / "m4_intake_summary_freeze.json"
+S8_GATE = ROOT / "data" / "gates" / "s8_concurrency_evidence_gate.json"
 OUT = ROOT / "outputs"
 
 
@@ -625,6 +627,32 @@ def cmd_concurrency_fidelity(_: argparse.Namespace) -> int:
     return 0 if report["hypothesis_supported"] else 1
 
 
+def cmd_gate_s8(_: argparse.Namespace) -> int:
+    gate = load_s8_gate(S8_GATE)
+    report = gate_s8(ROOT, gate)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s8_evidence_gate.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    lim = report["limits_statement"]
+    print(f"Evidence Gate S8 concurrency pack (WP-46)")
+    print(
+        f"present={report['summary']['present']} missing={report['summary']['missing']} "
+        f"gate_pass={report['summary']['gate_pass']}"
+    )
+    print(
+        f"limits: safe_n={lim['safe_n']} break_point_n={lim.get('measured_break_point_n', lim['break_point_n'])} "
+        f"max_delay={lim['max_answer_delay_s']}s"
+    )
+    for r in report["checklist"]:
+        print(f"  [{r['status']}] {r['item']} -> {r['location']}")
+    for rj in report["rejected_configs"]:
+        print(f"  {rj['id']}: {rj['config']}")
+    print(f"U3 status: {report['summary']['u3_status']} ({report['summary']['u3_note']})")
+    print(f"S8 closed: {report['summary']['s8_closed']}")
+    print(f"Wrote {path}")
+    return 0 if report["summary"]["gate_pass"] else 1
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -655,6 +683,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("concurrency-breakpoint", cmd_concurrency_breakpoint),
         ("concurrency-queue", cmd_concurrency_queue),
         ("concurrency-fidelity", cmd_concurrency_fidelity),
+        ("gate-s8", cmd_gate_s8),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -751,6 +780,9 @@ def main() -> int:
 
     p_cf = sub.add_parser("concurrency-fidelity", help="Spot-check summary fidelity under load; flag invent/omit collapse (WP-45)")
     p_cf.set_defaults(func=cmd_concurrency_fidelity)
+
+    p_g8 = sub.add_parser("gate-s8", help="Evidence Gate concurrency pack + limits statement; U3 pointers (WP-46)")
+    p_g8.set_defaults(func=cmd_gate_s8)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

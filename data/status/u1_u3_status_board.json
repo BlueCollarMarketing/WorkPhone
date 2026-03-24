@@ -1,7 +1,7 @@
 {
   "board_id": "WP-STATUS-BOARD",
-  "version": "v0.8",
-  "updated_card": "WP-45",
+  "version": "v0.9",
+  "updated_card": "WP-46",
   "label": "Executed",
   "uncertainties": {
     "U1": {
@@ -41,9 +41,17 @@
         {"card": "WP-42", "label": "Executed", "note": "Concurrency load scenarios LOAD-2 / LOAD-3 / LOAD-N designed"},
         {"card": "WP-43", "label": "Executed", "note": "Break-point N=6 (last_ok=5); drop/answer-delay limits logged"},
         {"card": "WP-44", "label": "Executed", "note": "Queue/drop/error rates; provider logs in WP-U3-CONCURRENCY pack"},
-        {"card": "WP-45", "label": "Executed", "note": "Summary fidelity under load; silent collapse flagged; invent/omit not pass"}
+        {"card": "WP-45", "label": "Executed", "note": "Summary fidelity under load; silent collapse flagged; invent/omit not pass"},
+        {"card": "WP-46", "label": "Executed", "note": "S8 Evidence Gate: concurrency pack Present; U3-LIMITS-v0; S8 closed"}
       ],
-      "notes": "Partial: concurrency + summary-under-load evidenced on Executed lab; Evidence Gate / limits statement next (WP-46)."
+      "limits_statement": {
+        "id": "U3-LIMITS-v0",
+        "safe_n": 5,
+        "break_point_n": 6,
+        "max_answer_delay_s": 8.0,
+        "provider_channel_limit": "Planned (unset)"
+      },
+      "notes": "Partial: Executed lab concurrency pack + limits gated (S8 closed). Provider concurrent channel limit still Planned; not Confirmed closed."
     },
     "System": {
       "status": "Open",
