@@ -1,0 +1,114 @@
+{
+  "map_id": "WP-ONBOARD-MAP",
+  "version": "v0",
+  "deliverable": "D-07",
+  "sprint": "S9",
+  "card": "WP-47",
+  "label": "Executed",
+  "description": "Onboarding form fields to agent configuration (services, hours, voice)",
+  "mapping_path": {
+    "steps": [
+      "Contractor completes onboarding form (Executed lab form schema)",
+      "Validator checks required form groups: business, services, hours, voice",
+      "Mapper writes agent_config JSON for Workphone runtime",
+      "Config version stamped for D-07 audit"
+    ],
+    "form_schema": "data/onboarding/onboarding_form_schema_v0.json",
+    "map_file": "data/onboarding/onboarding_form_to_agent_config_v0.json",
+    "example_output": "outputs/s9_agent_config_demo.json"
+  },
+  "field_map": [
+    {
+      "form_field": "business_name",
+      "agent_path": "agent.identity.display_name",
+      "group": "business",
+      "required": true
+    },
+    {
+      "form_field": "trade_primary",
+      "agent_path": "agent.identity.primary_trade",
+      "group": "business",
+      "required": true
+    },
+    {
+      "form_field": "services",
+      "agent_path": "agent.services.offered",
+      "group": "services",
+      "required": true,
+      "notes": "List of service labels offered on inbound calls"
+    },
+    {
+      "form_field": "service_notes",
+      "agent_path": "agent.services.notes",
+      "group": "services",
+      "required": false
+    },
+    {
+      "form_field": "hours_weekday_open",
+      "agent_path": "agent.hours.weekday.open",
+      "group": "hours",
+      "required": true
+    },
+    {
+      "form_field": "hours_weekday_close",
+      "agent_path": "agent.hours.weekday.close",
+      "group": "hours",
+      "required": true
+    },
+    {
+      "form_field": "hours_saturday",
+      "agent_path": "agent.hours.saturday",
+      "group": "hours",
+      "required": false
+    },
+    {
+      "form_field": "hours_sunday",
+      "agent_path": "agent.hours.sunday",
+      "group": "hours",
+      "required": false
+    },
+    {
+      "form_field": "after_hours_mode",
+      "agent_path": "agent.hours.after_hours_mode",
+      "group": "hours",
+      "required": true,
+      "enum": ["answer", "voicemail", "forward"]
+    },
+    {
+      "form_field": "voice_id",
+      "agent_path": "agent.voice.voice_id",
+      "group": "voice",
+      "required": true
+    },
+    {
+      "form_field": "voice_style",
+      "agent_path": "agent.voice.style",
+      "group": "voice",
+      "required": true,
+      "enum": ["neutral", "friendly", "formal"]
+    },
+    {
+      "form_field": "greeting_template",
+      "agent_path": "agent.voice.greeting_template",
+      "group": "voice",
+      "required": false
+    }
+  ],
+  "groups": ["business", "services", "hours", "voice"],
+  "examples": {
+    "roofing_co": {
+      "business_name": "Summit Roofing Co",
+      "trade_primary": "roofing",
+      "services": ["estimate", "repair", "emergency leak"],
+      "service_notes": "Emergency leak triage after hours",
+      "hours_weekday_open": "08:00",
+      "hours_weekday_close": "17:00",
+      "hours_saturday": "09:00-13:00",
+      "hours_sunday": "closed",
+      "after_hours_mode": "answer",
+      "voice_id": "voice_trade_neutral_01",
+      "voice_style": "neutral",
+      "greeting_template": "Thanks for calling {{business_name}}. How can we help?"
+    }
+  }
+}

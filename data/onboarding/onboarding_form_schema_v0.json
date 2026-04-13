@@ -1,0 +1,22 @@
+{
+  "schema_id": "WP-ONBOARD-FORM",
+  "version": "v0",
+  "deliverable": "D-07",
+  "sprint": "S9",
+  "label": "Executed",
+  "required_groups": ["business", "services", "hours", "voice"],
+  "properties": {
+    "business_name": {"type": "string", "group": "business"},
+    "trade_primary": {"type": "string", "group": "business"},
+    "services": {"type": "string_list", "group": "services", "min_items": 1},
+    "service_notes": {"type": "string", "group": "services"},
+    "hours_weekday_open": {"type": "time", "group": "hours"},
+    "hours_weekday_close": {"type": "time", "group": "hours"},
+    "hours_saturday": {"type": "string", "group": "hours"},
+    "hours_sunday": {"type": "string", "group": "hours"},
+    "after_hours_mode": {"type": "enum", "group": "hours", "values": ["answer", "voicemail", "forward"]},
+    "voice_id": {"type": "string", "group": "voice"},
+    "voice_style": {"type": "enum", "group": "voice", "values": ["neutral", "friendly", "formal"]},
+    "greeting_template": {"type": "string", "group": "voice"}
+  }
+}

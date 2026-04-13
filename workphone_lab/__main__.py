@@ -24,6 +24,7 @@ from .m4_freeze import evaluate_m4_freeze, load_m4_freeze
 from .measure_policy import measure_packs
 from .measure_summary import load_gt_pack, measure_summary_accuracy
 from .negative_intake import load_cases, run_negative_cases
+from .onboarding_map import demo_onboarding, load_onboard_map
 from .ots_compare import compare_side_by_side
 from .scoring import compare_to_baseline, score_pack
 from .session import run_demo_session
@@ -49,6 +50,7 @@ CONC_SCENARIOS = ROOT / "data" / "concurrency" / "load_scenarios_v0.json"
 CONC_BREAK = ROOT / "data" / "concurrency" / "breakpoint_config_v0.json"
 CONC_QUEUE = ROOT / "data" / "concurrency" / "queue_rates_config_v0.json"
 CONC_FIDELITY = ROOT / "data" / "concurrency" / "summary_fidelity_under_load_v0.json"
+ONBOARD_MAP = ROOT / "data" / "onboarding" / "onboarding_form_to_agent_config_v0.json"
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
 M4_FREEZE = ROOT / "data" / "gates" / "m4_intake_summary_freeze.json"
@@ -653,6 +655,30 @@ def cmd_gate_s8(_: argparse.Namespace) -> int:
     return 0 if report["summary"]["gate_pass"] else 1
 
 
+def cmd_onboarding_map(_: argparse.Namespace) -> int:
+    mapping = load_onboard_map(ONBOARD_MAP)
+    report = demo_onboarding(mapping)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s9_onboarding_map_report.json"
+    demo_cfg = OUT / "s9_agent_config_demo.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    configs = [r["agent_config"] for r in report["results"] if r["agent_config"]]
+    if configs:
+        demo_cfg.write_text(json.dumps(configs[0], indent=2), encoding="utf-8")
+    print(f"Onboarding map {report['map_id']} {report['version']} ({report['deliverable']})")
+    print(f"fields={report['field_count']} groups={report['groups']} ok={report['ok']}")
+    for step in report["mapping_path"]["steps"]:
+        print(f"  path: {step}")
+    for r in report["results"]:
+        print(f"  [{r['example']}] form_ok={r['form_ok']} mapped={r['mapped_groups']}")
+        for e in r["errors"]:
+            print(f"    ERROR: {e}")
+    print(f"Wrote {path}")
+    if configs:
+        print(f"Wrote {demo_cfg}")
+    return 0 if report["ok"] else 1
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -684,6 +710,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("concurrency-queue", cmd_concurrency_queue),
         ("concurrency-fidelity", cmd_concurrency_fidelity),
         ("gate-s8", cmd_gate_s8),
+        ("onboarding-map", cmd_onboarding_map),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -783,6 +810,9 @@ def main() -> int:
 
     p_g8 = sub.add_parser("gate-s8", help="Evidence Gate concurrency pack + limits statement; U3 pointers (WP-46)")
     p_g8.set_defaults(func=cmd_gate_s8)
+
+    p_ob = sub.add_parser("onboarding-map", help="Map onboarding form fields to agent config D-07 (WP-47)")
+    p_ob.set_defaults(func=cmd_onboarding_map)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

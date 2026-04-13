@@ -48,3 +48,4 @@
 | 2026-03-18 | WP-44 | S8 | Damczyk Jennifer | Queue/drop/error rates under load; provider logs retained in U3 concurrency pack |
 | 2026-03-19 | WP-45 | S8 | Hill Alexandria | Summary fidelity spot-check under load; collapse flagged; invent/omit not pass (RJ-S8-01) |
 | 2026-03-24 | WP-46 | S8 | Mann Wesley J | Evidence Gate S8: concurrency pack Present; U3-LIMITS-v0; U3 Partial; S8 closed |
+| 2026-04-13 | WP-47 | S9 | Hill Alexandria | Onboarding form to agent config map v0 for D-07 (services/hours/voice) |
