@@ -43,6 +43,7 @@ python -m workphone_lab concurrency-queue
 python -m workphone_lab concurrency-fidelity
 python -m workphone_lab gate-s8
 python -m workphone_lab onboarding-map
+python -m workphone_lab trade-profiles
 ```
 
 | Command | What it does |
@@ -76,6 +77,7 @@ python -m workphone_lab onboarding-map
 | `concurrency-fidelity` | Summary fidelity under load; invent/omit not pass (WP-45) -> `outputs/s8_summary_fidelity_under_load.json` |
 | `gate-s8` | S8 Evidence Gate concurrency pack + limits (WP-46) -> `outputs/s8_evidence_gate.json` |
 | `onboarding-map` | Onboarding form to agent config D-07 (WP-47) -> `outputs/s9_onboarding_map_report.json` |
+| `trade-profiles` | Roofing vs plumbing side-by-side behaviour (WP-48) -> `outputs/s9_trade_profiles_side_by_side.json` |
 | `all` | Run full lab suite smoke check |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)  
@@ -95,6 +97,7 @@ Concurrency fidelity: `data/concurrency/summary_fidelity_under_load_v0.json`
 U3 concurrency pack: `data/concurrency/u3_concurrency_pack_v0.json`  
 Onboarding map: `data/onboarding/onboarding_form_to_agent_config_v0.json`  
 Onboarding form schema: `data/onboarding/onboarding_form_schema_v0.json`  
+Trade profiles: `data/onboarding/trade_profiles_v0.json`  
 Status board: `data/status/u1_u3_status_board.json`  
 Corpus gate: `data/gates/corpus_gate_m3.json`  
 M4 freeze: `data/gates/m4_intake_summary_freeze.json`  

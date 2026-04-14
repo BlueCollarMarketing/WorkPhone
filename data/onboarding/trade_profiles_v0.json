@@ -1,0 +1,55 @@
+{
+  "pack_id": "WP-TRADE-PROFILES",
+  "version": "v0",
+  "sprint": "S9",
+  "card": "WP-48",
+  "label": "Executed",
+  "deliverable": "D-07",
+  "hypothesis": {
+    "id": "H-S9-01",
+    "statement": "Two different trade profiles produce distinct correct agent behaviour on the same scripts."
+  },
+  "scripts_pack": "data/scripts/wp_scr_v0.json",
+  "profiles": {
+    "roofing": {
+      "profile_id": "PROFILE-ROOF",
+      "business_name": "Summit Roofing Co",
+      "trade_primary": "roofing",
+      "services": ["estimate", "repair", "emergency leak", "flashing", "ridge vent"],
+      "after_hours_mode": "answer",
+      "voice_style": "neutral",
+      "greeting": "Thanks for calling Summit Roofing Co. Roofing estimates and repairs - how can we help?",
+      "keywords": ["roof", "flashing", "ridge", "shingle", "leak"],
+      "preferred_path_hints": {
+        "estimate": "roof_estimate_intake",
+        "service": "roof_repair_intake",
+        "after_hours": "roof_after_hours_answer",
+        "incomplete": "roof_clarify_trade",
+        "callback": "roof_callback_queue"
+      }
+    },
+    "plumbing": {
+      "profile_id": "PROFILE-PLUMB",
+      "business_name": "Harbor Plumbing",
+      "trade_primary": "plumbing",
+      "services": ["estimate", "repair", "drain", "water heater", "emergency flood"],
+      "after_hours_mode": "forward",
+      "voice_style": "friendly",
+      "greeting": "Thanks for calling Harbor Plumbing. Drains, leaks, and water heaters - how can we help?",
+      "keywords": ["plumb", "sink", "drain", "pipe", "water heater", "leak"],
+      "preferred_path_hints": {
+        "estimate": "plumb_estimate_intake",
+        "service": "plumb_repair_intake",
+        "after_hours": "plumb_after_hours_forward",
+        "incomplete": "plumb_clarify_trade",
+        "callback": "plumb_callback_queue"
+      }
+    }
+  },
+  "correctness_rules": [
+    "Greeting must include business_name and trade-appropriate service language",
+    "after_hours_mode must match profile (roofing=answer, plumbing=forward)",
+    "Service path hint must differ by trade for the same scenario",
+    "Trade keyword affinity should prefer matching trade on script content"
+  ]
+}

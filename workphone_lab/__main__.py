@@ -32,6 +32,7 @@ from .status_board import load_board, render_board
 from .summary_email import demo_summary, load_template
 from .summary_failure_modes import evaluate_failure_modes, load_failure_modes
 from .summary_latency import load_latency_pack, measure_summary_latency
+from .trade_profiles import load_trade_profiles, side_by_side as trade_side_by_side
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "data" / "scripts" / "wp_scr_v0.json"
@@ -51,6 +52,7 @@ CONC_BREAK = ROOT / "data" / "concurrency" / "breakpoint_config_v0.json"
 CONC_QUEUE = ROOT / "data" / "concurrency" / "queue_rates_config_v0.json"
 CONC_FIDELITY = ROOT / "data" / "concurrency" / "summary_fidelity_under_load_v0.json"
 ONBOARD_MAP = ROOT / "data" / "onboarding" / "onboarding_form_to_agent_config_v0.json"
+TRADE_PROFILES = ROOT / "data" / "onboarding" / "trade_profiles_v0.json"
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
 M4_FREEZE = ROOT / "data" / "gates" / "m4_intake_summary_freeze.json"
@@ -679,6 +681,29 @@ def cmd_onboarding_map(_: argparse.Namespace) -> int:
     return 0 if report["ok"] else 1
 
 
+def cmd_trade_profiles(_: argparse.Namespace) -> int:
+    pack = load_trade_profiles(TRADE_PROFILES)
+    scripts = json.loads(SCRIPTS.read_text(encoding="utf-8"))["scripts"]
+    report = trade_side_by_side(pack, scripts)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s9_trade_profiles_side_by_side.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"Trade profiles side-by-side (WP-48 / {report['hypothesis_id']})")
+    print(
+        f"profiles={report['profiles']} n={report['n_scripts']} "
+        f"distinct_all={report['distinct_on_all']} both_correct={report['both_correct_on_all']} "
+        f"supported={report['hypothesis_supported']}"
+    )
+    for row in report["side_by_side"]:
+        print(
+            f"  {row['script_id']}: distinct={row['behaviours_distinct']} "
+            f"roof={row['roofing']['path_hint']} plumb={row['plumbing']['path_hint']} "
+            f"ah={row['roofing']['after_hours_action']}/{row['plumbing']['after_hours_action']}"
+        )
+    print(f"Wrote {path}")
+    return 0 if report["hypothesis_supported"] else 1
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -711,6 +736,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("concurrency-fidelity", cmd_concurrency_fidelity),
         ("gate-s8", cmd_gate_s8),
         ("onboarding-map", cmd_onboarding_map),
+        ("trade-profiles", cmd_trade_profiles),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -813,6 +839,9 @@ def main() -> int:
 
     p_ob = sub.add_parser("onboarding-map", help="Map onboarding form fields to agent config D-07 (WP-47)")
     p_ob.set_defaults(func=cmd_onboarding_map)
+
+    p_tp = sub.add_parser("trade-profiles", help="Side-by-side roofing vs plumbing agent behaviour (WP-48)")
+    p_tp.set_defaults(func=cmd_trade_profiles)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)
