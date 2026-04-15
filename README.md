@@ -44,6 +44,7 @@ python -m workphone_lab concurrency-fidelity
 python -m workphone_lab gate-s8
 python -m workphone_lab onboarding-map
 python -m workphone_lab trade-profiles
+python -m workphone_lab voice-greeting
 ```
 
 | Command | What it does |
@@ -78,6 +79,7 @@ python -m workphone_lab trade-profiles
 | `gate-s8` | S8 Evidence Gate concurrency pack + limits (WP-46) -> `outputs/s8_evidence_gate.json` |
 | `onboarding-map` | Onboarding form to agent config D-07 (WP-47) -> `outputs/s9_onboarding_map_report.json` |
 | `trade-profiles` | Roofing vs plumbing side-by-side behaviour (WP-48) -> `outputs/s9_trade_profiles_side_by_side.json` |
+| `voice-greeting` | Voice selection and greeting customization WS4 (WP-49) -> `outputs/s9_voice_greeting_ws4.json` |
 | `all` | Run full lab suite smoke check |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)  
@@ -98,6 +100,7 @@ U3 concurrency pack: `data/concurrency/u3_concurrency_pack_v0.json`
 Onboarding map: `data/onboarding/onboarding_form_to_agent_config_v0.json`  
 Onboarding form schema: `data/onboarding/onboarding_form_schema_v0.json`  
 Trade profiles: `data/onboarding/trade_profiles_v0.json`  
+Voice/greeting cases: `data/onboarding/voice_greeting_cases_v0.json`  
 Status board: `data/status/u1_u3_status_board.json`  
 Corpus gate: `data/gates/corpus_gate_m3.json`  
 M4 freeze: `data/gates/m4_intake_summary_freeze.json`  

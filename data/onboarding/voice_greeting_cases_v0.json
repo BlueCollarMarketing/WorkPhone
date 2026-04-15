@@ -1,0 +1,81 @@
+{
+  "pack_id": "WP-VOICE-GREETING",
+  "version": "v0",
+  "sprint": "S9",
+  "card": "WP-49",
+  "workstream": "WS4",
+  "label": "Executed",
+  "deliverable": "D-07",
+  "allowed_voices": [
+    {"voice_id": "voice_trade_neutral_01", "styles": ["neutral", "formal"]},
+    {"voice_id": "voice_trade_friendly_01", "styles": ["friendly", "neutral"]},
+    {"voice_id": "voice_trade_formal_01", "styles": ["formal"]}
+  ],
+  "allowed_styles": ["neutral", "friendly", "formal"],
+  "greeting_rules": [
+    "Must include business_name",
+    "Must be non-empty after trim",
+    "Must not invent unlisted trade services not on profile",
+    "Placeholder {{business_name}} must resolve"
+  ],
+  "cases": [
+    {
+      "case_id": "VG-OK-ROOF",
+      "profile_id": "PROFILE-ROOF",
+      "business_name": "Summit Roofing Co",
+      "voice_id": "voice_trade_neutral_01",
+      "voice_style": "neutral",
+      "greeting_template": "Thanks for calling {{business_name}}. Roofing estimates and repairs - how can we help?",
+      "expect": "accept"
+    },
+    {
+      "case_id": "VG-OK-PLUMB",
+      "profile_id": "PROFILE-PLUMB",
+      "business_name": "Harbor Plumbing",
+      "voice_id": "voice_trade_friendly_01",
+      "voice_style": "friendly",
+      "greeting_template": "Thanks for calling {{business_name}}. Drains, leaks, and water heaters - how can we help?",
+      "expect": "accept"
+    },
+    {
+      "case_id": "VG-FAIL-UNKNOWN-VOICE",
+      "profile_id": "PROFILE-ROOF",
+      "business_name": "Summit Roofing Co",
+      "voice_id": "voice_celebrity_clone_99",
+      "voice_style": "neutral",
+      "greeting_template": "Thanks for calling {{business_name}}.",
+      "expect": "fail",
+      "fail_reason": "voice_id not in allowed catalog"
+    },
+    {
+      "case_id": "VG-FAIL-STYLE-MISMATCH",
+      "profile_id": "PROFILE-PLUMB",
+      "business_name": "Harbor Plumbing",
+      "voice_id": "voice_trade_formal_01",
+      "voice_style": "friendly",
+      "greeting_template": "Thanks for calling {{business_name}}.",
+      "expect": "fail",
+      "fail_reason": "voice_style not allowed for voice_id"
+    },
+    {
+      "case_id": "VG-FAIL-EMPTY-GREETING",
+      "profile_id": "PROFILE-ROOF",
+      "business_name": "Summit Roofing Co",
+      "voice_id": "voice_trade_neutral_01",
+      "voice_style": "neutral",
+      "greeting_template": "   ",
+      "expect": "fail",
+      "fail_reason": "greeting empty after trim"
+    },
+    {
+      "case_id": "VG-FAIL-MISSING-BIZ",
+      "profile_id": "PROFILE-PLUMB",
+      "business_name": "Harbor Plumbing",
+      "voice_id": "voice_trade_friendly_01",
+      "voice_style": "friendly",
+      "greeting_template": "Thanks for calling us. How can we help?",
+      "expect": "fail",
+      "fail_reason": "greeting missing business_name"
+    }
+  ]
+}

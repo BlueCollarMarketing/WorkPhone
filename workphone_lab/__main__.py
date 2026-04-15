@@ -33,6 +33,7 @@ from .summary_email import demo_summary, load_template
 from .summary_failure_modes import evaluate_failure_modes, load_failure_modes
 from .summary_latency import load_latency_pack, measure_summary_latency
 from .trade_profiles import load_trade_profiles, side_by_side as trade_side_by_side
+from .voice_greeting import load_voice_cases, run_voice_greeting_pack
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "data" / "scripts" / "wp_scr_v0.json"
@@ -53,6 +54,7 @@ CONC_QUEUE = ROOT / "data" / "concurrency" / "queue_rates_config_v0.json"
 CONC_FIDELITY = ROOT / "data" / "concurrency" / "summary_fidelity_under_load_v0.json"
 ONBOARD_MAP = ROOT / "data" / "onboarding" / "onboarding_form_to_agent_config_v0.json"
 TRADE_PROFILES = ROOT / "data" / "onboarding" / "trade_profiles_v0.json"
+VOICE_CASES = ROOT / "data" / "onboarding" / "voice_greeting_cases_v0.json"
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
 M4_FREEZE = ROOT / "data" / "gates" / "m4_intake_summary_freeze.json"
@@ -704,6 +706,22 @@ def cmd_trade_profiles(_: argparse.Namespace) -> int:
     return 0 if report["hypothesis_supported"] else 1
 
 
+def cmd_voice_greeting(_: argparse.Namespace) -> int:
+    pack = load_voice_cases(VOICE_CASES)
+    report = run_voice_greeting_pack(pack)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s9_voice_greeting_ws4.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"Voice/greeting WS4 (WP-49) accepted={report['n_accepted']} failed={report['n_failed']}")
+    print(f"all expect matched: {report['all_expect_matched']}")
+    for a in report["accepted_configs"]:
+        print(f"  ACCEPT {a['case_id']}: {a['voice_id']}/{a['voice_style']}")
+    for f in report["failures"]:
+        print(f"  FAIL {f['case_id']}: {', '.join(f['errors'])}")
+    print(f"Wrote {path}")
+    return 0 if report["all_expect_matched"] else 1
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -737,6 +755,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("gate-s8", cmd_gate_s8),
         ("onboarding-map", cmd_onboarding_map),
         ("trade-profiles", cmd_trade_profiles),
+        ("voice-greeting", cmd_voice_greeting),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -842,6 +861,9 @@ def main() -> int:
 
     p_tp = sub.add_parser("trade-profiles", help="Side-by-side roofing vs plumbing agent behaviour (WP-48)")
     p_tp.set_defaults(func=cmd_trade_profiles)
+
+    p_vg = sub.add_parser("voice-greeting", help="Voice selection and greeting customization WS4 (WP-49)")
+    p_vg.set_defaults(func=cmd_voice_greeting)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)
