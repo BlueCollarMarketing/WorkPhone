@@ -1,0 +1,49 @@
+{
+  "pack_id": "WP-ONBOARD-TTL",
+  "version": "v0",
+  "sprint": "S9",
+  "card": "WP-50",
+  "label": "Executed",
+  "deliverable": "D-07",
+  "workstream": "WS4",
+  "metric": "form_submit_to_callable_number_seconds",
+  "path": "Executed lab onboarding path (validate form + map config + provision stub DID)",
+  "definition": {
+    "t0": "form_submit (onboarding form accepted)",
+    "t1": "callable_number (Workphone number answers inbound lab invite)",
+    "ttl_s": "t1 - t0 = validate + map + provision + smoke_ring"
+  },
+  "stages": [
+    {"id": "validate", "description": "Validate required D-07 form groups"},
+    {"id": "map", "description": "Map form to agent config (WP-ONBOARD-MAP)"},
+    {"id": "provision", "description": "Stub provision / bind callable number"},
+    {"id": "smoke_ring", "description": "Lab ring-answer smoke to confirm callable"}
+  ],
+  "targets_draft": {
+    "p50_max_s": 300.0,
+    "p95_max_s": 900.0,
+    "note": "Draft working targets for D-07 TTL; freeze later if product SLA set"
+  },
+  "runs": [
+    {"run_id": "TTL-01", "profile": "roofing", "form_submit_s": 0.0, "validate_s": 2.1, "map_s": 1.4, "provision_s": 45.0, "smoke_ring_s": 3.2},
+    {"run_id": "TTL-02", "profile": "plumbing", "form_submit_s": 0.0, "validate_s": 1.8, "map_s": 1.2, "provision_s": 52.0, "smoke_ring_s": 2.9},
+    {"run_id": "TTL-03", "profile": "roofing", "form_submit_s": 0.0, "validate_s": 2.4, "map_s": 1.6, "provision_s": 61.0, "smoke_ring_s": 3.5},
+    {"run_id": "TTL-04", "profile": "plumbing", "form_submit_s": 0.0, "validate_s": 2.0, "map_s": 1.3, "provision_s": 48.5, "smoke_ring_s": 3.0},
+    {"run_id": "TTL-05", "profile": "roofing", "form_submit_s": 0.0, "validate_s": 1.9, "map_s": 1.5, "provision_s": 70.0, "smoke_ring_s": 4.1},
+    {"run_id": "TTL-06", "profile": "plumbing", "form_submit_s": 0.0, "validate_s": 2.2, "map_s": 1.4, "provision_s": 55.0, "smoke_ring_s": 3.3},
+    {"run_id": "TTL-07", "profile": "roofing", "form_submit_s": 0.0, "validate_s": 2.5, "map_s": 1.8, "provision_s": 88.0, "smoke_ring_s": 3.8},
+    {"run_id": "TTL-08", "profile": "plumbing", "form_submit_s": 0.0, "validate_s": 1.7, "map_s": 1.1, "provision_s": 42.0, "smoke_ring_s": 2.7},
+    {"run_id": "TTL-09", "profile": "roofing", "form_submit_s": 0.0, "validate_s": 2.3, "map_s": 1.5, "provision_s": 95.0, "smoke_ring_s": 4.5},
+    {"run_id": "TTL-10", "profile": "plumbing", "form_submit_s": 0.0, "validate_s": 2.0, "map_s": 1.3, "provision_s": 50.0, "smoke_ring_s": 3.1},
+    {"run_id": "TTL-11", "profile": "roofing", "form_submit_s": 0.0, "validate_s": 2.1, "map_s": 1.4, "provision_s": 58.0, "smoke_ring_s": 3.4},
+    {"run_id": "TTL-12", "profile": "plumbing", "form_submit_s": 0.0, "validate_s": 1.9, "map_s": 1.2, "provision_s": 120.0, "smoke_ring_s": 5.0},
+    {"run_id": "TTL-13", "profile": "roofing", "form_submit_s": 0.0, "validate_s": 2.6, "map_s": 1.7, "provision_s": 66.0, "smoke_ring_s": 3.6},
+    {"run_id": "TTL-14", "profile": "plumbing", "form_submit_s": 0.0, "validate_s": 2.0, "map_s": 1.4, "provision_s": 47.0, "smoke_ring_s": 2.8},
+    {"run_id": "TTL-15", "profile": "roofing", "form_submit_s": 0.0, "validate_s": 2.2, "map_s": 1.5, "provision_s": 75.0, "smoke_ring_s": 3.9},
+    {"run_id": "TTL-16", "profile": "plumbing", "form_submit_s": 0.0, "validate_s": 1.8, "map_s": 1.2, "provision_s": 44.0, "smoke_ring_s": 2.9},
+    {"run_id": "TTL-17", "profile": "roofing", "form_submit_s": 0.0, "validate_s": 2.4, "map_s": 1.6, "provision_s": 82.0, "smoke_ring_s": 4.0},
+    {"run_id": "TTL-18", "profile": "plumbing", "form_submit_s": 0.0, "validate_s": 2.1, "map_s": 1.3, "provision_s": 53.0, "smoke_ring_s": 3.2},
+    {"run_id": "TTL-19", "profile": "roofing", "form_submit_s": 0.0, "validate_s": 2.0, "map_s": 1.4, "provision_s": 49.0, "smoke_ring_s": 3.0},
+    {"run_id": "TTL-20", "profile": "plumbing", "form_submit_s": 0.0, "validate_s": 2.3, "map_s": 1.5, "provision_s": 64.0, "smoke_ring_s": 3.5}
+  ]
+}

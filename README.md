@@ -45,6 +45,7 @@ python -m workphone_lab gate-s8
 python -m workphone_lab onboarding-map
 python -m workphone_lab trade-profiles
 python -m workphone_lab voice-greeting
+python -m workphone_lab time-to-live
 ```
 
 | Command | What it does |
@@ -80,6 +81,7 @@ python -m workphone_lab voice-greeting
 | `onboarding-map` | Onboarding form to agent config D-07 (WP-47) -> `outputs/s9_onboarding_map_report.json` |
 | `trade-profiles` | Roofing vs plumbing side-by-side behaviour (WP-48) -> `outputs/s9_trade_profiles_side_by_side.json` |
 | `voice-greeting` | Voice selection and greeting customization WS4 (WP-49) -> `outputs/s9_voice_greeting_ws4.json` |
+| `time-to-live` | Form-submit to callable number TTL D-07 (WP-50) -> `outputs/s9_time_to_live_distribution.json` |
 | `all` | Run full lab suite smoke check |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)  
@@ -101,6 +103,7 @@ Onboarding map: `data/onboarding/onboarding_form_to_agent_config_v0.json`
 Onboarding form schema: `data/onboarding/onboarding_form_schema_v0.json`  
 Trade profiles: `data/onboarding/trade_profiles_v0.json`  
 Voice/greeting cases: `data/onboarding/voice_greeting_cases_v0.json`  
+Time-to-live runs: `data/onboarding/time_to_live_runs_v0.json`  
 Status board: `data/status/u1_u3_status_board.json`  
 Corpus gate: `data/gates/corpus_gate_m3.json`  
 M4 freeze: `data/gates/m4_intake_summary_freeze.json`  

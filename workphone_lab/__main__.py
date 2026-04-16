@@ -32,6 +32,7 @@ from .status_board import load_board, render_board
 from .summary_email import demo_summary, load_template
 from .summary_failure_modes import evaluate_failure_modes, load_failure_modes
 from .summary_latency import load_latency_pack, measure_summary_latency
+from .time_to_live import load_ttl_pack, measure_time_to_live
 from .trade_profiles import load_trade_profiles, side_by_side as trade_side_by_side
 from .voice_greeting import load_voice_cases, run_voice_greeting_pack
 
@@ -55,6 +56,7 @@ CONC_FIDELITY = ROOT / "data" / "concurrency" / "summary_fidelity_under_load_v0.
 ONBOARD_MAP = ROOT / "data" / "onboarding" / "onboarding_form_to_agent_config_v0.json"
 TRADE_PROFILES = ROOT / "data" / "onboarding" / "trade_profiles_v0.json"
 VOICE_CASES = ROOT / "data" / "onboarding" / "voice_greeting_cases_v0.json"
+TTL_RUNS = ROOT / "data" / "onboarding" / "time_to_live_runs_v0.json"
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
 M4_FREEZE = ROOT / "data" / "gates" / "m4_intake_summary_freeze.json"
@@ -722,6 +724,26 @@ def cmd_voice_greeting(_: argparse.Namespace) -> int:
     return 0 if report["all_expect_matched"] else 1
 
 
+def cmd_time_to_live(_: argparse.Namespace) -> int:
+    pack = load_ttl_pack(TTL_RUNS)
+    report = measure_time_to_live(pack)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s9_time_to_live_distribution.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    d = report["distribution"]
+    print(f"Time-to-live form_submit->callable (WP-50 / D-07)")
+    print(
+        f"n={d['n']}  min={d['min_s']}s  p50={d['p50_s']}s  p90={d['p90_s']}s  "
+        f"p95={d['p95_s']}s  max={d['max_s']}s  mean={d['mean_s']}s"
+    )
+    print(f"within draft targets: {report['within_draft_targets']}")
+    for b in d["histogram_s"]:
+        hi = f"{b['hi_s']}" if b["hi_s"] is not None else "inf"
+        print(f"  bin [{b['lo_s']},{hi}): {b['count']}")
+    print(f"Wrote {path}")
+    return 0
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -756,6 +778,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("onboarding-map", cmd_onboarding_map),
         ("trade-profiles", cmd_trade_profiles),
         ("voice-greeting", cmd_voice_greeting),
+        ("time-to-live", cmd_time_to_live),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -864,6 +887,9 @@ def main() -> int:
 
     p_vg = sub.add_parser("voice-greeting", help="Voice selection and greeting customization WS4 (WP-49)")
     p_vg.set_defaults(func=cmd_voice_greeting)
+
+    p_ttl = sub.add_parser("time-to-live", help="Measure form-submit to callable number TTL for D-07 (WP-50)")
+    p_ttl.set_defaults(func=cmd_time_to_live)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)
