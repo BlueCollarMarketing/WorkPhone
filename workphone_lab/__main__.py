@@ -21,6 +21,7 @@ from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
 from .intake_map import load_field_map, validate_field_map
 from .intake_schema import load_schema, validate_schema_pack
 from .m4_freeze import evaluate_m4_freeze, load_m4_freeze
+from .m5_pack import assemble_m5, load_m5_pack
 from .measure_policy import measure_packs
 from .measure_summary import load_gt_pack, measure_summary_accuracy
 from .negative_intake import load_cases, run_negative_cases
@@ -60,6 +61,7 @@ TTL_RUNS = ROOT / "data" / "onboarding" / "time_to_live_runs_v0.json"
 BOARD = ROOT / "data" / "status" / "u1_u3_status_board.json"
 CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
 M4_FREEZE = ROOT / "data" / "gates" / "m4_intake_summary_freeze.json"
+M5_PACK = ROOT / "data" / "gates" / "m5_concurrency_onboard_pack.json"
 S8_GATE = ROOT / "data" / "gates" / "s8_concurrency_evidence_gate.json"
 OUT = ROOT / "outputs"
 
@@ -744,6 +746,34 @@ def cmd_time_to_live(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_gate_m5(_: argparse.Namespace) -> int:
+    gate = load_m5_pack(M5_PACK)
+    report = assemble_m5(ROOT, gate)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s9_m5_concurrency_onboard_pack.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    lim = report["concurrency_limits"]
+    print(f"M5 pack {report['pack_tag']} (WP-51)")
+    print(
+        f"present={report['summary']['present']} missing={report['summary']['missing']} "
+        f"pack_pass={report['summary']['pack_pass']}"
+    )
+    print(
+        f"limits: safe_n={lim['safe_n']} break_point_n={lim['break_point_n']} "
+        f"max_delay={lim['max_answer_delay_s']}s"
+    )
+    print("onboard path: " + " -> ".join(report["onboard_path_e2e"]["steps"]))
+    for r in report["checklist"]:
+        print(f"  [{r['status']}] {r['item']} -> {r['location']}")
+    for g in report["explicit_gaps"]:
+        print(f"  {g['id']} [{g['label']}] {g['item']}")
+    for rj in report["rejected_configs"]:
+        print(f"  {rj['id']}: {rj['config']}")
+    print(f"S9 closed: {report['summary']['s9_closed']}")
+    print(f"Wrote {path}")
+    return 0 if report["summary"]["pack_pass"] else 1
+
+
 def cmd_all(_: argparse.Namespace) -> int:
     """Run the full lab suite (smoke check that the project is runnable)."""
     steps = [
@@ -779,6 +809,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("trade-profiles", cmd_trade_profiles),
         ("voice-greeting", cmd_voice_greeting),
         ("time-to-live", cmd_time_to_live),
+        ("gate-m5", cmd_gate_m5),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -890,6 +921,9 @@ def main() -> int:
 
     p_ttl = sub.add_parser("time-to-live", help="Measure form-submit to callable number TTL for D-07 (WP-50)")
     p_ttl.set_defaults(func=cmd_time_to_live)
+
+    p_m5 = sub.add_parser("gate-m5", help="Assemble M5 concurrency limits + onboard path pack / S9 close (WP-51)")
+    p_m5.set_defaults(func=cmd_gate_m5)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

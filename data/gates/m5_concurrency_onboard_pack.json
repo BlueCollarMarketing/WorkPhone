@@ -1,0 +1,88 @@
+{
+  "gate_id": "WP-M5-PACK",
+  "version": "v0",
+  "milestone": "M5",
+  "sprint": "S9",
+  "card": "WP-51",
+  "label": "Executed",
+  "pack_tag": "assembled@m5-v0",
+  "rule": "M5 pack documents concurrency limits (U3-LIMITS-v0) and onboard path end-to-end (D-07) for S9 close",
+  "concurrency_limits": {
+    "source": "U3-LIMITS-v0 / WP-46",
+    "safe_n": 5,
+    "break_point_n": 6,
+    "max_answer_delay_s": 8.0,
+    "provider_channel_limit": {"value": null, "label": "Planned"}
+  },
+  "onboard_path_e2e": {
+    "deliverable": "D-07",
+    "steps": [
+      "Form submit (WP-ONBOARD-FORM)",
+      "Map to agent config (WP-ONBOARD-MAP)",
+      "Trade profile behaviour (WP-TRADE-PROFILES)",
+      "Voice/greeting accept-fail log (WS4)",
+      "Time-to-live to callable number (WP-ONBOARD-TTL)"
+    ]
+  },
+  "pack_artifacts": {
+    "concurrency": [
+      {"id": "WP-CONC-SCENARIOS", "version": "v0", "path": "data/concurrency/load_scenarios_v0.json"},
+      {"id": "WP-CONC-BREAKPOINT", "version": "v0", "path": "data/concurrency/breakpoint_config_v0.json"},
+      {"id": "WP-CONC-QUEUE-RATES", "version": "v0", "path": "data/concurrency/queue_rates_config_v0.json"},
+      {"id": "WP-CONC-SUMMARY-FIDELITY", "version": "v0", "path": "data/concurrency/summary_fidelity_under_load_v0.json"},
+      {"id": "WP-U3-CONCURRENCY", "version": "v0.3", "path": "data/concurrency/u3_concurrency_pack_v0.json"},
+      {"id": "WP-S8-EVIDENCE-GATE", "version": "v0", "path": "data/gates/s8_concurrency_evidence_gate.json"}
+    ],
+    "onboard": [
+      {"id": "WP-ONBOARD-FORM", "version": "v0", "path": "data/onboarding/onboarding_form_schema_v0.json", "deliverable": "D-07"},
+      {"id": "WP-ONBOARD-MAP", "version": "v0", "path": "data/onboarding/onboarding_form_to_agent_config_v0.json", "deliverable": "D-07"},
+      {"id": "WP-TRADE-PROFILES", "version": "v0", "path": "data/onboarding/trade_profiles_v0.json", "deliverable": "D-07"},
+      {"id": "WP-VOICE-GREETING", "version": "v0", "path": "data/onboarding/voice_greeting_cases_v0.json", "deliverable": "D-07"},
+      {"id": "WP-ONBOARD-TTL", "version": "v0", "path": "data/onboarding/time_to_live_runs_v0.json", "deliverable": "D-07"}
+    ]
+  },
+  "evidence_docs": [
+    {"item": "Concurrency load scenarios", "path": "docs/s8/WP-42-concurrency-load-scenarios.md"},
+    {"item": "Concurrent drop/answer-delay", "path": "docs/s8/WP-43-concurrent-drop-answer-delay.md"},
+    {"item": "Queue drop/error rates", "path": "docs/s8/WP-44-queue-drop-error-rates.md"},
+    {"item": "Summary fidelity under load", "path": "docs/s8/WP-45-summary-fidelity-under-load.md"},
+    {"item": "S8 Evidence Gate + limits", "path": "docs/s8/WP-46-evidence-gate-concurrency-pack.md"},
+    {"item": "Onboarding form to agent config", "path": "docs/s9/WP-47-onboarding-form-to-agent-config.md"},
+    {"item": "Trade profiles side-by-side", "path": "docs/s9/WP-48-trade-profiles-side-by-side.md"},
+    {"item": "Voice/greeting WS4", "path": "docs/s9/WP-49-voice-greeting-customization.md"},
+    {"item": "Time-to-live form to callable", "path": "docs/s9/WP-50-time-to-live-form-to-callable.md"}
+  ],
+  "explicit_gaps": [
+    {
+      "id": "GAP-M5-01",
+      "item": "Confirmed provider concurrent channel limit",
+      "status": "Missing",
+      "label": "Planned",
+      "note": "U3-LIMITS-v0 keeps provider cap Planned"
+    },
+    {
+      "id": "GAP-M5-02",
+      "item": "Live carrier DID provision (non-stub)",
+      "status": "Missing",
+      "label": "Planned",
+      "note": "TTL uses stub provision + smoke ring on Executed path"
+    }
+  ],
+  "rejected_configs": [
+    {
+      "id": "RJ-M5-01",
+      "config": "Ship M5 without concurrency limits statement",
+      "reason": "Breaks U3 audit trail from WP-46"
+    },
+    {
+      "id": "RJ-M5-02",
+      "config": "Claim onboard path live without TTL distribution",
+      "reason": "D-07 requires form-submit to callable evidence"
+    },
+    {
+      "id": "RJ-M5-03",
+      "config": "Treat Planned provider channel limit as Executed capacity",
+      "reason": "Evidence labels"
+    }
+  ]
+}
