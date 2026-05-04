@@ -53,3 +53,4 @@
 | 2026-04-15 | WP-49 | S9 | Damczyk Jennifer | Voice/greeting WS4: 2 accepted, 4 failures retained (catalog/style/empty/biz) |
 | 2026-04-16 | WP-50 | S9 | Roantree Timothy I | Form-submit to callable TTL distribution for D-07 (n=20; p50=63.4s) |
 | 2026-04-21 | WP-51 | S9 | Roantree Timothy I | M5 pack assembled@m5-v0: concurrency limits + onboard e2e; S9 closed |
+| 2026-05-04 | WP-52 | S10 | Adesanya Okunade K | E2E telephony pack WP-E2E-TELEPHONY v0: happy/noise/incomplete/concurrent for D-08 |

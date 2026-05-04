@@ -1,0 +1,75 @@
+{
+  "pack_id": "WP-E2E-TELEPHONY",
+  "version": "v0",
+  "sprint": "S10",
+  "card": "WP-52",
+  "deliverable": "D-08",
+  "label": "Executed",
+  "purpose": "Run E2E scenarios (happy path, noise, incomplete intake, concurrent); capture outcomes for D-08 system assembly notes",
+  "path": "Executed lab (ring-answer-greet-active-end + ASR/NLU stub + intake/handoff + concurrency model)",
+  "scenarios": [
+    {
+      "id": "E2E-HAPPY",
+      "name": "Happy path",
+      "family": "happy_path",
+      "script_ids": ["SCR-E01", "SCR-S01", "SCR-C01"],
+      "expect": {
+        "session_complete": true,
+        "min_intent_accuracy": 0.8,
+        "named_handoff_allowed": true
+      },
+      "d08_focus": "Clean estimate/service/callback through answer; named callback converts to handoff"
+    },
+    {
+      "id": "E2E-NOISE",
+      "name": "Noise / jargon",
+      "family": "noise",
+      "script_ids": ["SCR-E01-NJ", "SCR-S01-NJ", "SCR-A01-NJ", "SCR-I01-NJ", "SCR-C01-NJ"],
+      "expect": {
+        "max_intent_accuracy": 0.5,
+        "document_degradation": true
+      },
+      "d08_focus": "Intent/entity drop under noise+jargon vs clean (U1 stress on live path)"
+    },
+    {
+      "id": "E2E-INCOMPLETE",
+      "name": "Incomplete intake",
+      "family": "incomplete_intake",
+      "script_ids": ["SCR-I01"],
+      "negative_case_ids": ["NEG-REFUSE", "NEG-PARTIAL-ADDR", "NEG-CALLBACK"],
+      "expect": {
+        "fabricated_fields": false,
+        "incomplete_handoff_blocked": true,
+        "safe_case_pass_rate_min": 1.0
+      },
+      "d08_focus": "Refuse/partial/callback stay safe; incomplete blocked from full handoff"
+    },
+    {
+      "id": "E2E-CONCURRENT",
+      "name": "Concurrent inbound",
+      "family": "concurrent",
+      "n_safe": 5,
+      "n_break": 6,
+      "stagger_ms": 150,
+      "expect": {
+        "safe_within_limits": true,
+        "break_exceeds_limits": true
+      },
+      "d08_focus": "LOAD at U3-LIMITS-v0 safe_n=5 OK; break_point_n=6 fails delay/drop"
+    }
+  ],
+  "rejected_configs": [
+    {
+      "id": "RJ-E2E-01",
+      "config": "Claim E2E live carrier pass from lab-only Executed path"
+    },
+    {
+      "id": "RJ-E2E-02",
+      "config": "Treat noise degradation as pack failure when drop is documented for D-08"
+    },
+    {
+      "id": "RJ-E2E-03",
+      "config": "Ship D-08 without concurrent safe_n / break_point outcomes"
+    }
+  ]
+}

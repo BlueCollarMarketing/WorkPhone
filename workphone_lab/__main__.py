@@ -21,6 +21,7 @@ from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
 from .intake_map import load_field_map, validate_field_map
 from .intake_schema import load_schema, validate_schema_pack
 from .m4_freeze import evaluate_m4_freeze, load_m4_freeze
+from .e2e_scenarios import load_e2e_pack, run_e2e_pack
 from .m5_pack import assemble_m5, load_m5_pack
 from .measure_policy import measure_packs
 from .measure_summary import load_gt_pack, measure_summary_accuracy
@@ -63,6 +64,7 @@ CORPUS_GATE = ROOT / "data" / "gates" / "corpus_gate_m3.json"
 M4_FREEZE = ROOT / "data" / "gates" / "m4_intake_summary_freeze.json"
 M5_PACK = ROOT / "data" / "gates" / "m5_concurrency_onboard_pack.json"
 S8_GATE = ROOT / "data" / "gates" / "s8_concurrency_evidence_gate.json"
+E2E_PACK = ROOT / "data" / "e2e" / "telephony_scenario_pack_v0.json"
 OUT = ROOT / "outputs"
 
 
@@ -746,6 +748,38 @@ def cmd_time_to_live(_: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_e2e_scenarios(_: argparse.Namespace) -> int:
+    pack = load_e2e_pack(E2E_PACK)
+    clean = json.loads(SCRIPTS.read_text(encoding="utf-8"))
+    noise = json.loads(SCRIPTS_NJ.read_text(encoding="utf-8"))
+    neg = load_cases(NEG_CASES)
+    schema = load_schema(SCHEMA)
+    report = run_e2e_pack(
+        pack,
+        clean_scripts=clean,
+        noise_scripts=noise,
+        negative_cases=neg,
+        schema=schema,
+    )
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s10_e2e_telephony_scenario_pack.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    summ = report["summary"]
+    print(f"E2E telephony scenario pack (WP-52 / {report['pack_id']} @ {report['version']})")
+    print(
+        f"scenarios={summ['scenarios']} expect_met={summ['expect_met']} "
+        f"pack_pass={summ['pack_pass']}"
+    )
+    for row in report["results"]:
+        print(f"  {row['id']}: {row.get('outcome')} expect_met={row.get('expect_met')}")
+    for note in report["d08_notes"]:
+        print(f"  D-08 {note}")
+    for rj in report["rejected_configs"]:
+        print(f"  {rj['id']}: {rj['config']}")
+    print(f"Wrote {path}")
+    return 0 if summ["pack_pass"] else 1
+
+
 def cmd_gate_m5(_: argparse.Namespace) -> int:
     gate = load_m5_pack(M5_PACK)
     report = assemble_m5(ROOT, gate)
@@ -810,6 +844,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("voice-greeting", cmd_voice_greeting),
         ("time-to-live", cmd_time_to_live),
         ("gate-m5", cmd_gate_m5),
+        ("e2e-scenarios", cmd_e2e_scenarios),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -924,6 +959,9 @@ def main() -> int:
 
     p_m5 = sub.add_parser("gate-m5", help="Assemble M5 concurrency limits + onboard path pack / S9 close (WP-51)")
     p_m5.set_defaults(func=cmd_gate_m5)
+
+    p_e2e = sub.add_parser("e2e-scenarios", help="Run E2E telephony scenario pack for D-08 (WP-52)")
+    p_e2e.set_defaults(func=cmd_e2e_scenarios)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)
