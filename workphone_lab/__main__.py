@@ -34,6 +34,7 @@ from .status_board import load_board, render_board
 from .summary_email import demo_summary, load_template
 from .summary_failure_modes import evaluate_failure_modes, load_failure_modes
 from .summary_latency import load_latency_pack, measure_summary_latency
+from .system_failure_modes import evaluate_system_fm, load_system_fm
 from .time_to_live import load_ttl_pack, measure_time_to_live
 from .trade_profiles import load_trade_profiles, side_by_side as trade_side_by_side
 from .voice_greeting import load_voice_cases, run_voice_greeting_pack
@@ -65,6 +66,7 @@ M4_FREEZE = ROOT / "data" / "gates" / "m4_intake_summary_freeze.json"
 M5_PACK = ROOT / "data" / "gates" / "m5_concurrency_onboard_pack.json"
 S8_GATE = ROOT / "data" / "gates" / "s8_concurrency_evidence_gate.json"
 E2E_PACK = ROOT / "data" / "e2e" / "telephony_scenario_pack_v0.json"
+SYS_FM = ROOT / "data" / "e2e" / "system_failure_modes_v0.json"
 OUT = ROOT / "outputs"
 
 
@@ -780,6 +782,28 @@ def cmd_e2e_scenarios(_: argparse.Namespace) -> int:
     return 0 if summ["pack_pass"] else 1
 
 
+def cmd_system_fm(_: argparse.Namespace) -> int:
+    library = load_system_fm(SYS_FM)
+    report = evaluate_system_fm(library)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s10_system_failure_modes.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"System-only failure modes {report['library_id']} {report['version']} (WP-53)")
+    print(
+        f"probes={report['n_probes']} defects={report['n_defects']} "
+        f"rule_ok={report['rule_ok']} notes_filed={report['notes_filed_for_d08']}"
+    )
+    for r in report["results"]:
+        mark = "DEFECT" if r["defect"] else "ok"
+        print(f"  {r['probe_id']} {r['mode_id']}: {mark} ({r['detail']})")
+    for note in report["d08_notes"]:
+        print(f"  D-08 {note}")
+    for rj in report["rejected_configs"]:
+        print(f"  {rj['id']}: {rj['config']}")
+    print(f"Wrote {path}")
+    return 0 if report["rule_ok"] and report["notes_filed_for_d08"] else 1
+
+
 def cmd_gate_m5(_: argparse.Namespace) -> int:
     gate = load_m5_pack(M5_PACK)
     report = assemble_m5(ROOT, gate)
@@ -845,6 +869,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("time-to-live", cmd_time_to_live),
         ("gate-m5", cmd_gate_m5),
         ("e2e-scenarios", cmd_e2e_scenarios),
+        ("system-fm", cmd_system_fm),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -962,6 +987,9 @@ def main() -> int:
 
     p_e2e = sub.add_parser("e2e-scenarios", help="Run E2E telephony scenario pack for D-08 (WP-52)")
     p_e2e.set_defaults(func=cmd_e2e_scenarios)
+
+    p_sfm = sub.add_parser("system-fm", help="Document system-only failure modes for D-08 (WP-53)")
+    p_sfm.set_defaults(func=cmd_system_fm)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

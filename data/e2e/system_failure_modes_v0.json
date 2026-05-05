@@ -1,0 +1,129 @@
+{
+  "library_id": "WP-SYS-FM",
+  "version": "v0",
+  "sprint": "S10",
+  "card": "WP-53",
+  "deliverable": "D-08",
+  "label": "Executed",
+  "purpose": "System failure notes for issues invisible in unit tests (drift, drops, summary/intake mismatches)",
+  "path": "Executed lab live-shaped path (E2E + concurrency + summary/intake cross-check)",
+  "why_unit_tests_miss": [
+    "Unit ASR/NLU scores one utterance in isolation; drift appears across ASR vs policy vs intake stages",
+    "Single-session lifecycle demos never open N concurrent legs",
+    "Summary accuracy vs GT and intake schema tests run separately; mismatches appear only when both artifacts are compared",
+    "Fidelity under load is not exercised by single-call summary unit checks"
+  ],
+  "scoring_rule": {
+    "id": "RJ-S10-01",
+    "rule": "System-only defects stay defects for D-08; unit-test pass does not clear them",
+    "applies_to": ["SYS-DRIFT", "SYS-DROP", "SYS-SUM-INTAKE", "SYS-FIDELITY-LOAD"]
+  },
+  "modes": [
+    {
+      "id": "SYS-DRIFT",
+      "name": "Cross-stage ASR/NLU drift",
+      "description": "Clean unit intent pass, but noise ASR path predicts different intent/entities on the same base script",
+      "severity": "Major",
+      "invisible_in": "Per-utterance clean unit score",
+      "d08_link": "assembly: ASR to policy handoff"
+    },
+    {
+      "id": "SYS-DROP",
+      "name": "Concurrent session drop",
+      "description": "Inbound leg dropped or excess answer delay only when N exceeds safe_n",
+      "severity": "Critical",
+      "invisible_in": "Single-session ring-answer-greet-end unit demo",
+      "d08_link": "assembly: telephony concurrency"
+    },
+    {
+      "id": "SYS-SUM-INTAKE",
+      "name": "Summary vs intake mismatch",
+      "description": "Post-call summary field disagrees with intake/handoff record for the same call",
+      "severity": "Critical",
+      "invisible_in": "Isolated summary template render or intake schema unit check",
+      "d08_link": "assembly: intake to email summary"
+    },
+    {
+      "id": "SYS-FIDELITY-LOAD",
+      "name": "Summary fidelity collapse under load",
+      "description": "Invent/omit appears in summaries when concurrent load is active; quiet unit summary still looks clean",
+      "severity": "Critical",
+      "invisible_in": "Single-call summary invent/omit unit check",
+      "d08_link": "assembly: summary under concurrency"
+    }
+  ],
+  "probes": [
+    {
+      "probe_id": "SYS-P01",
+      "mode_id": "SYS-DRIFT",
+      "script_id": "SCR-E01",
+      "linked_evidence": ["WP-22", "WP-52/E2E-NOISE"],
+      "observed": {
+        "clean_intent_ok": true,
+        "noise_intent_ok": false,
+        "clean_predicted": "estimate",
+        "noise_predicted": "service",
+        "unit_test_passed": true
+      },
+      "note": "Clean SCR-E01 unit pass; SCR-E01-NJ maps flashing/rough-in to service (E-Jargon drift)"
+    },
+    {
+      "probe_id": "SYS-P02",
+      "mode_id": "SYS-DROP",
+      "script_id": "LOAD-N",
+      "linked_evidence": ["WP-43", "WP-52/E2E-CONCURRENT"],
+      "observed": {
+        "n": 6,
+        "safe_n": 5,
+        "drop_rate": 0.17,
+        "max_answer_delay_s": 8.45,
+        "max_answer_delay_limit_s": 8.0,
+        "unit_session_ok": true
+      },
+      "note": "Session unit demo OK; break_point_n=6 drops/delays invisible at N=1"
+    },
+    {
+      "probe_id": "SYS-P03",
+      "mode_id": "SYS-SUM-INTAKE",
+      "script_id": "SCR-C01",
+      "linked_evidence": ["WP-38", "WP-40", "WP-33"],
+      "observed": {
+        "intake_need": null,
+        "summary_need": "roof estimate",
+        "intake_number": "289-555-0122",
+        "summary_number": "289-555-0122",
+        "mismatch_fields": ["need"]
+      },
+      "note": "Callback intake has no job; summary invents need (unit summary alone may not compare intake)"
+    },
+    {
+      "probe_id": "SYS-P04",
+      "mode_id": "SYS-FIDELITY-LOAD",
+      "script_id": "LOAD-3",
+      "linked_evidence": ["WP-45", "WP-52/E2E-CONCURRENT"],
+      "observed": {
+        "n": 3,
+        "invent_count": 1,
+        "omit_count": 1,
+        "field_accuracy": 0.67,
+        "collapse_flagged": true,
+        "quiet_unit_summary_pass": true
+      },
+      "note": "Quiet unit summary invent/omit pass; under LOAD-3 fidelity collapses"
+    }
+  ],
+  "rejected_configs": [
+    {
+      "id": "RJ-S10-01",
+      "config": "Clear SYS-* defects because unit tests passed"
+    },
+    {
+      "id": "RJ-S10-02",
+      "config": "File D-08 without system-only failure notes"
+    },
+    {
+      "id": "RJ-S10-03",
+      "config": "Treat summary/intake mismatch as summary-only unit bug"
+    }
+  ]
+}

@@ -48,6 +48,7 @@ python -m workphone_lab voice-greeting
 python -m workphone_lab time-to-live
 python -m workphone_lab gate-m5
 python -m workphone_lab e2e-scenarios
+python -m workphone_lab system-fm
 ```
 
 | Command | What it does |
@@ -86,6 +87,7 @@ python -m workphone_lab e2e-scenarios
 | `time-to-live` | Form-submit to callable number TTL D-07 (WP-50) -> `outputs/s9_time_to_live_distribution.json` |
 | `gate-m5` | M5 concurrency limits + onboard path pack / S9 close (WP-51) -> `outputs/s9_m5_concurrency_onboard_pack.json` |
 | `e2e-scenarios` | E2E telephony scenario pack happy/noise/incomplete/concurrent D-08 (WP-52) -> `outputs/s10_e2e_telephony_scenario_pack.json` |
+| `system-fm` | System-only failure modes drift/drop/summary-intake/load D-08 (WP-53) -> `outputs/s10_system_failure_modes.json` |
 | `all` | Run full lab suite smoke check |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)  
@@ -109,6 +111,7 @@ Trade profiles: `data/onboarding/trade_profiles_v0.json`
 Voice/greeting cases: `data/onboarding/voice_greeting_cases_v0.json`  
 Time-to-live runs: `data/onboarding/time_to_live_runs_v0.json`  
 E2E telephony pack: `data/e2e/telephony_scenario_pack_v0.json`  
+System failure modes: `data/e2e/system_failure_modes_v0.json`  
 Status board: `data/status/u1_u3_status_board.json`  
 Corpus gate: `data/gates/corpus_gate_m3.json`  
 M4 freeze: `data/gates/m4_intake_summary_freeze.json`  
