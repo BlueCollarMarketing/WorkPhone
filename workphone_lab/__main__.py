@@ -31,6 +31,7 @@ from .ots_compare import compare_side_by_side
 from .scoring import compare_to_baseline, score_pack
 from .session import run_demo_session
 from .status_board import load_board, render_board
+from .status_board_freeze import freeze_status_board
 from .summary_email import demo_summary, load_template
 from .summary_failure_modes import evaluate_failure_modes, load_failure_modes
 from .summary_latency import load_latency_pack, measure_summary_latency
@@ -804,6 +805,38 @@ def cmd_system_fm(_: argparse.Namespace) -> int:
     return 0 if report["rule_ok"] and report["notes_filed_for_d08"] else 1
 
 
+def cmd_freeze_status_board(_: argparse.Namespace) -> int:
+    board = load_board(BOARD)
+    report = freeze_status_board(board)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s10_status_board_draft_freeze.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    # Also refresh the simple board export
+    simple = render_board(board)
+    simple["card"] = "WP-54"
+    simple["freeze_tag"] = board.get("freeze_tag")
+    (OUT / "s5_u1_status_board.json").write_text(json.dumps(simple, indent=2), encoding="utf-8")
+    summ = report["summary"]
+    print(f"Status board draft freeze {report['freeze_tag']} (WP-54)")
+    print(
+        f"uncertainties={summ['uncertainties']} by_status={summ['by_status']} "
+        f"freeze_pass={summ['freeze_pass']}"
+    )
+    for row in report["rows"]:
+        print(
+            f"  {row['id']}: {row['status']} "
+            f"(evidence={row['evidence_count']}, labels={row['labels']})"
+        )
+    for uid in ("U1", "U2", "U3"):
+        print(f"{uid} pointers:")
+        for p in board["uncertainties"][uid]["evidence_pointers"]:
+            print(f"  - {p['card']} [{p['label']}]: {p['note']}")
+    for rj in report["rejected_configs"]:
+        print(f"  {rj['id']}: {rj['config']}")
+    print(f"Wrote {path}")
+    return 0 if summ["freeze_pass"] else 1
+
+
 def cmd_gate_m5(_: argparse.Namespace) -> int:
     gate = load_m5_pack(M5_PACK)
     report = assemble_m5(ROOT, gate)
@@ -870,6 +903,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("gate-m5", cmd_gate_m5),
         ("e2e-scenarios", cmd_e2e_scenarios),
         ("system-fm", cmd_system_fm),
+        ("freeze-status-board", cmd_freeze_status_board),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -990,6 +1024,9 @@ def main() -> int:
 
     p_sfm = sub.add_parser("system-fm", help="Document system-only failure modes for D-08 (WP-53)")
     p_sfm.set_defaults(func=cmd_system_fm)
+
+    p_fsb = sub.add_parser("freeze-status-board", help="Freeze U1/U2/U3 status board draft (WP-54)")
+    p_fsb.set_defaults(func=cmd_freeze_status_board)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

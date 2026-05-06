@@ -49,6 +49,7 @@ python -m workphone_lab time-to-live
 python -m workphone_lab gate-m5
 python -m workphone_lab e2e-scenarios
 python -m workphone_lab system-fm
+python -m workphone_lab freeze-status-board
 ```
 
 | Command | What it does |
@@ -88,6 +89,7 @@ python -m workphone_lab system-fm
 | `gate-m5` | M5 concurrency limits + onboard path pack / S9 close (WP-51) -> `outputs/s9_m5_concurrency_onboard_pack.json` |
 | `e2e-scenarios` | E2E telephony scenario pack happy/noise/incomplete/concurrent D-08 (WP-52) -> `outputs/s10_e2e_telephony_scenario_pack.json` |
 | `system-fm` | System-only failure modes drift/drop/summary-intake/load D-08 (WP-53) -> `outputs/s10_system_failure_modes.json` |
+| `freeze-status-board` | Freeze U1/U2/U3 status board draft Open/Partial/Resolved (WP-54) -> `outputs/s10_status_board_draft_freeze.json` |
 | `all` | Run full lab suite smoke check |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)  
