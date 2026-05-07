@@ -12,6 +12,7 @@ from .concurrency_summary_fidelity import load_fidelity_config, spot_check_fidel
 from .corpus import load_corpus, validate_corpus
 from .corpus_gate import evaluate_corpus_gate, load_json
 from .dialogue_policy import demo_policy, load_policy
+from .evidence_index import align_evidence_index, load_evidence_index
 from .evidence_gate import gate_s4
 from .evidence_gate_s6 import gate_s6
 from .evidence_gate_s8 import gate_s8, load_s8_gate
@@ -68,6 +69,7 @@ M5_PACK = ROOT / "data" / "gates" / "m5_concurrency_onboard_pack.json"
 S8_GATE = ROOT / "data" / "gates" / "s8_concurrency_evidence_gate.json"
 E2E_PACK = ROOT / "data" / "e2e" / "telephony_scenario_pack_v0.json"
 SYS_FM = ROOT / "data" / "e2e" / "system_failure_modes_v0.json"
+EVIDENCE_INDEX = ROOT / "data" / "evidence" / "evidence_index_v0.json"
 OUT = ROOT / "outputs"
 
 
@@ -837,6 +839,38 @@ def cmd_freeze_status_board(_: argparse.Namespace) -> int:
     return 0 if summ["freeze_pass"] else 1
 
 
+def cmd_evidence_index(_: argparse.Namespace) -> int:
+    pack = load_evidence_index(EVIDENCE_INDEX)
+    report = align_evidence_index(ROOT, pack)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s10_evidence_index_timesheet_alignment.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    hs = report["hours_summary"]
+    es = report["evidence_summary"]
+    print(f"Evidence index {report['index_id']} {report['version']} (WP-55 / D-09)")
+    print(
+        f"hours_aligned={hs['hours_aligned']} youtrack={hs['youtrack_total_hours']} "
+        f"labour={hs['labour_target_total_hours']} delta={hs['delta_hours']}"
+    )
+    for r in report["role_alignment"]:
+        mark = "OK" if r["aligned"] else "MISS"
+        print(
+            f"  {r['role_key']}: yt={r['youtrack_hours']} target={r['labour_target_hours']} "
+            f"delta={r['delta_hours']} {mark}"
+        )
+    print(
+        f"evidence present={es['present']} planned={es['planned']} "
+        f"missing={es['missing']} missing_through_wp55={es['missing_through_wp55']}"
+    )
+    print(
+        f"roles_only_ok={report['roles_only_ok']} index_pass={report['summary']['index_pass']}"
+    )
+    for rj in report["rejected_configs"]:
+        print(f"  {rj['id']}: {rj['config']}")
+    print(f"Wrote {path}")
+    return 0 if report["summary"]["index_pass"] else 1
+
+
 def cmd_gate_m5(_: argparse.Namespace) -> int:
     gate = load_m5_pack(M5_PACK)
     report = assemble_m5(ROOT, gate)
@@ -904,6 +938,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("e2e-scenarios", cmd_e2e_scenarios),
         ("system-fm", cmd_system_fm),
         ("freeze-status-board", cmd_freeze_status_board),
+        ("evidence-index", cmd_evidence_index),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -1027,6 +1062,9 @@ def main() -> int:
 
     p_fsb = sub.add_parser("freeze-status-board", help="Freeze U1/U2/U3 status board draft (WP-54)")
     p_fsb.set_defaults(func=cmd_freeze_status_board)
+
+    p_ei = sub.add_parser("evidence-index", help="Evidence index + YouTrack/timesheet alignment D-09 (WP-55)")
+    p_ei.set_defaults(func=cmd_evidence_index)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

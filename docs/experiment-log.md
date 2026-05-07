@@ -56,3 +56,4 @@
 | 2026-05-04 | WP-52 | S10 | Adesanya Okunade K | E2E telephony pack WP-E2E-TELEPHONY v0: happy/noise/incomplete/concurrent for D-08 |
 | 2026-05-05 | WP-53 | S10 | Damczyk Jennifer | System-only FM WP-SYS-FM v0: drift/drop/summary-intake/fidelity-load filed for D-08 |
 | 2026-05-06 | WP-54 | S10 | Hill Alexandria | Status board draft freeze frozen@status-board-draft-s10-v0: U1/U2/U3/System Partial |
+| 2026-05-07 | WP-55 | S10 | Roantree Timothy I | Evidence index WP-EVIDENCE-INDEX v0: YT hours align to labour targets (5 roles only) |

@@ -50,6 +50,7 @@ python -m workphone_lab gate-m5
 python -m workphone_lab e2e-scenarios
 python -m workphone_lab system-fm
 python -m workphone_lab freeze-status-board
+python -m workphone_lab evidence-index
 ```
 
 | Command | What it does |
@@ -90,6 +91,7 @@ python -m workphone_lab freeze-status-board
 | `e2e-scenarios` | E2E telephony scenario pack happy/noise/incomplete/concurrent D-08 (WP-52) -> `outputs/s10_e2e_telephony_scenario_pack.json` |
 | `system-fm` | System-only failure modes drift/drop/summary-intake/load D-08 (WP-53) -> `outputs/s10_system_failure_modes.json` |
 | `freeze-status-board` | Freeze U1/U2/U3 status board draft Open/Partial/Resolved (WP-54) -> `outputs/s10_status_board_draft_freeze.json` |
+| `evidence-index` | Evidence index + YouTrack/timesheet alignment D-09 (WP-55) -> `outputs/s10_evidence_index_timesheet_alignment.json` |
 | `all` | Run full lab suite smoke check |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)  
@@ -114,6 +116,7 @@ Voice/greeting cases: `data/onboarding/voice_greeting_cases_v0.json`
 Time-to-live runs: `data/onboarding/time_to_live_runs_v0.json`  
 E2E telephony pack: `data/e2e/telephony_scenario_pack_v0.json`  
 System failure modes: `data/e2e/system_failure_modes_v0.json`  
+Evidence index: `data/evidence/evidence_index_v0.json`  
 Status board: `data/status/u1_u3_status_board.json`  
 Corpus gate: `data/gates/corpus_gate_m3.json`  
 M4 freeze: `data/gates/m4_intake_summary_freeze.json`  
