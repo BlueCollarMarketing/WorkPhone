@@ -12,10 +12,11 @@ from .concurrency_summary_fidelity import load_fidelity_config, spot_check_fidel
 from .corpus import load_corpus, validate_corpus
 from .corpus_gate import evaluate_corpus_gate, load_json
 from .dialogue_policy import demo_policy, load_policy
-from .evidence_index import align_evidence_index, load_evidence_index
 from .evidence_gate import gate_s4
+from .evidence_gate_m6 import gate_m6, load_m6_gate
 from .evidence_gate_s6 import gate_s6
 from .evidence_gate_s8 import gate_s8, load_s8_gate
+from .evidence_index import align_evidence_index, load_evidence_index
 from .handoff_enforce import measure_enforcement
 from .handoff_rules import demo_handoff_rules, load_rules
 from .hypothesis_s4 import build_hypothesis_log, write_hypothesis_log
@@ -70,6 +71,7 @@ S8_GATE = ROOT / "data" / "gates" / "s8_concurrency_evidence_gate.json"
 E2E_PACK = ROOT / "data" / "e2e" / "telephony_scenario_pack_v0.json"
 SYS_FM = ROOT / "data" / "e2e" / "system_failure_modes_v0.json"
 EVIDENCE_INDEX = ROOT / "data" / "evidence" / "evidence_index_v0.json"
+M6_GATE = ROOT / "data" / "gates" / "m6_core_evidence_gate.json"
 OUT = ROOT / "outputs"
 
 
@@ -871,6 +873,30 @@ def cmd_evidence_index(_: argparse.Namespace) -> int:
     return 0 if report["summary"]["index_pass"] else 1
 
 
+def cmd_gate_m6(_: argparse.Namespace) -> int:
+    gate = load_m6_gate(M6_GATE)
+    report = gate_m6(ROOT, gate)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "s10_m6_core_evidence_gate.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    summ = report["summary"]
+    print(f"Evidence Gate M6 core pack {report['gate_tag']} (WP-56)")
+    print(
+        f"present={summ['present']} missing={summ['missing']} "
+        f"hard_missing={summ['hard_missing']} gate_pass={summ['gate_pass']}"
+    )
+    for r in report["checklist"]:
+        print(f"  [{r['status']}] {r['item']} -> {r['location']}")
+    print("Explicit gaps (do not block M6):")
+    for g in report["explicit_gaps"]:
+        print(f"  {g['id']} [{g['label']}] {g['item']}: {g['note']}")
+    for rj in report["rejected_configs"]:
+        print(f"  {rj['id']}: {rj['config']}")
+    print(f"S10 closed: {summ['s10_closed']}")
+    print(f"Wrote {path}")
+    return 0 if summ["gate_pass"] else 1
+
+
 def cmd_gate_m5(_: argparse.Namespace) -> int:
     gate = load_m5_pack(M5_PACK)
     report = assemble_m5(ROOT, gate)
@@ -939,6 +965,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("system-fm", cmd_system_fm),
         ("freeze-status-board", cmd_freeze_status_board),
         ("evidence-index", cmd_evidence_index),
+        ("gate-m6", cmd_gate_m6),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -1065,6 +1092,9 @@ def main() -> int:
 
     p_ei = sub.add_parser("evidence-index", help="Evidence index + YouTrack/timesheet alignment D-09 (WP-55)")
     p_ei.set_defaults(func=cmd_evidence_index)
+
+    p_m6 = sub.add_parser("gate-m6", help="Evidence Gate core pack Present/Missing/Location M6 / S10 close (WP-56)")
+    p_m6.set_defaults(func=cmd_gate_m6)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

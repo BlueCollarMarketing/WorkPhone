@@ -829,8 +829,8 @@
       "date": "2026-05-12",
       "sprint": "S10",
       "summary": "Evidence Gate core pack Present Missing Location",
-      "evidence_doc": null,
-      "evidence_status": "Planned",
+      "evidence_doc": "docs/s10/WP-56-evidence-gate-core-pack.md",
+      "evidence_status": "Present",
       "included_role": true
     },
     {

@@ -1,0 +1,91 @@
+{
+  "gate_id": "WP-M6-CORE-EVIDENCE-GATE",
+  "version": "v0",
+  "milestone": "M6",
+  "sprint": "S10",
+  "card": "WP-56",
+  "label": "Executed",
+  "gate_tag": "gated@m6-core-v0",
+  "rule": "Core pack Evidence Gate: each item Present / Missing / Location; hard Missing blocks M6; Planned gaps listed explicitly",
+  "checklist": [
+    {"item": "WP-SCR-v0 clean scripts", "path": "data/scripts/wp_scr_v0.json", "section": "speech", "regenerable": false},
+    {"item": "Noise/jargon script variants", "path": "data/scripts/wp_scr_v0_noise_jargon.json", "section": "speech", "regenerable": false},
+    {"item": "Regression corpus", "path": "data/corpus/regression_corpus.json", "section": "speech", "regenerable": false},
+    {"item": "Dialogue policy v0", "path": "data/policy/dialogue_policy_v0.json", "section": "intake", "regenerable": false},
+    {"item": "Intake field map D-04", "path": "data/intake/intake_field_map_v0.json", "section": "intake", "regenerable": false},
+    {"item": "Intake schema v0", "path": "data/intake/intake_schema_v0.json", "section": "intake", "regenerable": false},
+    {"item": "Negative intake cases", "path": "data/intake/negative_intake_cases_v0.json", "section": "intake", "regenerable": false},
+    {"item": "Handoff rules email/SMS/CRM", "path": "data/handoff/handoff_rules_v0.json", "section": "intake", "regenerable": false},
+    {"item": "Summary email template D-05", "path": "data/summary/summary_email_template_v0.json", "section": "summary", "regenerable": false},
+    {"item": "Summary ground-truth notes", "path": "data/summary/ground_truth_call_notes_v0.json", "section": "summary", "regenerable": false},
+    {"item": "Summary failure modes", "path": "data/summary/summary_failure_modes_v0.json", "section": "summary", "regenerable": false},
+    {"item": "Concurrency load scenarios", "path": "data/concurrency/load_scenarios_v0.json", "section": "concurrency", "regenerable": false},
+    {"item": "Concurrency breakpoint config", "path": "data/concurrency/breakpoint_config_v0.json", "section": "concurrency", "regenerable": false},
+    {"item": "U3 concurrency pack index", "path": "data/concurrency/u3_concurrency_pack_v0.json", "section": "concurrency", "regenerable": false},
+    {"item": "Onboarding form to agent map D-07", "path": "data/onboarding/onboarding_form_to_agent_config_v0.json", "section": "onboard", "regenerable": false},
+    {"item": "Trade profiles", "path": "data/onboarding/trade_profiles_v0.json", "section": "onboard", "regenerable": false},
+    {"item": "Time-to-live runs D-07", "path": "data/onboarding/time_to_live_runs_v0.json", "section": "onboard", "regenerable": false},
+    {"item": "E2E telephony scenario pack D-08", "path": "data/e2e/telephony_scenario_pack_v0.json", "section": "e2e", "regenerable": false},
+    {"item": "System-only failure modes D-08", "path": "data/e2e/system_failure_modes_v0.json", "section": "e2e", "regenerable": false},
+    {"item": "Status board draft freeze", "path": "data/status/u1_u3_status_board.json", "section": "status", "regenerable": false},
+    {"item": "Evidence index D-09", "path": "data/evidence/evidence_index_v0.json", "section": "index", "regenerable": false},
+    {"item": "Corpus gate M3", "path": "data/gates/corpus_gate_m3.json", "section": "gates", "regenerable": false},
+    {"item": "M4 intake+summary freeze", "path": "data/gates/m4_intake_summary_freeze.json", "section": "gates", "regenerable": false},
+    {"item": "M5 concurrency+onboard pack", "path": "data/gates/m5_concurrency_onboard_pack.json", "section": "gates", "regenerable": false},
+    {"item": "S8 concurrency Evidence Gate", "path": "data/gates/s8_concurrency_evidence_gate.json", "section": "gates", "regenerable": false},
+    {"item": "S4 Evidence Gate note", "path": "docs/s4/WP-26-evidence-gate-corpus-scores.md", "section": "docs", "regenerable": false},
+    {"item": "S6 Evidence Gate note", "path": "docs/s6/WP-36-evidence-gate-intake-schema.md", "section": "docs", "regenerable": false},
+    {"item": "M4 freeze note", "path": "docs/s7/WP-41-m4-intake-summary-freeze.md", "section": "docs", "regenerable": false},
+    {"item": "S8 Evidence Gate note", "path": "docs/s8/WP-46-evidence-gate-concurrency-pack.md", "section": "docs", "regenerable": false},
+    {"item": "M5 pack note", "path": "docs/s9/WP-51-m5-concurrency-onboard-pack.md", "section": "docs", "regenerable": false},
+    {"item": "E2E scenario pack note", "path": "docs/s10/WP-52-e2e-telephony-scenario-pack.md", "section": "docs", "regenerable": false},
+    {"item": "System-only FM note", "path": "docs/s10/WP-53-system-only-failure-modes.md", "section": "docs", "regenerable": false},
+    {"item": "Status board freeze note", "path": "docs/s10/WP-54-u1-u2-u3-status-board-freeze.md", "section": "docs", "regenerable": false},
+    {"item": "Evidence index note", "path": "docs/s10/WP-55-evidence-index-timesheet-alignment.md", "section": "docs", "regenerable": false},
+    {"item": "Experiment log", "path": "docs/experiment-log.md", "section": "docs", "regenerable": false},
+    {"item": "E2E pack export", "path": "outputs/s10_e2e_telephony_scenario_pack.json", "section": "exports", "regenerable": true},
+    {"item": "System FM export", "path": "outputs/s10_system_failure_modes.json", "section": "exports", "regenerable": true},
+    {"item": "Status board freeze export", "path": "outputs/s10_status_board_draft_freeze.json", "section": "exports", "regenerable": true},
+    {"item": "Evidence index export", "path": "outputs/s10_evidence_index_timesheet_alignment.json", "section": "exports", "regenerable": true}
+  ],
+  "explicit_gaps": [
+    {
+      "id": "GAP-M6-01",
+      "item": "Confirmed provider concurrent channel limit",
+      "status": "Missing",
+      "label": "Planned",
+      "note": "U3-LIMITS-v0 keeps provider cap Planned; does not block M6 core pack"
+    },
+    {
+      "id": "GAP-M6-02",
+      "item": "Live carrier DID provision (non-stub)",
+      "status": "Missing",
+      "label": "Planned",
+      "note": "E2E/TTL Executed on lab path; live DID Confirmed in Close-out"
+    },
+    {
+      "id": "GAP-M6-03",
+      "item": "Partner acceptance / period close",
+      "status": "Missing",
+      "label": "Planned",
+      "note": "WP-60/WP-61 Close-out; not required for M6 core Present/Missing"
+    }
+  ],
+  "rejected_configs": [
+    {
+      "id": "RJ-M6-01",
+      "config": "Close M6 with hard-Missing core pack item",
+      "reason": "Core Evidence Gate requires Present or regenerable export"
+    },
+    {
+      "id": "RJ-M6-02",
+      "config": "Treat Planned live-carrier gaps as Executed Confirmed",
+      "reason": "Keep Executed/Planned/Confirmed labels"
+    },
+    {
+      "id": "RJ-M6-03",
+      "config": "Skip Location column on Evidence Gate checklist",
+      "reason": "M6 requires Present/Missing/Location for each item"
+    }
+  ]
+}

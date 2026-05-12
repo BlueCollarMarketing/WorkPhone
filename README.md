@@ -51,6 +51,7 @@ python -m workphone_lab e2e-scenarios
 python -m workphone_lab system-fm
 python -m workphone_lab freeze-status-board
 python -m workphone_lab evidence-index
+python -m workphone_lab gate-m6
 ```
 
 | Command | What it does |
@@ -92,6 +93,7 @@ python -m workphone_lab evidence-index
 | `system-fm` | System-only failure modes drift/drop/summary-intake/load D-08 (WP-53) -> `outputs/s10_system_failure_modes.json` |
 | `freeze-status-board` | Freeze U1/U2/U3 status board draft Open/Partial/Resolved (WP-54) -> `outputs/s10_status_board_draft_freeze.json` |
 | `evidence-index` | Evidence index + YouTrack/timesheet alignment D-09 (WP-55) -> `outputs/s10_evidence_index_timesheet_alignment.json` |
+| `gate-m6` | Evidence Gate core pack Present/Missing/Location M6 / S10 close (WP-56) -> `outputs/s10_m6_core_evidence_gate.json` |
 | `all` | Run full lab suite smoke check |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)  
@@ -121,6 +123,7 @@ Status board: `data/status/u1_u3_status_board.json`
 Corpus gate: `data/gates/corpus_gate_m3.json`  
 M4 freeze: `data/gates/m4_intake_summary_freeze.json`  
 M5 pack: `data/gates/m5_concurrency_onboard_pack.json`  
+M6 core Evidence Gate: `data/gates/m6_core_evidence_gate.json`  
 S8 Evidence Gate: `data/gates/s8_concurrency_evidence_gate.json`
 
 **Full smoke check:** `python -m workphone_lab all`
