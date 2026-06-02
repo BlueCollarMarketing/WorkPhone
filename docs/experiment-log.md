@@ -58,3 +58,4 @@
 | 2026-05-06 | WP-54 | S10 | Hill Alexandria | Status board draft freeze frozen@status-board-draft-s10-v0: U1/U2/U3/System Partial |
 | 2026-05-07 | WP-55 | S10 | Roantree Timothy I | Evidence index WP-EVIDENCE-INDEX v0: YT hours align to labour targets (5 roles only) |
 | 2026-05-12 | WP-56 | S10 | Hill Alexandria | M6 core Evidence Gate gated@m6-core-v0: Present/Missing/Location; S10 closed |
+| 2026-06-02 | WP-57 | Close-out | Mann Wesley J | Continuity CONT-U1/U2/U3 continuity@d10-v0: U1/U2/U3 stay Partial; pointers updated |

@@ -2,71 +2,236 @@
   "board_id": "WP-STATUS-BOARD",
   "version": "v1.0-draft-freeze",
   "freeze_tag": "frozen@status-board-draft-s10-v0",
-  "updated_card": "WP-54",
-  "sprint": "S10",
+  "updated_card": "WP-57",
+  "sprint": "Close-out",
   "label": "Executed",
-  "allowed_statuses": ["Open", "Partial", "Resolved"],
-  "allowed_evidence_labels": ["Executed", "Planned", "Confirmed"],
+  "allowed_statuses": [
+    "Open",
+    "Partial",
+    "Resolved"
+  ],
+  "allowed_evidence_labels": [
+    "Executed",
+    "Planned",
+    "Confirmed"
+  ],
   "rule": "Draft freeze of U1/U2/U3 (and System) as Open|Partial|Resolved with evidence pointers; keep Executed/Planned/Confirmed labels; do not mark Resolved without Confirmed close",
   "uncertainties": {
     "U1": {
       "status": "Partial",
       "statement": "Can the agent reliably understand and classify inbound speech under contractor conditions (noise, trade jargon, incomplete info)?",
       "evidence_pointers": [
-        {"card": "WP-18", "label": "Executed", "note": "Clean ASR/NLU baseline intent scores"},
-        {"card": "WP-19", "label": "Executed", "note": "Error taxonomy E-Jargon/E-Num/E-Overlap"},
-        {"card": "WP-20", "label": "Executed", "note": "Executed provider/model settings"},
-        {"card": "WP-22", "label": "Executed", "note": "Noise+jargon intent drop vs clean (delta logged)"},
-        {"card": "WP-23", "label": "Executed", "note": "Regression corpus variants linked to WP-SCR-v0"},
-        {"card": "WP-24", "label": "Executed", "note": "Clarification-loop helps/harms/no_change"},
-        {"card": "WP-25", "label": "Executed", "note": "OTS vs Workphone delta table"},
-        {"card": "WP-26", "label": "Executed", "note": "S4 Evidence Gate Present/Missing"},
-        {"card": "WP-29", "label": "Executed", "note": "Policy/corpus routing under speech stress (related)"},
-        {"card": "WP-52", "label": "Executed", "note": "E2E-NOISE degraded_as_expected on live-shaped path"},
-        {"card": "WP-53", "label": "Executed", "note": "SYS-DRIFT retained as system-only defect for D-08"}
+        {
+          "card": "WP-18",
+          "label": "Executed",
+          "note": "Clean ASR/NLU baseline intent scores"
+        },
+        {
+          "card": "WP-19",
+          "label": "Executed",
+          "note": "Error taxonomy E-Jargon/E-Num/E-Overlap"
+        },
+        {
+          "card": "WP-20",
+          "label": "Executed",
+          "note": "Executed provider/model settings"
+        },
+        {
+          "card": "WP-22",
+          "label": "Executed",
+          "note": "Noise+jargon intent drop vs clean (delta logged)"
+        },
+        {
+          "card": "WP-23",
+          "label": "Executed",
+          "note": "Regression corpus variants linked to WP-SCR-v0"
+        },
+        {
+          "card": "WP-24",
+          "label": "Executed",
+          "note": "Clarification-loop helps/harms/no_change"
+        },
+        {
+          "card": "WP-25",
+          "label": "Executed",
+          "note": "OTS vs Workphone delta table"
+        },
+        {
+          "card": "WP-26",
+          "label": "Executed",
+          "note": "S4 Evidence Gate Present/Missing"
+        },
+        {
+          "card": "WP-29",
+          "label": "Executed",
+          "note": "Policy/corpus routing under speech stress (related)"
+        },
+        {
+          "card": "WP-52",
+          "label": "Executed",
+          "note": "E2E-NOISE degraded_as_expected on live-shaped path"
+        },
+        {
+          "card": "WP-53",
+          "label": "Executed",
+          "note": "SYS-DRIFT retained as system-only defect for D-08"
+        },
+        {
+          "card": "WP-57",
+          "label": "Executed",
+          "note": "CONT-U1 continuity: Noise/jargon still degrades intent; U1 remains Partial"
+        }
       ],
       "planned_items": [
-        {"item": "Confirmed production ASR/NLU under live job-site noise", "label": "Planned"}
+        {
+          "item": "Confirmed production ASR/NLU under live job-site noise",
+          "label": "Planned"
+        }
       ],
-      "notes": "Partial: clean-path speech/intent evidenced; noise/jargon still degrades; E2E noise drop retained. Not Confirmed closed; not Resolved."
+      "notes": "Partial -> Partial after continuity CONT-U1. Noise/jargon still degrades intent; U1 remains Partial Not Confirmed closed; not Resolved."
     },
     "U2": {
       "status": "Partial",
       "statement": "Can a construction-specific dialogue policy collect booking-grade intake fields without wrong-path handoffs?",
       "evidence_pointers": [
-        {"card": "WP-27", "label": "Executed", "note": "Dialogue policy v0 draft"},
-        {"card": "WP-28", "label": "Executed", "note": "Intake field map D-04"},
-        {"card": "WP-29", "label": "Executed", "note": "Completion 0.48; wrong-path 0.67"},
-        {"card": "WP-31", "label": "Executed", "note": "Corpus gate M3 before bulk policy change"},
-        {"card": "WP-32", "label": "Executed", "note": "Intake schema v0 D-04"},
-        {"card": "WP-33", "label": "Executed", "note": "Required-field handoff enforcement"},
-        {"card": "WP-34", "label": "Executed", "note": "Handoff rules email/SMS/CRM stub"},
-        {"card": "WP-35", "label": "Executed", "note": "Negative intake refuse/partial/callback safe"},
-        {"card": "WP-36", "label": "Executed", "note": "S6 Evidence Gate intake schema Present"},
-        {"card": "WP-41", "label": "Executed", "note": "M4 freeze intake+summary core path"},
-        {"card": "WP-52", "label": "Executed", "note": "E2E-INCOMPLETE safe; omit not invented"}
+        {
+          "card": "WP-27",
+          "label": "Executed",
+          "note": "Dialogue policy v0 draft"
+        },
+        {
+          "card": "WP-28",
+          "label": "Executed",
+          "note": "Intake field map D-04"
+        },
+        {
+          "card": "WP-29",
+          "label": "Executed",
+          "note": "Completion 0.48; wrong-path 0.67"
+        },
+        {
+          "card": "WP-31",
+          "label": "Executed",
+          "note": "Corpus gate M3 before bulk policy change"
+        },
+        {
+          "card": "WP-32",
+          "label": "Executed",
+          "note": "Intake schema v0 D-04"
+        },
+        {
+          "card": "WP-33",
+          "label": "Executed",
+          "note": "Required-field handoff enforcement"
+        },
+        {
+          "card": "WP-34",
+          "label": "Executed",
+          "note": "Handoff rules email/SMS/CRM stub"
+        },
+        {
+          "card": "WP-35",
+          "label": "Executed",
+          "note": "Negative intake refuse/partial/callback safe"
+        },
+        {
+          "card": "WP-36",
+          "label": "Executed",
+          "note": "S6 Evidence Gate intake schema Present"
+        },
+        {
+          "card": "WP-41",
+          "label": "Executed",
+          "note": "M4 freeze intake+summary core path"
+        },
+        {
+          "card": "WP-52",
+          "label": "Executed",
+          "note": "E2E-INCOMPLETE safe; omit not invented"
+        },
+        {
+          "card": "WP-57",
+          "label": "Executed",
+          "note": "CONT-U2 continuity: Negative/incomplete intake still safe; U2 remains Partial (wrong-path / live conversion Planned)"
+        }
       ],
       "planned_items": [
-        {"item": "Confirmed booking-grade conversion on live carrier path", "label": "Planned"}
+        {
+          "item": "Confirmed booking-grade conversion on live carrier path",
+          "label": "Planned"
+        }
       ],
-      "notes": "Partial: intake schema + enforcement + negatives Executed (S6/M4). Wrong-path rate historically high; not Confirmed closed; not Resolved."
+      "notes": "Partial -> Partial after continuity CONT-U2. Negative/incomplete intake still safe; U2 remains Partial (wrong-path / live conversion Planned) Not Confirmed closed; not Resolved."
     },
     "U3": {
       "status": "Partial",
       "statement": "Can concurrent telephony and post-call summaries stay accurate and timely under load?",
       "evidence_pointers": [
-        {"card": "WP-37", "label": "Executed", "note": "Summary email template D-05 v0"},
-        {"card": "WP-38", "label": "Executed", "note": "Summary field accuracy invent/omit vs ground truth"},
-        {"card": "WP-39", "label": "Executed", "note": "Call-end to email latency distribution retained"},
-        {"card": "WP-40", "label": "Executed", "note": "Summary FM: delay / wrong number / hallucinated service; invent=defect"},
-        {"card": "WP-42", "label": "Executed", "note": "Concurrency load scenarios LOAD-2 / LOAD-3 / LOAD-N designed"},
-        {"card": "WP-43", "label": "Executed", "note": "Break-point N=6 (last_ok=5); drop/answer-delay limits logged"},
-        {"card": "WP-44", "label": "Executed", "note": "Queue/drop/error rates; provider logs in WP-U3-CONCURRENCY pack"},
-        {"card": "WP-45", "label": "Executed", "note": "Summary fidelity under load; silent collapse flagged; invent/omit not pass"},
-        {"card": "WP-46", "label": "Executed", "note": "S8 Evidence Gate: concurrency pack Present; U3-LIMITS-v0; S8 closed"},
-        {"card": "WP-51", "label": "Executed", "note": "M5 pack: concurrency limits + onboard path"},
-        {"card": "WP-52", "label": "Executed", "note": "E2E-CONCURRENT safe_n=5 OK; break_point_n=6 fails"},
-        {"card": "WP-53", "label": "Executed", "note": "SYS-DROP and SYS-FIDELITY-LOAD retained for D-08"}
+        {
+          "card": "WP-37",
+          "label": "Executed",
+          "note": "Summary email template D-05 v0"
+        },
+        {
+          "card": "WP-38",
+          "label": "Executed",
+          "note": "Summary field accuracy invent/omit vs ground truth"
+        },
+        {
+          "card": "WP-39",
+          "label": "Executed",
+          "note": "Call-end to email latency distribution retained"
+        },
+        {
+          "card": "WP-40",
+          "label": "Executed",
+          "note": "Summary FM: delay / wrong number / hallucinated service; invent=defect"
+        },
+        {
+          "card": "WP-42",
+          "label": "Executed",
+          "note": "Concurrency load scenarios LOAD-2 / LOAD-3 / LOAD-N designed"
+        },
+        {
+          "card": "WP-43",
+          "label": "Executed",
+          "note": "Break-point N=6 (last_ok=5); drop/answer-delay limits logged"
+        },
+        {
+          "card": "WP-44",
+          "label": "Executed",
+          "note": "Queue/drop/error rates; provider logs in WP-U3-CONCURRENCY pack"
+        },
+        {
+          "card": "WP-45",
+          "label": "Executed",
+          "note": "Summary fidelity under load; silent collapse flagged; invent/omit not pass"
+        },
+        {
+          "card": "WP-46",
+          "label": "Executed",
+          "note": "S8 Evidence Gate: concurrency pack Present; U3-LIMITS-v0; S8 closed"
+        },
+        {
+          "card": "WP-51",
+          "label": "Executed",
+          "note": "M5 pack: concurrency limits + onboard path"
+        },
+        {
+          "card": "WP-52",
+          "label": "Executed",
+          "note": "E2E-CONCURRENT safe_n=5 OK; break_point_n=6 fails"
+        },
+        {
+          "card": "WP-53",
+          "label": "Executed",
+          "note": "SYS-DROP and SYS-FIDELITY-LOAD retained for D-08"
+        },
+        {
+          "card": "WP-57",
+          "label": "Executed",
+          "note": "CONT-U3 continuity: U3-LIMITS-v0 continuity holds; provider channel limit still Planned; U3 remains Partial"
+        }
       ],
       "limits_statement": {
         "id": "U3-LIMITS-v0",
@@ -76,25 +241,62 @@
         "provider_channel_limit": "Planned (unset)"
       },
       "planned_items": [
-        {"item": "Confirmed provider concurrent channel limit", "label": "Planned"}
+        {
+          "item": "Confirmed provider concurrent channel limit",
+          "label": "Planned"
+        }
       ],
-      "notes": "Partial: Executed lab concurrency pack + limits gated. Provider concurrent channel limit still Planned; invent/omit under load not pass. Not Confirmed closed; not Resolved."
+      "notes": "Partial -> Partial after continuity CONT-U3. U3-LIMITS-v0 continuity holds; provider channel limit still Planned; U3 remains Partial Not Confirmed closed; not Resolved."
     },
     "System": {
       "status": "Partial",
       "statement": "End-to-end live path assembled and gated",
       "evidence_pointers": [
-        {"card": "WP-07", "label": "Executed", "note": "Telephony forward path (lab/docs)"},
-        {"card": "WP-47", "label": "Executed", "note": "Onboarding form to agent config D-07"},
-        {"card": "WP-50", "label": "Executed", "note": "Form-submit to callable TTL distribution"},
-        {"card": "WP-51", "label": "Executed", "note": "M5 onboard path e2e Present"},
-        {"card": "WP-52", "label": "Executed", "note": "E2E telephony scenario pack for D-08"},
-        {"card": "WP-53", "label": "Executed", "note": "System-only failure modes filed for D-08"},
-        {"card": "lab", "label": "Executed", "note": "workphone_lab runnable suite"}
+        {
+          "card": "WP-07",
+          "label": "Executed",
+          "note": "Telephony forward path (lab/docs)"
+        },
+        {
+          "card": "WP-47",
+          "label": "Executed",
+          "note": "Onboarding form to agent config D-07"
+        },
+        {
+          "card": "WP-50",
+          "label": "Executed",
+          "note": "Form-submit to callable TTL distribution"
+        },
+        {
+          "card": "WP-51",
+          "label": "Executed",
+          "note": "M5 onboard path e2e Present"
+        },
+        {
+          "card": "WP-52",
+          "label": "Executed",
+          "note": "E2E telephony scenario pack for D-08"
+        },
+        {
+          "card": "WP-53",
+          "label": "Executed",
+          "note": "System-only failure modes filed for D-08"
+        },
+        {
+          "card": "lab",
+          "label": "Executed",
+          "note": "workphone_lab runnable suite"
+        }
       ],
       "planned_items": [
-        {"item": "Live carrier DID provision (non-stub)", "label": "Planned"},
-        {"item": "Partner Confirmed close on production path", "label": "Planned"}
+        {
+          "item": "Live carrier DID provision (non-stub)",
+          "label": "Planned"
+        },
+        {
+          "item": "Partner Confirmed close on production path",
+          "label": "Planned"
+        }
       ],
       "notes": "Partial: E2E pack + system FM Executed for D-08 assembly. Live carrier path not Confirmed; not Resolved."
     }
@@ -112,5 +314,6 @@
       "id": "RJ-S10-SB-03",
       "config": "Treat Planned provider channel limit as Confirmed capacity"
     }
-  ]
+  ],
+  "continuity_tag": "continuity@d10-v0"
 }

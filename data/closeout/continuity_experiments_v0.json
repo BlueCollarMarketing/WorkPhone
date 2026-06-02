@@ -1,0 +1,60 @@
+{
+  "pack_id": "WP-CONTINUITY-U123",
+  "version": "v0",
+  "sprint": "Close-out",
+  "card": "WP-57",
+  "deliverable": "D-10",
+  "label": "Executed",
+  "purpose": "Continuity experiments on remaining Open/Partial U1/U2/U3 items; record results and update status pointers for D-10",
+  "scope_rule": "Treat Open and Partial as remaining open uncertainties; do not mark Resolved without Confirmed close",
+  "experiments": [
+    {
+      "id": "CONT-U1",
+      "uncertainty": "U1",
+      "name": "Noise/jargon intent continuity",
+      "method": "Re-score clean vs noise/jargon packs; require intent delta > 0 (degradation still present)",
+      "expect": {
+        "prior_status_in": ["Open", "Partial"],
+        "post_status": "Partial",
+        "min_intent_delta": 0.01
+      }
+    },
+    {
+      "id": "CONT-U2",
+      "uncertainty": "U2",
+      "name": "Incomplete/negative intake continuity",
+      "method": "Re-run negative intake cases; require safe_no_fabricate and SCR-I01 omit fields not invented",
+      "expect": {
+        "prior_status_in": ["Open", "Partial"],
+        "post_status": "Partial",
+        "safe_no_fabricate": true
+      }
+    },
+    {
+      "id": "CONT-U3",
+      "uncertainty": "U3",
+      "name": "Concurrency safe_n continuity",
+      "method": "Re-run N=safe_n within limits and N=break_point exceeds limits (U3-LIMITS-v0)",
+      "expect": {
+        "prior_status_in": ["Open", "Partial"],
+        "post_status": "Partial",
+        "safe_n": 5,
+        "break_point_n": 6
+      }
+    }
+  ],
+  "rejected_configs": [
+    {
+      "id": "RJ-D10-01",
+      "config": "Mark U1/U2/U3 Resolved from continuity re-runs alone"
+    },
+    {
+      "id": "RJ-D10-02",
+      "config": "Skip status pointer updates after continuity experiments"
+    },
+    {
+      "id": "RJ-D10-03",
+      "config": "Treat Planned Confirmed-close items as cleared by lab continuity"
+    }
+  ]
+}

@@ -843,8 +843,8 @@
       "date": "2026-06-02",
       "sprint": "Close-out",
       "summary": "Run continuity experiments on open U1 U2 U3 items",
-      "evidence_doc": null,
-      "evidence_status": "Planned",
+      "evidence_doc": "docs/closeout/WP-57-continuity-experiments-u1-u2-u3.md",
+      "evidence_status": "Present",
       "included_role": true
     },
     {

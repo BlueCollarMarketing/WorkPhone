@@ -9,6 +9,7 @@ from .concurrency_breakpoint import load_breakpoint_config, measure_breakpoint
 from .concurrency_queue_rates import load_queue_config, measure_queue_rates
 from .concurrency_scenarios import design_report, load_scenarios
 from .concurrency_summary_fidelity import load_fidelity_config, spot_check_fidelity
+from .continuity import load_continuity_pack, run_continuity
 from .corpus import load_corpus, validate_corpus
 from .corpus_gate import evaluate_corpus_gate, load_json
 from .dialogue_policy import demo_policy, load_policy
@@ -72,6 +73,7 @@ E2E_PACK = ROOT / "data" / "e2e" / "telephony_scenario_pack_v0.json"
 SYS_FM = ROOT / "data" / "e2e" / "system_failure_modes_v0.json"
 EVIDENCE_INDEX = ROOT / "data" / "evidence" / "evidence_index_v0.json"
 M6_GATE = ROOT / "data" / "gates" / "m6_core_evidence_gate.json"
+CONTINUITY = ROOT / "data" / "closeout" / "continuity_experiments_v0.json"
 OUT = ROOT / "outputs"
 
 
@@ -897,6 +899,48 @@ def cmd_gate_m6(_: argparse.Namespace) -> int:
     return 0 if summ["gate_pass"] else 1
 
 
+def cmd_continuity(_: argparse.Namespace) -> int:
+    pack = load_continuity_pack(CONTINUITY)
+    board = load_board(BOARD)
+    clean = json.loads(SCRIPTS.read_text(encoding="utf-8"))
+    noise = json.loads(SCRIPTS_NJ.read_text(encoding="utf-8"))
+    neg = load_cases(NEG_CASES)
+    report = run_continuity(
+        pack,
+        board=board,
+        clean_scripts=clean,
+        noise_scripts=noise,
+        negative_cases=neg,
+    )
+    # Persist updated status pointers for D-10
+    BOARD.write_text(json.dumps(report["updated_board"], indent=2) + "\n", encoding="utf-8")
+    OUT.mkdir(parents=True, exist_ok=True)
+    # Strip full board from export (large); keep status_after
+    export = {k: v for k, v in report.items() if k != "updated_board"}
+    path = OUT / "closeout_continuity_u1_u2_u3.json"
+    path.write_text(json.dumps(export, indent=2), encoding="utf-8")
+    summ = report["summary"]
+    print(f"Continuity experiments {report['continuity_tag']} (WP-57 / D-10)")
+    print(
+        f"experiments={summ['experiments']} expect_met={summ['expect_met']} "
+        f"pack_pass={summ['pack_pass']}"
+    )
+    print("open/partial at start: " + ", ".join(
+        f"{x['id']}={x['prior_status']}" for x in report["open_items_at_start"]
+    ))
+    for row in report["results"]:
+        print(
+            f"  {row['id']} {row['uncertainty']}: {row.get('outcome')} "
+            f"-> {row.get('post_status', row.get('note'))}"
+        )
+    print("status after: " + ", ".join(f"{k}={v}" for k, v in report["status_after"].items()))
+    for rj in report["rejected_configs"]:
+        print(f"  {rj['id']}: {rj['config']}")
+    print(f"Updated board pointers -> {BOARD.relative_to(ROOT)}")
+    print(f"Wrote {path}")
+    return 0 if summ["pack_pass"] else 1
+
+
 def cmd_gate_m5(_: argparse.Namespace) -> int:
     gate = load_m5_pack(M5_PACK)
     report = assemble_m5(ROOT, gate)
@@ -966,6 +1010,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("freeze-status-board", cmd_freeze_status_board),
         ("evidence-index", cmd_evidence_index),
         ("gate-m6", cmd_gate_m6),
+        ("continuity", cmd_continuity),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -1095,6 +1140,9 @@ def main() -> int:
 
     p_m6 = sub.add_parser("gate-m6", help="Evidence Gate core pack Present/Missing/Location M6 / S10 close (WP-56)")
     p_m6.set_defaults(func=cmd_gate_m6)
+
+    p_cont = sub.add_parser("continuity", help="Continuity experiments on open U1/U2/U3 items D-10 (WP-57)")
+    p_cont.set_defaults(func=cmd_continuity)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)
