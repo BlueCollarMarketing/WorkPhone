@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
+from .assumptions_register import load_assumptions_register, sweep_assumptions_register
 from .clarification import run_clarification_pack
 from .concurrency_breakpoint import load_breakpoint_config, measure_breakpoint
 from .concurrency_queue_rates import load_queue_config, measure_queue_rates
@@ -74,6 +75,7 @@ SYS_FM = ROOT / "data" / "e2e" / "system_failure_modes_v0.json"
 EVIDENCE_INDEX = ROOT / "data" / "evidence" / "evidence_index_v0.json"
 M6_GATE = ROOT / "data" / "gates" / "m6_core_evidence_gate.json"
 CONTINUITY = ROOT / "data" / "closeout" / "continuity_experiments_v0.json"
+ASSUMPTIONS = ROOT / "data" / "closeout" / "assumptions_register_v0.json"
 OUT = ROOT / "outputs"
 
 
@@ -941,6 +943,27 @@ def cmd_continuity(_: argparse.Namespace) -> int:
     return 0 if summ["pack_pass"] else 1
 
 
+def cmd_assumptions(_: argparse.Namespace) -> int:
+    register = load_assumptions_register(ASSUMPTIONS)
+    report = sweep_assumptions_register(register)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "closeout_assumptions_register_sweep.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    summ = report["summary"]
+    print(f"Assumptions Register sweep {report['register_tag']} (WP-58)")
+    print(
+        f"n={summ['n_entries']} Validated={summ['validated']} "
+        f"Revised={summ['revised']} Removed={summ['removed']} "
+        f"sweep_pass={summ['sweep_pass']}"
+    )
+    for row in report["entries"]:
+        print(f"  {row['id']}: {row['disposition']} - {row['note']}")
+    for rj in report["rejected_configs"]:
+        print(f"  {rj['id']}: {rj['config']}")
+    print(f"Wrote {path}")
+    return 0 if summ["sweep_pass"] else 1
+
+
 def cmd_gate_m5(_: argparse.Namespace) -> int:
     gate = load_m5_pack(M5_PACK)
     report = assemble_m5(ROOT, gate)
@@ -1011,6 +1034,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("evidence-index", cmd_evidence_index),
         ("gate-m6", cmd_gate_m6),
         ("continuity", cmd_continuity),
+        ("assumptions", cmd_assumptions),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -1143,6 +1167,9 @@ def main() -> int:
 
     p_cont = sub.add_parser("continuity", help="Continuity experiments on open U1/U2/U3 items D-10 (WP-57)")
     p_cont.set_defaults(func=cmd_continuity)
+
+    p_ar = sub.add_parser("assumptions", help="Assumptions Register sweep Validated/Revised/Removed (WP-58)")
+    p_ar.set_defaults(func=cmd_assumptions)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

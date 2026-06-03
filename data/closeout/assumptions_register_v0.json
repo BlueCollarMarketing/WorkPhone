@@ -1,0 +1,146 @@
+{
+  "register_id": "WP-ASSUMPTIONS-REGISTER",
+  "version": "v1.0-final",
+  "sprint": "Close-out",
+  "card": "WP-58",
+  "label": "Executed",
+  "register_tag": "swept@closeout-v0",
+  "purpose": "Sweep Assumptions Register entries to Validated / Revised / Removed; file final register for close-out",
+  "allowed_dispositions": ["Validated", "Revised", "Removed"],
+  "entries": [
+    {
+      "id": "A-WP-01",
+      "assumption": "Generic OTS answering agents are insufficient for construction trade intake under noise/jargon/incomplete info",
+      "source": "S0 WP-2/WP-3",
+      "disposition": "Validated",
+      "evidence": ["WP-2", "WP-3", "WP-25"],
+      "note": "OTS baseline fails trade scripts; Workphone delta retained"
+    },
+    {
+      "id": "A-WP-02",
+      "assumption": "Executed lab path (no live carrier) is acceptable evidence for telephony/ASR/intake/summary experiments within this span",
+      "source": "S1 WP-10",
+      "disposition": "Validated",
+      "evidence": ["WP-10", "WP-52", "WP-56"],
+      "note": "Executed vs Planned stack documented; live DID remains Planned"
+    },
+    {
+      "id": "A-WP-03",
+      "assumption": "Clean-script ASR/NLU intent accuracy near 1.0 is sufficient to close U1",
+      "source": "S3 WP-18 draft",
+      "disposition": "Revised",
+      "evidence": ["WP-22", "WP-52", "WP-57"],
+      "note": "Revised: U1 stays Partial; noise/jargon delta and E2E-NOISE keep U1 open"
+    },
+    {
+      "id": "A-WP-04",
+      "assumption": "Clarification loops at low confidence improve intake without net harm",
+      "source": "S4 H-S4-04",
+      "disposition": "Validated",
+      "evidence": ["WP-24"],
+      "note": "Helps 4 / harms 0 / no_change 3 on Executed pack"
+    },
+    {
+      "id": "A-WP-05",
+      "assumption": "Dialogue policy v0 will achieve booking-grade completion without wrong-path handoffs in this span",
+      "source": "S5 WP-27/WP-29 draft",
+      "disposition": "Revised",
+      "evidence": ["WP-29", "WP-33", "WP-54"],
+      "note": "Revised: completion 0.48 / wrong-path 0.67; U2 Partial; enforcement reduces incomplete handoffs"
+    },
+    {
+      "id": "A-WP-06",
+      "assumption": "Invented intake/summary fields may be scored as pass if 'helpful'",
+      "source": "Early draft habit (rejected)",
+      "disposition": "Removed",
+      "evidence": ["WP-35", "WP-38", "WP-40", "WP-45"],
+      "note": "Removed: invent/omit/hallucination retained as defects (RJ-S7-01, RJ-S8-01)"
+    },
+    {
+      "id": "A-WP-07",
+      "assumption": "Draft summary latency alert band (~15s) is a frozen SLA",
+      "source": "S7 WP-39/WP-41",
+      "disposition": "Revised",
+      "evidence": ["WP-39", "WP-41"],
+      "note": "Revised: p50/p95 remain Draft working distributions; absolute SLA not frozen (GAP-M4-04)"
+    },
+    {
+      "id": "A-WP-08",
+      "assumption": "Lab soft cap N=5 is a safe operating concurrency on the Executed path",
+      "source": "S8 WP-42/WP-43",
+      "disposition": "Validated",
+      "evidence": ["WP-43", "WP-46", "WP-52", "WP-57"],
+      "note": "last_ok_n=5; break_point_n=6; continuity CONT-U3 holds"
+    },
+    {
+      "id": "A-WP-09",
+      "assumption": "Provider concurrent channel limit equals lab soft cap",
+      "source": "S8 draft conflation risk",
+      "disposition": "Removed",
+      "evidence": ["WP-46", "WP-51", "WP-54"],
+      "note": "Removed: provider channel limit remains Planned/unset; not Confirmed"
+    },
+    {
+      "id": "A-WP-10",
+      "assumption": "Form-submit to callable number completes within Draft D-07 TTL targets on Executed path",
+      "source": "S9 WP-50",
+      "disposition": "Validated",
+      "evidence": ["WP-50"],
+      "note": "n=20; p50 within Draft band on lab stub provision + smoke ring"
+    },
+    {
+      "id": "A-WP-11",
+      "assumption": "Unit-test pass clears system-only E2E failure modes",
+      "source": "Pre-S10 habit (rejected)",
+      "disposition": "Removed",
+      "evidence": ["WP-53"],
+      "note": "Removed: SYS-DRIFT/DROP/SUM-INTAKE/FIDELITY-LOAD retained for D-08"
+    },
+    {
+      "id": "A-WP-12",
+      "assumption": "U1/U2/U3 may be marked Resolved at S10 draft freeze",
+      "source": "S10 WP-54 risk",
+      "disposition": "Removed",
+      "evidence": ["WP-54", "WP-57"],
+      "note": "Removed: all remain Partial; continuity forbids Resolved without Confirmed"
+    },
+    {
+      "id": "A-WP-13",
+      "assumption": "Only five included roster roles own project labour hours (remaps excluded as owners)",
+      "source": "D-09 WP-55",
+      "disposition": "Validated",
+      "evidence": ["WP-55"],
+      "note": "YouTrack hours align to labour targets; emily/stephen/jacob/parminder remapped"
+    },
+    {
+      "id": "A-WP-14",
+      "assumption": "Live CRM write and live SMTP delivery are part of the frozen M4 Executed core path",
+      "source": "S7 M4 gap risk",
+      "disposition": "Removed",
+      "evidence": ["WP-41"],
+      "note": "Removed: CRM/SMTP stubs only; gaps GAP-M4-01/02 Planned"
+    },
+    {
+      "id": "A-WP-15",
+      "assumption": "Max answer delay 8.0s is the Executed lab concurrency threshold",
+      "source": "S8 WP-42/WP-43",
+      "disposition": "Validated",
+      "evidence": ["WP-43", "WP-46"],
+      "note": "Embedded in U3-LIMITS-v0; continuity re-confirmed"
+    }
+  ],
+  "rejected_configs": [
+    {
+      "id": "RJ-AR-01",
+      "config": "Leave Assumptions Register entries without Validated/Revised/Removed disposition"
+    },
+    {
+      "id": "RJ-AR-02",
+      "config": "Treat Removed assumptions as still operative for Confirmed claims"
+    },
+    {
+      "id": "RJ-AR-03",
+      "config": "File close-out without final Assumptions Register"
+    }
+  ]
+}

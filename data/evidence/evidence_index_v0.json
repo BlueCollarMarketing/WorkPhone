@@ -857,8 +857,8 @@
       "date": "2026-06-03",
       "sprint": "Close-out",
       "summary": "Complete Assumptions Register sweep",
-      "evidence_doc": null,
-      "evidence_status": "Planned",
+      "evidence_doc": "docs/closeout/WP-58-assumptions-register-sweep.md",
+      "evidence_status": "Present",
       "included_role": true
     },
     {
