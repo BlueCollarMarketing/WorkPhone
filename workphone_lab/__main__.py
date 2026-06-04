@@ -41,6 +41,7 @@ from .summary_failure_modes import evaluate_failure_modes, load_failure_modes
 from .summary_latency import load_latency_pack, measure_summary_latency
 from .system_failure_modes import evaluate_system_fm, load_system_fm
 from .time_to_live import load_ttl_pack, measure_time_to_live
+from .timesheet_reconcile import load_reconcile_config, reconcile_timesheet
 from .trade_profiles import load_trade_profiles, side_by_side as trade_side_by_side
 from .voice_greeting import load_voice_cases, run_voice_greeting_pack
 
@@ -76,6 +77,7 @@ EVIDENCE_INDEX = ROOT / "data" / "evidence" / "evidence_index_v0.json"
 M6_GATE = ROOT / "data" / "gates" / "m6_core_evidence_gate.json"
 CONTINUITY = ROOT / "data" / "closeout" / "continuity_experiments_v0.json"
 ASSUMPTIONS = ROOT / "data" / "closeout" / "assumptions_register_v0.json"
+TIMESHEET_RECON = ROOT / "data" / "closeout" / "timesheet_reconcile_v0.json"
 OUT = ROOT / "outputs"
 
 
@@ -964,6 +966,43 @@ def cmd_assumptions(_: argparse.Namespace) -> int:
     return 0 if summ["sweep_pass"] else 1
 
 
+def cmd_timesheet_reconcile(_: argparse.Namespace) -> int:
+    cfg = load_reconcile_config(TIMESHEET_RECON)
+    index = load_evidence_index(EVIDENCE_INDEX)
+    report = reconcile_timesheet(ROOT, index, cfg)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "closeout_timesheet_reconciliation.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    hs = report["hours_summary"]
+    es = report["evidence_summary"]
+    summ = report["summary"]
+    print(f"Timesheet reconcile {report['reconcile_tag']} (WP-59 / D-09)")
+    print(
+        f"hours_aligned={hs['hours_aligned']} youtrack={hs['youtrack_total_hours']} "
+        f"labour={hs['labour_target_total_hours']} delta={hs['delta_hours']}"
+    )
+    for r in report["role_alignment"]:
+        mark = "OK" if r["aligned"] else "GAP"
+        print(
+            f"  {r['role_key']}: yt={r['youtrack_hours']} target={r['labour_target_hours']} "
+            f"delta={r['delta_hours']} {mark}"
+        )
+    print(
+        f"evidence present={es['present']} planned={es['planned']} missing={es['missing']} "
+        f"gaps_open={report['gaps_open']}"
+    )
+    print(
+        f"roles_only_ok={report['roles_only_ok']} reconcile_pass={summ['reconcile_pass']} "
+        f"ready_for_partner_close={summ['ready_for_partner_close']}"
+    )
+    for g in report["gaps"]:
+        print(f"  GAP {g['gap_id']}: {g['kind']} {g.get('detail')}")
+    for rj in report["rejected_configs"]:
+        print(f"  {rj['id']}: {rj['config']}")
+    print(f"Wrote {path}")
+    return 0 if summ["reconcile_pass"] else 1
+
+
 def cmd_gate_m5(_: argparse.Namespace) -> int:
     gate = load_m5_pack(M5_PACK)
     report = assemble_m5(ROOT, gate)
@@ -1035,6 +1074,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("gate-m6", cmd_gate_m6),
         ("continuity", cmd_continuity),
         ("assumptions", cmd_assumptions),
+        ("timesheet-reconcile", cmd_timesheet_reconcile),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -1170,6 +1210,9 @@ def main() -> int:
 
     p_ar = sub.add_parser("assumptions", help="Assumptions Register sweep Validated/Revised/Removed (WP-58)")
     p_ar.set_defaults(func=cmd_assumptions)
+
+    p_tr = sub.add_parser("timesheet-reconcile", help="Final YouTrack/timesheet reconcile included roles (WP-59)")
+    p_tr.set_defaults(func=cmd_timesheet_reconcile)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

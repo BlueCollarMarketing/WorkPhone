@@ -1,0 +1,25 @@
+{
+  "reconcile_id": "WP-TIMESHEET-RECONCILE",
+  "version": "v0",
+  "sprint": "Close-out",
+  "card": "WP-59",
+  "deliverable": "D-09",
+  "label": "Executed",
+  "reconcile_tag": "reconciled@closeout-v0",
+  "reconcile_through_card": 59,
+  "purpose": "Final YouTrack / timesheet reconciliation for included roles only against project labour hours; fix gaps before Partner close",
+  "rejected_configs": [
+    {
+      "id": "RJ-TR-01",
+      "config": "Proceed to Partner close with open hours or evidence gaps"
+    },
+    {
+      "id": "RJ-TR-02",
+      "config": "Include excluded remapped identities as labour owners"
+    },
+    {
+      "id": "RJ-TR-03",
+      "config": "Count WP-60/WP-61 Planned cards as Missing for WP-59 reconcile"
+    }
+  ]
+}

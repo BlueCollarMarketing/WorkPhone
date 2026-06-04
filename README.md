@@ -54,6 +54,7 @@ python -m workphone_lab evidence-index
 python -m workphone_lab gate-m6
 python -m workphone_lab continuity
 python -m workphone_lab assumptions
+python -m workphone_lab timesheet-reconcile
 ```
 
 | Command | What it does |
@@ -98,6 +99,7 @@ python -m workphone_lab assumptions
 | `gate-m6` | Evidence Gate core pack Present/Missing/Location M6 / S10 close (WP-56) -> `outputs/s10_m6_core_evidence_gate.json` |
 | `continuity` | Continuity experiments on open U1/U2/U3 items D-10 (WP-57) -> `outputs/closeout_continuity_u1_u2_u3.json` |
 | `assumptions` | Assumptions Register sweep Validated/Revised/Removed (WP-58) -> `outputs/closeout_assumptions_register_sweep.json` |
+| `timesheet-reconcile` | Final YouTrack/timesheet reconcile included roles (WP-59) -> `outputs/closeout_timesheet_reconciliation.json` |
 | `all` | Run full lab suite smoke check |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)  
@@ -125,6 +127,7 @@ System failure modes: `data/e2e/system_failure_modes_v0.json`
 Evidence index: `data/evidence/evidence_index_v0.json`  
 Continuity pack: `data/closeout/continuity_experiments_v0.json`  
 Assumptions Register: `data/closeout/assumptions_register_v0.json`  
+Timesheet reconcile: `data/closeout/timesheet_reconcile_v0.json`  
 Status board: `data/status/u1_u3_status_board.json`  
 Corpus gate: `data/gates/corpus_gate_m3.json`  
 M4 freeze: `data/gates/m4_intake_summary_freeze.json`  

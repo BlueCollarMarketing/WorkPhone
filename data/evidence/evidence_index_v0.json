@@ -1,6 +1,6 @@
 {
   "index_id": "WP-EVIDENCE-INDEX",
-  "version": "v0",
+  "version": "v0.1-reconciled",
   "sprint": "S10",
   "card": "WP-55",
   "deliverable": "D-09",
@@ -871,8 +871,8 @@
       "date": "2026-06-04",
       "sprint": "Close-out",
       "summary": "Reconcile YouTrack timesheet for included roles",
-      "evidence_doc": null,
-      "evidence_status": "Planned",
+      "evidence_doc": "docs/closeout/WP-59-timesheet-reconciliation.md",
+      "evidence_status": "Present",
       "included_role": true
     },
     {
@@ -917,5 +917,7 @@
       "id": "RJ-D09-03",
       "config": "Count Planned close-out cards as Missing evidence for WP-55 gate"
     }
-  ]
+  ],
+  "reconciled_card": "WP-59",
+  "reconcile_tag": "reconciled@closeout-v0"
 }
