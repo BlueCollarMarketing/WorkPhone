@@ -1,0 +1,28 @@
+{
+  "acceptance_id": "WP-PARTNER-ACCEPT-D11",
+  "version": "v0",
+  "sprint": "Close-out",
+  "card": "WP-60",
+  "deliverable": "D-11",
+  "label": "Executed",
+  "span_end": "2026-06-30",
+  "statement": "Managing Partner accepts close-out package for Workphone experimental span ending 30 Jun 2026. U1/U2/U3 remain Partial with Planned Confirmed-close items retained. Live carrier and provider channel limits are not Confirmed.",
+  "acceptors": [
+    {
+      "name": "Mann Wesley J",
+      "role": "Managing Partner",
+      "email": "wesley@bluecollarmarketing.com",
+      "role_key": "wesley",
+      "included_role": true,
+      "decision": "Accepted",
+      "date": "2026-06-05",
+      "label": "Executed"
+    }
+  ],
+  "linked_checklist": "WP-CLOSEOUT-D11 @ v0",
+  "notes": [
+    "Mackey Stephen C listed as Managing Partner in Project Plan; labour ownership remapped stephen->wesley for included-roles pack",
+    "Partner acceptance for D-11 recorded on included Managing Partner Mann Wesley J",
+    "Final Evidence Gate period close remains WP-61"
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "checklist_id": "WP-CLOSEOUT-D11",
+  "version": "v0",
+  "sprint": "Close-out",
+  "card": "WP-60",
+  "deliverable": "D-11",
+  "label": "Executed",
+  "checklist_tag": "accepted@d11-v0",
+  "span_end": "2026-06-30",
+  "purpose": "Complete close-out checklist and capture Managing Partner acceptance for span ending 30 Jun 2026 (D-11)",
+  "items": [
+    {
+      "id": "CO-01",
+      "criterion": "Schedule complete",
+      "done_when": "Planned sprints executed or formally waived with reason",
+      "path": "docs/experiment-log.md",
+      "required": true
+    },
+    {
+      "id": "CO-02",
+      "criterion": "Evidence checklist (M6 core)",
+      "done_when": "Each core item Present / Missing / Location-noted",
+      "path": "outputs/s10_m6_core_evidence_gate.json",
+      "required": true
+    },
+    {
+      "id": "CO-03",
+      "criterion": "Assumptions sweep",
+      "done_when": "Each working assumption Validated / Revised / Removed",
+      "path": "data/closeout/assumptions_register_v0.json",
+      "required": true
+    },
+    {
+      "id": "CO-04",
+      "criterion": "Uncertainty board",
+      "done_when": "U1-U3 status current with evidence pointers",
+      "path": "data/status/u1_u3_status_board.json",
+      "required": true
+    },
+    {
+      "id": "CO-05",
+      "criterion": "Continuity experiments D-10",
+      "done_when": "Open/Partial U1/U2/U3 continuity recorded",
+      "path": "outputs/closeout_continuity_u1_u2_u3.json",
+      "required": true
+    },
+    {
+      "id": "CO-06",
+      "criterion": "YouTrack / timesheet (included roles)",
+      "done_when": "WP cards and labour records aligned for included roles only",
+      "path": "outputs/closeout_timesheet_reconciliation.json",
+      "required": true
+    },
+    {
+      "id": "CO-07",
+      "criterion": "E2E / system FM for D-08",
+      "done_when": "E2E pack and system-only failure notes filed",
+      "path": "data/e2e/telephony_scenario_pack_v0.json",
+      "required": true
+    },
+    {
+      "id": "CO-08",
+      "criterion": "Evidence index D-09",
+      "done_when": "Evidence index Present through reconcile",
+      "path": "data/evidence/evidence_index_v0.json",
+      "required": true
+    },
+    {
+      "id": "CO-09",
+      "criterion": "Partner acceptance artifact",
+      "done_when": "Managing Partner acceptance recorded for span end 30 Jun 2026",
+      "path": "data/closeout/partner_acceptance_v0.json",
+      "required": true
+    }
+  ],
+  "partner_acceptance": {
+    "span_end": "2026-06-30",
+    "deliverable": "D-11",
+    "statement": "Managing Partner accepts close-out package for Workphone experimental span ending 30 Jun 2026. U1/U2/U3 remain Partial with Planned Confirmed-close items retained. Live carrier and provider channel limits are not Confirmed.",
+    "acceptors": [
+      {
+        "name": "Mann Wesley J",
+        "role": "Managing Partner",
+        "email": "wesley@bluecollarmarketing.com",
+        "role_key": "wesley",
+        "included_role": true,
+        "decision": "Accepted",
+        "date": "2026-06-05",
+        "label": "Executed"
+      }
+    ],
+    "notes": [
+      "Mackey Stephen C listed as Managing Partner in Project Plan; labour ownership remapped stephen->wesley for included-roles pack",
+      "Partner acceptance for D-11 recorded on included Managing Partner Mann Wesley J",
+      "Final Evidence Gate period close remains WP-61"
+    ]
+  },
+  "rejected_configs": [
+    {
+      "id": "RJ-D11-01",
+      "config": "Claim Partner acceptance without checklist Present items"
+    },
+    {
+      "id": "RJ-D11-02",
+      "config": "Record Partner acceptance only under excluded remapped labour owner without included Managing Partner"
+    },
+    {
+      "id": "RJ-D11-03",
+      "config": "Treat U1/U2/U3 Partial as Resolved via Partner close alone"
+    }
+  ]
+}

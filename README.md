@@ -55,6 +55,7 @@ python -m workphone_lab gate-m6
 python -m workphone_lab continuity
 python -m workphone_lab assumptions
 python -m workphone_lab timesheet-reconcile
+python -m workphone_lab closeout
 ```
 
 | Command | What it does |
@@ -100,6 +101,7 @@ python -m workphone_lab timesheet-reconcile
 | `continuity` | Continuity experiments on open U1/U2/U3 items D-10 (WP-57) -> `outputs/closeout_continuity_u1_u2_u3.json` |
 | `assumptions` | Assumptions Register sweep Validated/Revised/Removed (WP-58) -> `outputs/closeout_assumptions_register_sweep.json` |
 | `timesheet-reconcile` | Final YouTrack/timesheet reconcile included roles (WP-59) -> `outputs/closeout_timesheet_reconciliation.json` |
+| `closeout` | Close-out checklist + Partner acceptance D-11 (WP-60) -> `outputs/closeout_d11_checklist_partner_acceptance.json` |
 | `all` | Run full lab suite smoke check |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)  
@@ -128,6 +130,8 @@ Evidence index: `data/evidence/evidence_index_v0.json`
 Continuity pack: `data/closeout/continuity_experiments_v0.json`  
 Assumptions Register: `data/closeout/assumptions_register_v0.json`  
 Timesheet reconcile: `data/closeout/timesheet_reconcile_v0.json`  
+Close-out checklist D-11: `data/closeout/closeout_checklist_d11_v0.json`  
+Partner acceptance: `data/closeout/partner_acceptance_v0.json`  
 Status board: `data/status/u1_u3_status_board.json`  
 Corpus gate: `data/gates/corpus_gate_m3.json`  
 M4 freeze: `data/gates/m4_intake_summary_freeze.json`  

@@ -885,8 +885,8 @@
       "date": "2026-06-05",
       "sprint": "Close-out",
       "summary": "Complete close-out checklist and Partner acceptance",
-      "evidence_doc": null,
-      "evidence_status": "Planned",
+      "evidence_doc": "docs/closeout/WP-60-closeout-checklist-partner-acceptance.md",
+      "evidence_status": "Present",
       "included_role": true
     },
     {

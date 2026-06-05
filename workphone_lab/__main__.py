@@ -6,6 +6,7 @@ from pathlib import Path
 
 from .assumptions_register import load_assumptions_register, sweep_assumptions_register
 from .clarification import run_clarification_pack
+from .closeout_checklist import evaluate_closeout, load_closeout_checklist
 from .concurrency_breakpoint import load_breakpoint_config, measure_breakpoint
 from .concurrency_queue_rates import load_queue_config, measure_queue_rates
 from .concurrency_scenarios import design_report, load_scenarios
@@ -78,6 +79,7 @@ M6_GATE = ROOT / "data" / "gates" / "m6_core_evidence_gate.json"
 CONTINUITY = ROOT / "data" / "closeout" / "continuity_experiments_v0.json"
 ASSUMPTIONS = ROOT / "data" / "closeout" / "assumptions_register_v0.json"
 TIMESHEET_RECON = ROOT / "data" / "closeout" / "timesheet_reconcile_v0.json"
+CLOSEOUT_D11 = ROOT / "data" / "closeout" / "closeout_checklist_d11_v0.json"
 OUT = ROOT / "outputs"
 
 
@@ -1003,6 +1005,34 @@ def cmd_timesheet_reconcile(_: argparse.Namespace) -> int:
     return 0 if summ["reconcile_pass"] else 1
 
 
+def cmd_closeout(_: argparse.Namespace) -> int:
+    pack = load_closeout_checklist(CLOSEOUT_D11)
+    report = evaluate_closeout(ROOT, pack)
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "closeout_d11_checklist_partner_acceptance.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    summ = report["summary"]
+    pa = report["partner_acceptance"]
+    print(f"Close-out checklist {report['checklist_tag']} (WP-60 / D-11)")
+    print(
+        f"present={summ['present']} missing={summ['missing']} "
+        f"hard_missing={summ['hard_missing']} partner_ok={summ['partner_ok']} "
+        f"checklist_pass={summ['checklist_pass']}"
+    )
+    for r in report["checklist"]:
+        print(f"  [{r['status']}] {r['id']} {r['criterion']} -> {r['location']}")
+    print(f"Partner acceptance span_end={pa['span_end']} accepted={pa['accepted_count']}")
+    for a in pa["acceptors"]:
+        print(
+            f"  {a['name']} ({a['role']}): {a['decision']} [{a['label']}] {a['date']}"
+        )
+    for rj in report["rejected_configs"]:
+        print(f"  {rj['id']}: {rj['config']}")
+    print(f"D-11 complete: {summ['d11_complete']}")
+    print(f"Wrote {path}")
+    return 0 if summ["checklist_pass"] else 1
+
+
 def cmd_gate_m5(_: argparse.Namespace) -> int:
     gate = load_m5_pack(M5_PACK)
     report = assemble_m5(ROOT, gate)
@@ -1075,6 +1105,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("continuity", cmd_continuity),
         ("assumptions", cmd_assumptions),
         ("timesheet-reconcile", cmd_timesheet_reconcile),
+        ("closeout", cmd_closeout),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -1213,6 +1244,9 @@ def main() -> int:
 
     p_tr = sub.add_parser("timesheet-reconcile", help="Final YouTrack/timesheet reconcile included roles (WP-59)")
     p_tr.set_defaults(func=cmd_timesheet_reconcile)
+
+    p_co = sub.add_parser("closeout", help="Close-out checklist + Partner acceptance D-11 (WP-60)")
+    p_co.set_defaults(func=cmd_closeout)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

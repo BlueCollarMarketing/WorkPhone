@@ -61,3 +61,4 @@
 | 2026-06-02 | WP-57 | Close-out | Mann Wesley J | Continuity CONT-U1/U2/U3 continuity@d10-v0: U1/U2/U3 stay Partial; pointers updated |
 | 2026-06-03 | WP-58 | Close-out | Mann Wesley J | Assumptions Register swept@closeout-v0: 7 Validated / 3 Revised / 5 Removed |
 | 2026-06-04 | WP-59 | Close-out | Roantree Timothy I | Timesheet reconcile reconciled@closeout-v0: 5 roles delta=0; gaps fixed for Partner close |
+| 2026-06-05 | WP-60 | Close-out | Damczyk Jennifer | D-11 close-out checklist accepted@d11-v0; Managing Partner Wesley Accepted |
