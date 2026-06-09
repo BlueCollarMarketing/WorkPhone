@@ -56,6 +56,7 @@ python -m workphone_lab continuity
 python -m workphone_lab assumptions
 python -m workphone_lab timesheet-reconcile
 python -m workphone_lab closeout
+python -m workphone_lab gate-m7
 ```
 
 | Command | What it does |
@@ -102,6 +103,7 @@ python -m workphone_lab closeout
 | `assumptions` | Assumptions Register sweep Validated/Revised/Removed (WP-58) -> `outputs/closeout_assumptions_register_sweep.json` |
 | `timesheet-reconcile` | Final YouTrack/timesheet reconcile included roles (WP-59) -> `outputs/closeout_timesheet_reconciliation.json` |
 | `closeout` | Close-out checklist + Partner acceptance D-11 (WP-60) -> `outputs/closeout_d11_checklist_partner_acceptance.json` |
+| `gate-m7` | Final Evidence Gate period close 30 Jun 2026 M7 (WP-61) -> `outputs/closeout_m7_period_close_gate.json` |
 | `all` | Run full lab suite smoke check |
 
 Corpus: `data/corpus/regression_corpus.json` (variants linked to clean **WP-SCR-v0 @ v0**)  
@@ -137,6 +139,7 @@ Corpus gate: `data/gates/corpus_gate_m3.json`
 M4 freeze: `data/gates/m4_intake_summary_freeze.json`  
 M5 pack: `data/gates/m5_concurrency_onboard_pack.json`  
 M6 core Evidence Gate: `data/gates/m6_core_evidence_gate.json`  
+M7 period close gate: `data/gates/m7_period_close_gate.json`  
 S8 Evidence Gate: `data/gates/s8_concurrency_evidence_gate.json`
 
 **Full smoke check:** `python -m workphone_lab all`

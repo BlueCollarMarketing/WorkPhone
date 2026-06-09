@@ -17,6 +17,7 @@ from .corpus_gate import evaluate_corpus_gate, load_json
 from .dialogue_policy import demo_policy, load_policy
 from .evidence_gate import gate_s4
 from .evidence_gate_m6 import gate_m6, load_m6_gate
+from .evidence_gate_m7 import apply_fy_freeze_to_board, gate_m7, load_m7_gate
 from .evidence_gate_s6 import gate_s6
 from .evidence_gate_s8 import gate_s8, load_s8_gate
 from .evidence_index import align_evidence_index, load_evidence_index
@@ -80,6 +81,7 @@ CONTINUITY = ROOT / "data" / "closeout" / "continuity_experiments_v0.json"
 ASSUMPTIONS = ROOT / "data" / "closeout" / "assumptions_register_v0.json"
 TIMESHEET_RECON = ROOT / "data" / "closeout" / "timesheet_reconcile_v0.json"
 CLOSEOUT_D11 = ROOT / "data" / "closeout" / "closeout_checklist_d11_v0.json"
+M7_GATE = ROOT / "data" / "gates" / "m7_period_close_gate.json"
 OUT = ROOT / "outputs"
 
 
@@ -1033,6 +1035,55 @@ def cmd_closeout(_: argparse.Namespace) -> int:
     return 0 if summ["checklist_pass"] else 1
 
 
+def cmd_gate_m7(_: argparse.Namespace) -> int:
+    gate = load_m7_gate(M7_GATE)
+    report = gate_m7(ROOT, gate)
+    # Freeze FY pointer on status board
+    board = load_board(BOARD)
+    frozen_board = apply_fy_freeze_to_board(
+        board, report["gate_tag"], report["period_end"]
+    )
+    BOARD.write_text(json.dumps(frozen_board, indent=2) + "\n", encoding="utf-8")
+    OUT.mkdir(parents=True, exist_ok=True)
+    path = OUT / "closeout_m7_period_close_gate.json"
+    path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    # Persist freeze marker
+    freeze_path = OUT / "fy_records_freeze_2026-06-30.json"
+    freeze_path.write_text(
+        json.dumps(
+            {
+                "card": "WP-61",
+                "gate_tag": report["gate_tag"],
+                "period_end": report["period_end"],
+                "fy_freeze": report["fy_freeze"],
+                "summary": report["summary"],
+                "label": "Executed",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    summ = report["summary"]
+    print(f"Final Evidence Gate M7 {report['gate_tag']} (WP-61)")
+    print(
+        f"present={summ['present']} missing={summ['missing']} "
+        f"hard_missing={summ['hard_missing']} gate_pass={summ['gate_pass']}"
+    )
+    for r in report["checklist"]:
+        print(f"  [{r['status']}] {r['item']} -> {r['location']}")
+    print("Explicit gaps (do not block FY freeze):")
+    for g in report["explicit_gaps"]:
+        print(f"  {g['id']} [{g['label']}] {g['item']}: {g['note']}")
+    for rj in report["rejected_configs"]:
+        print(f"  {rj['id']}: {rj['config']}")
+    print(f"FY records frozen: {summ['fy_records_frozen']}")
+    print(f"Period closed: {summ['period_closed']}")
+    print(f"Updated board -> {BOARD.relative_to(ROOT)}")
+    print(f"Wrote {path}")
+    print(f"Wrote {freeze_path}")
+    return 0 if summ["gate_pass"] else 1
+
+
 def cmd_gate_m5(_: argparse.Namespace) -> int:
     gate = load_m5_pack(M5_PACK)
     report = assemble_m5(ROOT, gate)
@@ -1106,6 +1157,7 @@ def cmd_all(_: argparse.Namespace) -> int:
         ("assumptions", cmd_assumptions),
         ("timesheet-reconcile", cmd_timesheet_reconcile),
         ("closeout", cmd_closeout),
+        ("gate-m7", cmd_gate_m7),
     ]
     print("=== workphone_lab all ===")
     for name, fn in steps:
@@ -1247,6 +1299,9 @@ def main() -> int:
 
     p_co = sub.add_parser("closeout", help="Close-out checklist + Partner acceptance D-11 (WP-60)")
     p_co.set_defaults(func=cmd_closeout)
+
+    p_m7 = sub.add_parser("gate-m7", help="Final Evidence Gate period close 30 Jun 2026 M7 (WP-61)")
+    p_m7.set_defaults(func=cmd_gate_m7)
 
     p_all = sub.add_parser("all", help="Run full lab suite smoke check")
     p_all.set_defaults(func=cmd_all)

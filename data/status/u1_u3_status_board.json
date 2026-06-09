@@ -2,7 +2,7 @@
   "board_id": "WP-STATUS-BOARD",
   "version": "v1.0-draft-freeze",
   "freeze_tag": "frozen@status-board-draft-s10-v0",
-  "updated_card": "WP-57",
+  "updated_card": "WP-61",
   "sprint": "Close-out",
   "label": "Executed",
   "allowed_statuses": [
@@ -80,6 +80,11 @@
           "card": "WP-57",
           "label": "Executed",
           "note": "CONT-U1 continuity: Noise/jargon still degrades intent; U1 remains Partial"
+        },
+        {
+          "card": "WP-61",
+          "label": "Executed",
+          "note": "FY period close 2026-06-30; records frozen (frozen@fy-period-close-2026-06-30); status remains Partial"
         }
       ],
       "planned_items": [
@@ -153,6 +158,11 @@
           "card": "WP-57",
           "label": "Executed",
           "note": "CONT-U2 continuity: Negative/incomplete intake still safe; U2 remains Partial (wrong-path / live conversion Planned)"
+        },
+        {
+          "card": "WP-61",
+          "label": "Executed",
+          "note": "FY period close 2026-06-30; records frozen (frozen@fy-period-close-2026-06-30); status remains Partial"
         }
       ],
       "planned_items": [
@@ -231,6 +241,11 @@
           "card": "WP-57",
           "label": "Executed",
           "note": "CONT-U3 continuity: U3-LIMITS-v0 continuity holds; provider channel limit still Planned; U3 remains Partial"
+        },
+        {
+          "card": "WP-61",
+          "label": "Executed",
+          "note": "FY period close 2026-06-30; records frozen (frozen@fy-period-close-2026-06-30); status remains Partial"
         }
       ],
       "limits_statement": {
@@ -286,6 +301,11 @@
           "card": "lab",
           "label": "Executed",
           "note": "workphone_lab runnable suite"
+        },
+        {
+          "card": "WP-61",
+          "label": "Executed",
+          "note": "FY period close 2026-06-30; records frozen (frozen@fy-period-close-2026-06-30); status remains Partial"
         }
       ],
       "planned_items": [
@@ -315,5 +335,8 @@
       "config": "Treat Planned provider channel limit as Confirmed capacity"
     }
   ],
-  "continuity_tag": "continuity@d10-v0"
+  "continuity_tag": "continuity@d10-v0",
+  "fy_freeze_tag": "frozen@fy-period-close-2026-06-30",
+  "period_end": "2026-06-30",
+  "fy_records_frozen": true
 }

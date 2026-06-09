@@ -899,8 +899,8 @@
       "date": "2026-06-09",
       "sprint": "Close-out",
       "summary": "Final Evidence Gate period close 30 Jun 2026",
-      "evidence_doc": null,
-      "evidence_status": "Planned",
+      "evidence_doc": "docs/closeout/WP-61-final-evidence-gate-period-close.md",
+      "evidence_status": "Present",
       "included_role": true
     }
   ],

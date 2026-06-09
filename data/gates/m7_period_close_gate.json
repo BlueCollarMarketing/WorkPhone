@@ -1,0 +1,86 @@
+{
+  "gate_id": "WP-M7-PERIOD-CLOSE",
+  "version": "v0",
+  "milestone": "M7",
+  "sprint": "Close-out",
+  "card": "WP-61",
+  "label": "Executed",
+  "gate_tag": "frozen@fy-period-close-2026-06-30",
+  "period_end": "2026-06-30",
+  "rule": "Final Evidence Gate for period close 30 Jun 2026: Present/Missing/Location on FY records; freeze tag applied; Planned gaps do not block freeze",
+  "checklist": [
+    {"item": "Experiment log", "path": "docs/experiment-log.md", "section": "records", "regenerable": false},
+    {"item": "Status board (U1/U2/U3)", "path": "data/status/u1_u3_status_board.json", "section": "records", "regenerable": false},
+    {"item": "Evidence index D-09", "path": "data/evidence/evidence_index_v0.json", "section": "records", "regenerable": false},
+    {"item": "Assumptions Register final", "path": "data/closeout/assumptions_register_v0.json", "section": "closeout", "regenerable": false},
+    {"item": "Continuity pack D-10", "path": "data/closeout/continuity_experiments_v0.json", "section": "closeout", "regenerable": false},
+    {"item": "Timesheet reconcile config", "path": "data/closeout/timesheet_reconcile_v0.json", "section": "closeout", "regenerable": false},
+    {"item": "Close-out checklist D-11", "path": "data/closeout/closeout_checklist_d11_v0.json", "section": "closeout", "regenerable": false},
+    {"item": "Partner acceptance D-11", "path": "data/closeout/partner_acceptance_v0.json", "section": "closeout", "regenerable": false},
+    {"item": "M3 corpus gate", "path": "data/gates/corpus_gate_m3.json", "section": "gates", "regenerable": false},
+    {"item": "M4 intake+summary freeze", "path": "data/gates/m4_intake_summary_freeze.json", "section": "gates", "regenerable": false},
+    {"item": "M5 concurrency+onboard pack", "path": "data/gates/m5_concurrency_onboard_pack.json", "section": "gates", "regenerable": false},
+    {"item": "M6 core Evidence Gate", "path": "data/gates/m6_core_evidence_gate.json", "section": "gates", "regenerable": false},
+    {"item": "S8 concurrency Evidence Gate", "path": "data/gates/s8_concurrency_evidence_gate.json", "section": "gates", "regenerable": false},
+    {"item": "E2E telephony pack D-08", "path": "data/e2e/telephony_scenario_pack_v0.json", "section": "e2e", "regenerable": false},
+    {"item": "System-only failure modes D-08", "path": "data/e2e/system_failure_modes_v0.json", "section": "e2e", "regenerable": false},
+    {"item": "WP-SCR-v0 scripts", "path": "data/scripts/wp_scr_v0.json", "section": "core", "regenerable": false},
+    {"item": "Intake schema v0", "path": "data/intake/intake_schema_v0.json", "section": "core", "regenerable": false},
+    {"item": "Summary email template D-05", "path": "data/summary/summary_email_template_v0.json", "section": "core", "regenerable": false},
+    {"item": "U3 concurrency pack index", "path": "data/concurrency/u3_concurrency_pack_v0.json", "section": "core", "regenerable": false},
+    {"item": "Onboarding map D-07", "path": "data/onboarding/onboarding_form_to_agent_config_v0.json", "section": "core", "regenerable": false},
+    {"item": "M6 gate export", "path": "outputs/s10_m6_core_evidence_gate.json", "section": "exports", "regenerable": true},
+    {"item": "Continuity export", "path": "outputs/closeout_continuity_u1_u2_u3.json", "section": "exports", "regenerable": true},
+    {"item": "Assumptions sweep export", "path": "outputs/closeout_assumptions_register_sweep.json", "section": "exports", "regenerable": true},
+    {"item": "Timesheet reconcile export", "path": "outputs/closeout_timesheet_reconciliation.json", "section": "exports", "regenerable": true},
+    {"item": "D-11 Partner acceptance export", "path": "outputs/closeout_d11_checklist_partner_acceptance.json", "section": "exports", "regenerable": true},
+    {"item": "Continuity note WP-57", "path": "docs/closeout/WP-57-continuity-experiments-u1-u2-u3.md", "section": "docs", "regenerable": false},
+    {"item": "Assumptions note WP-58", "path": "docs/closeout/WP-58-assumptions-register-sweep.md", "section": "docs", "regenerable": false},
+    {"item": "Timesheet reconcile note WP-59", "path": "docs/closeout/WP-59-timesheet-reconciliation.md", "section": "docs", "regenerable": false},
+    {"item": "D-11 close-out note WP-60", "path": "docs/closeout/WP-60-closeout-checklist-partner-acceptance.md", "section": "docs", "regenerable": false}
+  ],
+  "fy_freeze": {
+    "period_start": "2025-07-01",
+    "period_end": "2026-06-30",
+    "freeze_tag": "frozen@fy-period-close-2026-06-30",
+    "rule": "FY records frozen at period close; further edits require change control after M7",
+    "included_roles_only": true
+  },
+  "explicit_gaps": [
+    {
+      "id": "GAP-M7-01",
+      "item": "Confirmed provider concurrent channel limit",
+      "status": "Missing",
+      "label": "Planned",
+      "note": "Retained Planned; does not block FY freeze"
+    },
+    {
+      "id": "GAP-M7-02",
+      "item": "Live carrier DID provision (non-stub)",
+      "status": "Missing",
+      "label": "Planned",
+      "note": "Lab Executed path frozen; live DID not Confirmed"
+    },
+    {
+      "id": "GAP-M7-03",
+      "item": "U1/U2/U3 Confirmed Resolved",
+      "status": "Missing",
+      "label": "Planned",
+      "note": "Board remains Partial; continuity forbids false Resolved"
+    }
+  ],
+  "rejected_configs": [
+    {
+      "id": "RJ-M7-01",
+      "config": "Close FY period with hard-Missing core FY record"
+    },
+    {
+      "id": "RJ-M7-02",
+      "config": "Mark U1/U2/U3 Resolved at period close without Confirmed evidence"
+    },
+    {
+      "id": "RJ-M7-03",
+      "config": "Omit Location on Final Evidence Gate checklist"
+    }
+  ]
+}
